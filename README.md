@@ -1,5 +1,5 @@
 # CostlyAI - web client
-This repo contains the client code for the [CostlyAI API](https://github.com/lmartincek/CoslyAI).
+This repo contains the client code for the [CostlyAI API](https://github.com/lmartincek/CostlyAI).
 
 ## What is CostlyAI?
 **CostlyAI** is an AI-generated dataset that provides insights into the prices of everyday essentials, including:
@@ -19,7 +19,7 @@ This project requires Node v18+ and npm v9+. Install them first.
 
 Clone the repository and install the dependencies.
 ```bash
-git clone https://github.com/lmartincek/CoslyAI-webclient.git
+git clone https://github.com/lmartincek/CostlyAI-webclient.git
 
 cd swing-client
 
