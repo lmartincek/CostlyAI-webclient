@@ -5,8 +5,10 @@ import TableDisplay from "./components/TableDisplay.vue";
 
 import { useProductsStore } from './stores/productsStore.ts';
 import {computed, onMounted, ref, watch} from "vue";
-import {ICity, ICountry, useGeneralStore} from "./stores/generalStore.ts";
+import {useGeneralStore} from "./stores/generalStore.ts";
 import {fixAndParseJSON, groupProductsByCategory} from "./utils/objectHelpers.ts";
+import type {ICountry} from "./types/countries";
+import type {ICity} from "./types/cities";
 
 const prompt = computed(() => `
 create only JSON, no text outside of JSON format, of 24 items in total.
@@ -57,8 +59,10 @@ const args = computed<{country: ICountry | null, city: ICity | null, prompt: str
 
 onMounted(async () => await generalStore.loadCountries())
 watch( () => selectedCountry.value, async () => {
-    if ("id" in selectedCountryObj.value) {
-        await generalStore.loadCities(selectedCountryObj.value.id)
+    if (selectedCountryObj.value !== null) {
+        if ("id" in selectedCountryObj.value) {
+            await generalStore.loadCities(selectedCountryObj.value.id)
+        }
     }
 })
 

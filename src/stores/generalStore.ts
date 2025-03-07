@@ -1,18 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import {getCities, getCountries} from '../services/externalApi.ts';
+import type {ICountry} from "../types/countries";
+import type {ICity} from "../types/cities";
 
-export interface ICountry {
-    id: number,
-    code: string,
-    name: string,
-}
-
-export interface ICity {
-    id: number,
-    name: string,
-    country_id: number,
-}
 export const useGeneralStore = defineStore('generalStore', () => {
     const countries = ref<ICountry[]>([]);
     const cities = ref<ICity[]>([]);

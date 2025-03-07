@@ -18,7 +18,7 @@
 <!--            TODO - rewrite to more abstract -->
             <option
                 v-for="option in options"
-                :key="option.code"
+                :key="option.name"
                 :value="option.name"
             >
                 {{ option.name }}
@@ -29,15 +29,16 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import type {ICountry} from "../types/countries";
+import type {ICity} from "../types/cities";
 
-// Define props for the component
-const props = defineProps({
+defineProps({
     label: {
         type: String,
         default: 'Select an option',
     },
     options: {
-        type: Array as () => Array<{ id: number, name: string, code: string }>,
+        type: Array as () => Array<ICountry | ICity>,
         required: true,
     },
     defaultOptionLabel: {
@@ -54,16 +55,13 @@ const props = defineProps({
     },
 });
 
-// Reactive variable to hold the selected value
 const selectedValue = ref<any>(null);
 
-// Emit event when value changes
 const emit = defineEmits(['update:modelValue']);
 const handleChange = () => {
     emit('update:modelValue', selectedValue.value);
 };
 
-// Watch the selected value (Optional: could be useful for custom logic)
 watch(selectedValue, (newValue) => {
     console.log("Selected value changed to: ", newValue);
 });

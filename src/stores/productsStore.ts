@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getProducts } from '../services/externalApi.ts';
-import type {ICity, ICountry} from "./generalStore.ts";
+import type {ICountry} from "../types/countries";
+import type {ICity} from "../types/cities";
 
 export const useProductsStore = defineStore('productsStore', () => {
     const products = ref<Product[] | null>(null);

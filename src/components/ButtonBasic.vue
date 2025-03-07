@@ -1,7 +1,6 @@
 <template>
     <button
             :class="buttonClass"
-            :type="type"
             :disabled="disabled"
             @click="handleClick"
     >
@@ -15,10 +14,6 @@ defineProps({
         type: String,
         default: 'Click Me',
     },
-    type: {
-        type: String,
-        default: 'button',
-    },
     buttonClass: {
         type: String,
         default: 'btn-primary',
@@ -29,7 +24,6 @@ defineProps({
     },
 });
 
-// Emit click event to parent
 const emit = defineEmits(['click']);
 const handleClick = () => {
     emit('click');
