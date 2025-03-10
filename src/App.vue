@@ -68,6 +68,8 @@ watch( () => selectedCountry.value, async () => {
 </script>
 
 <template>
+    <InfoPopup/>
+
     <div>
         <h1>Costly</h1>
         <p>Search most commonly bought groceries and its prices in your location or location you want to visit</p>
