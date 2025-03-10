@@ -3,7 +3,8 @@ import ButtonBasic from "./components/ButtonBasic.vue";
 import SelectInput from "./components/SelectInput.vue";
 import TableDisplay from "./components/TableDisplay.vue";
 
-import {LastDataset, useProductsStore} from './stores/productsStore.ts';
+import {useProductsStore} from './stores/productsStore.ts';
+import type { LastDataset } from "./stores/productsStore.ts";
 import {computed, onMounted, ref, watch} from "vue";
 import {useGeneralStore} from "./stores/generalStore.ts";
 import {groupProductsByCategory} from "./utils/objectHelpers.ts";
@@ -43,6 +44,10 @@ watch( () => selectedCountry.value, async () => {
         }
     }
 })
+
+function login () {
+    console.log('login')
+}
 </script>
 
 <template>
@@ -52,6 +57,7 @@ watch( () => selectedCountry.value, async () => {
         <h1>Costly</h1>
         <p>Search most commonly bought groceries and its prices in your location or location you want to visit</p>
 
+        <button @click="login">login</button>
         <div class="wrapper-control">
             <div class="wrapper-control__inputs">
                 <SelectInput
