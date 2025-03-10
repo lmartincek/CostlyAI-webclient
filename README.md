@@ -34,12 +34,9 @@ npm run build
 ```
 
 ## ToDo / Work in Progress
-Here’s a list of things I’m currently working on or planning to improve:
 - [ ] Cleanup frontend (replace sass with vanilla css, separate into smaller chunks)
-- [ ] Add typing option to select inputs with suggestion set
-- [ ] Expand dataset to include more cities and regions
-- [ ] Add currencies
-- [ ] Add currency conversion for international users
-- [ ] Add more categories (e.g., transportation, entertainment)
 - [ ] Show from what date is data being shown, if it's fresh let the user know about it
 - [ ] Add loader while calling chat completion
+- [ ] Add typing option to select inputs with suggestion set
+- [ ] Add register/login
+- [ ] Add customized data set option for auth user

@@ -1,9 +1,4 @@
-// TODO - this is the same as in backend folder, how to unite it
-enum ProductCategory {
-    GROCERIES = "groceries",
-    SERVICES = "services",
-    OTHERS = "others",
-}
+import {ProductCategory} from "../constants/products.ts";
 
 type ProductCategoryType = ProductCategory.GROCERIES | ProductCategory.SERVICES | ProductCategory.OTHERS
 interface ProductAIResponse {
@@ -12,10 +7,10 @@ interface ProductAIResponse {
     category: ProductCategoryType,
 }
 
-interface Product extends ProductAIResponse {
+export interface Product extends ProductAIResponse {
     id: number,
     country_id: number,
     city_id: number | null
 }
 
-type ProductGroups = Record<ProductCategoryType, Product[]>;
+export type ProductGroups = Record<ProductCategoryType, Product[]>;

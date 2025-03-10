@@ -6,36 +6,18 @@ import TableDisplay from "./components/TableDisplay.vue";
 import { useProductsStore } from './stores/productsStore.ts';
 import {computed, onMounted, ref, watch} from "vue";
 import {useGeneralStore} from "./stores/generalStore.ts";
-import {fixAndParseJSON, groupProductsByCategory} from "./utils/objectHelpers.ts";
+import {groupProductsByCategory} from "./utils/objectHelpers.ts";
 import type {ICountry} from "./types/countries";
 import type {ICity} from "./types/cities";
 
-const prompt = computed(() => `
-create only JSON, no text outside of JSON format, of 24 items in total.
-10 commonly bought groceries with units (pc, kg, L),
-8 commonly used services, meal in restaurant, pint of beer, gym membership
-6 others such as transportation (with km range) or other available data
-in ${selectedCity.value ? selectedCountry.value + ', ' + selectedCity.value : selectedCountry.value}.
-JSON format should be
-[
-    {
-        "name": string in english,
-        "price": number in local currency,
-        "category": "groceries" | "services" | "others",
-    }
-]
-`)
+import StreamDisplay from "./components/StreamDisplay.vue";
+import InfoPopup from "./components/InfoPopup.vue";
 
 const productsStore = useProductsStore();
 const productsByCategory = computed(() => {
     if (productsStore.products) return groupProductsByCategory(productsStore.products)
     return []
 })
-
-function logGroups() {
-    console.log(productsByCategory, 'hmm')
-}
-// const { products, error, loading, loadProducts } = useProductsStore(); LOSE REACTIVITY
 
 const generalStore = useGeneralStore();
 
@@ -49,14 +31,6 @@ const selectedCityObj = computed<ICity | null>(() => {
     return generalStore.cities.find(country => country.name === selectedCity.value) || null
 })
 
-const args = computed<{country: ICountry | null, city: ICity | null, prompt: string}>(() => {
-    return {
-        country: selectedCountryObj.value,
-        city: selectedCityObj.value,
-        prompt: prompt.value
-    }
-})
-
 onMounted(async () => await generalStore.loadCountries())
 watch( () => selectedCountry.value, async () => {
     if (selectedCountryObj.value !== null) {
@@ -65,43 +39,11 @@ watch( () => selectedCountry.value, async () => {
         }
     }
 })
-
-const textInput = ref<string>('')
-const streamText = ref<string>('')
-
-//TODO rewrite later
-//@ts-ignore
-const parsedStreamText = computed<string>(() => streamText.value || "Ask me something and I will respond with stream")
-const sendChatStreamMessage = async (message: string) => {
-    if (streamText.value) streamText.value = ""
-
-    const response = await fetch('http://localhost:3000/api/chatStream', {
-        method: 'POST',
-        body: JSON.stringify({ message }),
-        headers: { 'Content-Type': 'application/json'}
-    })
-
-    if (!response.body) {
-        streamText.value = 'Error: not possible to get the streamed response'
-        console.error('No response body');
-        return;
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        //@ts-ignore
-        streamText.value += fixAndParseJSON(decoder.decode(value, { stream: true }))?.data?.choices?.[0]?.delta?.content || "";
-        console.log(`Received chunk: ${streamText.value}`);
-    }
-};
 </script>
 
 <template>
+    <InfoPopup/>
+
     <div>
         <h1>Costly</h1>
         <p>Search most commonly bought groceries and its prices in your location or location you want to visit</p>
@@ -122,25 +64,13 @@ const sendChatStreamMessage = async (message: string) => {
             </div>
             <div class="wrapper-control__button">
                 <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
-                             @click="productsStore.loadProducts(args)">Search</ButtonBasic>
+                             @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search</ButtonBasic>
             </div>
         </div>
 
-        <div class="wrapper-stream">
-            <div class="wrapper-stream__controls">
-                <input placeholder="Ask a question to get a streamed response"
-                       @keydown.enter="sendChatStreamMessage(textInput)"
-                       v-model="textInput"/>
-                <ButtonBasic :disabled="!textInput"
-                             @click="sendChatStreamMessage(textInput)">Ask</ButtonBasic>
-            </div>
+<!--        <StreamDisplay/>-->
 
-            <div class="wrapper-stream__output">
-                <p>{{parsedStreamText}}</p>
-            </div>
-        </div>
-
-        <div class="wrapper-data">
+        <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
             <div v-if="productsStore.loading" class="loader">
                 Data is about to be shown, <b>please wait...</b>
             </div>
@@ -154,11 +84,11 @@ const sendChatStreamMessage = async (message: string) => {
                         </b>.
                     </p>
                     <div class="wrapper-data__table">
-                        <TableDisplay :data="productsStore.products"/>
+                        <template v-for="(products, category) in productsByCategory">
+                            <TableDisplay :data="products" :category="category"/>
+                        </template>
                     </div>
             </template>
-
-            <button @click="logGroups">log groups</button>
         </div>
     </div>
 </template>
@@ -180,13 +110,19 @@ const sendChatStreamMessage = async (message: string) => {
         margin: 1rem 0 2rem;
         display: flex;
         justify-content: space-between;
+        flex-direction: column;
+
+        @media (min-width: 920px) {
+            flex-direction: row;
+        }
     }
 }
 
 .wrapper-control {
     display: flex;
     justify-content: space-between;
-    margin: 3rem 0 1rem;
+    margin: 3rem auto 1rem;
+    max-width: 650px;
 
     &__inputs {
         display: flex;
@@ -207,33 +143,6 @@ const sendChatStreamMessage = async (message: string) => {
         :deep(button) {
             width: 160px;
         }
-    }
-}
-
-.wrapper-stream {
-    width: 100%;
-    background: black;
-    border-radius: 1rem;
-    margin: 3rem 0 1rem;
-
-    &__controls {
-        display: flex;
-        padding: 1rem 1rem 0 1rem;
-
-        input {
-            border-radius: .5rem;
-            padding: 0.5rem 1rem;
-            margin-right: 1rem;
-            background: #ffffff;
-            color: #000000;
-            width: 100%;
-        }
-    }
-
-    &__output {
-        text-align: left;
-        display: flex;
-        padding: 0 1.25rem 0;
     }
 }
 </style>

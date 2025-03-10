@@ -1,4 +1,6 @@
 import axios from 'axios';
+import type {ICountry} from "../types/countries";
+import type {ICity} from "../types/cities";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -7,12 +9,12 @@ const apiClient = axios.create({
     },
 });
 
-export const sendChatMessage = async (countryId: number | undefined, cityId: number | undefined, message: string) => {
+export const sendChatMessage = async (country: ICountry, city: ICity | null) => {
     try {
-        const response = await apiClient.post('/chat', { message } );
+        const response = await apiClient.post('/chat', { countryName: country.name, cityName: country.name  } );
 
         if (response.data && response.status === 200) {
-            await apiClient.post('/products', { countryId, cityId, products: response.data })
+            await apiClient.post('/products', { countryId: country.id, cityId: city?.id, products: response.data })
         }
 
         return response.data;
@@ -22,15 +24,15 @@ export const sendChatMessage = async (countryId: number | undefined, cityId: num
     }
 };
 
-export const getProducts = async (countryId: number, cityId: number | undefined, message: string) => {
-    const url = `/products?countryId=${countryId}${cityId ? `&cityId=${cityId}` : ''}`
+export const getProducts = async (country: ICountry, city: ICity | null) => {
+    const url = `/products?countryId=${country.id}${city?.id ? `&cityId=${city.id}` : ''}`
     try {
         const response = await apiClient.get(url);
         return response.data;
     } catch (error) {
         // @ts-ignore
         if (error.response.status === 404) {
-            return await sendChatMessage(countryId, cityId, message)
+            return await sendChatMessage(country, city)
         }
 
         console.error('Error fetching products from DB:', error);
