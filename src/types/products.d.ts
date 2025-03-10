@@ -10,7 +10,8 @@ interface ProductAIResponse {
 export interface Product extends ProductAIResponse {
     id: number,
     country_id: number,
-    city_id: number | null
+    city_id: number | null,
+    created_at: string,
 }
 
 export type ProductGroups = Record<ProductCategoryType, Product[]>;

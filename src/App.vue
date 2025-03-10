@@ -3,14 +3,14 @@ import ButtonBasic from "./components/ButtonBasic.vue";
 import SelectInput from "./components/SelectInput.vue";
 import TableDisplay from "./components/TableDisplay.vue";
 
-import { useProductsStore } from './stores/productsStore.ts';
+import {LastDataset, useProductsStore} from './stores/productsStore.ts';
 import {computed, onMounted, ref, watch} from "vue";
 import {useGeneralStore} from "./stores/generalStore.ts";
 import {groupProductsByCategory} from "./utils/objectHelpers.ts";
 import type {ICountry} from "./types/countries";
 import type {ICity} from "./types/cities";
 
-import StreamDisplay from "./components/StreamDisplay.vue";
+// import StreamDisplay from "./components/StreamDisplay.vue";
 import InfoPopup from "./components/InfoPopup.vue";
 
 const productsStore = useProductsStore();
@@ -29,6 +29,10 @@ const selectedCountryObj = computed<ICountry | null>(() => {
 })
 const selectedCityObj = computed<ICity | null>(() => {
     return generalStore.cities.find(country => country.name === selectedCity.value) || null
+})
+
+const lastDataset = computed<LastDataset>(() => {
+    return productsStore.lastDataset
 })
 
 onMounted(async () => await generalStore.loadCountries())
@@ -76,18 +80,22 @@ watch( () => selectedCountry.value, async () => {
             </div>
             <div v-if="productsStore.error" class="error">{{ productsStore.error }}</div>
             <template v-if="productsStore.products">
-                    <p v-if="productsStore.lastCountry">
-                        Current avg prices in
-                        <b>{{productsStore.lastCity
-                        ? `${productsStore.lastCity}, ${productsStore.lastCountry}`
-                        : productsStore.lastCountry}}
-                        </b>.
-                    </p>
-                    <div class="wrapper-data__table">
-                        <template v-for="(products, category) in productsByCategory">
-                            <TableDisplay :data="products" :category="category"/>
-                        </template>
-                    </div>
+                <p v-if="lastDataset.country">
+                    Current avg. prices in
+                    <b>{{lastDataset.city
+                    ? `${lastDataset.city.name}, ${lastDataset.country.name}`
+                    : lastDataset.country.name}}
+                    </b>.
+                </p>
+                <p v-if="lastDataset.date">
+                    This dataset is from: {{lastDataset.date}}. If you wish fresh one, or customized one, please <button @click="login">login</button>.
+                </p>
+
+                <div class="wrapper-data__table">
+                    <template v-for="(products, category) in productsByCategory">
+                        <TableDisplay :data="products" :category="category"/>
+                    </template>
+                </div>
             </template>
         </div>
     </div>
