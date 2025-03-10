@@ -65,40 +65,6 @@ watch( () => selectedCountry.value, async () => {
         }
     }
 })
-
-const textInput = ref<string>('')
-const streamText = ref<string>('')
-
-//TODO rewrite later
-//@ts-ignore
-const parsedStreamText = computed<string>(() => streamText.value || "Ask me something and I will respond with stream")
-const sendChatStreamMessage = async (message: string) => {
-    if (streamText.value) streamText.value = ""
-
-    const response = await fetch('http://localhost:3000/api/chatStream', {
-        method: 'POST',
-        body: JSON.stringify({ message }),
-        headers: { 'Content-Type': 'application/json'}
-    })
-
-    if (!response.body) {
-        streamText.value = 'Error: not possible to get the streamed response'
-        console.error('No response body');
-        return;
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        //@ts-ignore
-        streamText.value += fixAndParseJSON(decoder.decode(value, { stream: true }))?.data?.choices?.[0]?.delta?.content || "";
-        console.log(`Received chunk: ${streamText.value}`);
-    }
-};
 </script>
 
 <template>
@@ -126,21 +92,9 @@ const sendChatStreamMessage = async (message: string) => {
             </div>
         </div>
 
-        <div class="wrapper-stream">
-            <div class="wrapper-stream__controls">
-                <input placeholder="Ask a question to get a streamed response"
-                       @keydown.enter="sendChatStreamMessage(textInput)"
-                       v-model="textInput"/>
-                <ButtonBasic :disabled="!textInput"
-                             @click="sendChatStreamMessage(textInput)">Ask</ButtonBasic>
-            </div>
+<!--        <StreamDisplay/>-->
 
-            <div class="wrapper-stream__output">
-                <p>{{parsedStreamText}}</p>
-            </div>
-        </div>
-
-        <div class="wrapper-data">
+        <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
             <div v-if="productsStore.loading" class="loader">
                 Data is about to be shown, <b>please wait...</b>
             </div>
@@ -207,33 +161,6 @@ const sendChatStreamMessage = async (message: string) => {
         :deep(button) {
             width: 160px;
         }
-    }
-}
-
-.wrapper-stream {
-    width: 100%;
-    background: black;
-    border-radius: 1rem;
-    margin: 3rem 0 1rem;
-
-    &__controls {
-        display: flex;
-        padding: 1rem 1rem 0 1rem;
-
-        input {
-            border-radius: .5rem;
-            padding: 0.5rem 1rem;
-            margin-right: 1rem;
-            background: #ffffff;
-            color: #000000;
-            width: 100%;
-        }
-    }
-
-    &__output {
-        text-align: left;
-        display: flex;
-        padding: 0 1.25rem 0;
     }
 }
 </style>
