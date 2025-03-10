@@ -1,3 +1,5 @@
+import type {Product, ProductGroups} from "../types/products";
+
 export const  fixAndParseJSON = (str: string): {} | void => {
     const [key, value] = str.split(/:(.+)/);
     if (!key || !value) throw new Error("Invalid input format");
@@ -12,10 +14,5 @@ export const groupProductsByCategory = (products: Product[]): ProductGroups => {
         }
         acc[product.category].push(product);
         return acc;
-    }, {
-        // TODO not working..
-        [ProductCategory.GROCERIES]: [] as Product[],
-        [ProductCategory.SERVICES]: [] as Product[],
-        [ProductCategory.OTHERS]: [] as Product[]
-    });
+    }, {} as ProductGroups);
 };

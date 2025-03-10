@@ -6,7 +6,7 @@ import TableDisplay from "./components/TableDisplay.vue";
 import { useProductsStore } from './stores/productsStore.ts';
 import {computed, onMounted, ref, watch} from "vue";
 import {useGeneralStore} from "./stores/generalStore.ts";
-import {fixAndParseJSON, groupProductsByCategory} from "./utils/objectHelpers.ts";
+import {groupProductsByCategory} from "./utils/objectHelpers.ts";
 import type {ICountry} from "./types/countries";
 import type {ICity} from "./types/cities";
 
@@ -18,11 +18,6 @@ const productsByCategory = computed(() => {
     if (productsStore.products) return groupProductsByCategory(productsStore.products)
     return []
 })
-
-function logGroups() {
-    console.log(productsByCategory, 'hmm')
-}
-// const { products, error, loading, loadProducts } = useProductsStore(); LOSE REACTIVITY
 
 const generalStore = useGeneralStore();
 
@@ -89,11 +84,11 @@ watch( () => selectedCountry.value, async () => {
                         </b>.
                     </p>
                     <div class="wrapper-data__table">
-                        <TableDisplay :data="productsStore.products"/>
+                        <template v-for="(products, category) in productsByCategory">
+                            <TableDisplay :data="products" :category="category"/>
+                        </template>
                     </div>
             </template>
-
-            <button @click="logGroups">log groups</button>
         </div>
     </div>
 </template>
@@ -115,13 +110,19 @@ watch( () => selectedCountry.value, async () => {
         margin: 1rem 0 2rem;
         display: flex;
         justify-content: space-between;
+        flex-direction: column;
+
+        @media (min-width: 920px) {
+            flex-direction: row;
+        }
     }
 }
 
 .wrapper-control {
     display: flex;
     justify-content: space-between;
-    margin: 3rem 0 1rem;
+    margin: 3rem auto 1rem;
+    max-width: 650px;
 
     &__inputs {
         display: flex;
