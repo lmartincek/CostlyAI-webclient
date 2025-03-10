@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { getProducts } from '../services/externalApi.ts';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
+import type {Product} from "../types/products";
 
 export const useProductsStore = defineStore('productsStore', () => {
     const products = ref<Product[] | null>(null);
@@ -12,12 +13,12 @@ export const useProductsStore = defineStore('productsStore', () => {
     const lastCountry = ref<string | null>(null);
     const lastCity = ref<string | null>(null);
 
-    const loadProducts = async ({country, city, prompt}: {country: ICountry | null, city: ICity | null, prompt: string})  => {
+    const loadProducts = async (country: ICountry | null, city: ICity | null)  => {
         if (!country) return;
 
         loading.value = true;
         try {
-            products.value = await getProducts(country.id, city?.id, prompt);
+            products.value = await getProducts(country, city);
             lastCountry.value = country.name;
             lastCity.value = city?.name || null;
         } catch (err) {

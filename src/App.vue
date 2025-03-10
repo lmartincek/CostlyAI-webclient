@@ -10,21 +10,8 @@ import {fixAndParseJSON, groupProductsByCategory} from "./utils/objectHelpers.ts
 import type {ICountry} from "./types/countries";
 import type {ICity} from "./types/cities";
 
-const prompt = computed(() => `
-create only JSON, no text outside of JSON format, of 24 items in total.
-10 commonly bought groceries with units (pc, kg, L),
-8 commonly used services, meal in restaurant, pint of beer, gym membership
-6 others such as transportation (with km range) or other available data
-in ${selectedCity.value ? selectedCountry.value + ', ' + selectedCity.value : selectedCountry.value}.
-JSON format should be
-[
-    {
-        "name": string in english,
-        "price": number in local currency,
-        "category": "groceries" | "services" | "others",
-    }
-]
-`)
+import StreamDisplay from "./components/StreamDisplay.vue";
+import InfoPopup from "./components/InfoPopup.vue";
 
 const productsStore = useProductsStore();
 const productsByCategory = computed(() => {
@@ -47,14 +34,6 @@ const selectedCountryObj = computed<ICountry | null>(() => {
 })
 const selectedCityObj = computed<ICity | null>(() => {
     return generalStore.cities.find(country => country.name === selectedCity.value) || null
-})
-
-const args = computed<{country: ICountry | null, city: ICity | null, prompt: string}>(() => {
-    return {
-        country: selectedCountryObj.value,
-        city: selectedCityObj.value,
-        prompt: prompt.value
-    }
 })
 
 onMounted(async () => await generalStore.loadCountries())
@@ -90,7 +69,7 @@ watch( () => selectedCountry.value, async () => {
             </div>
             <div class="wrapper-control__button">
                 <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
-                             @click="productsStore.loadProducts(args)">Search</ButtonBasic>
+                             @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search</ButtonBasic>
             </div>
         </div>
 
