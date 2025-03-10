@@ -16,7 +16,7 @@ async function manageInitialShow(): Promise<void> {
     show.value = true
 
     await nextTick()
-    popup.value.focus()
+    if (popup.value) popup.value.focus()
 }
 
 const popup = useTemplateRef('popup')
