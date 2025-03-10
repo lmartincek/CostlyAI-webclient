@@ -94,6 +94,8 @@ watch( () => selectedCountry.value, async () => {
 </template>
 
 <style scoped lang="scss">
+@import '/src/assets/styles/main.scss';
+
 .error {
     color: red;
 }
@@ -112,7 +114,7 @@ watch( () => selectedCountry.value, async () => {
         justify-content: space-between;
         flex-direction: column;
 
-        @media (min-width: 920px) {
+        @include respond-lg {
             flex-direction: row;
         }
     }
