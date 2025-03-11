@@ -4,83 +4,68 @@ defineProps(['data', 'category'])
 
 <template>
     <div class="table-wrapper">
-        <h2>{{category}}</h2>
-
-        <table v-if="data" border="1">
-            <thead>
-            <tr>
-                <th>Item</th>
-                <th>Price</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <tr v-for="(value, key) in data" :key="key">
-                <td>{{ value.name }}</td>
-                <td>{{ Number(value.price).toFixed(2) }} $</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <p v-else class="no-data">No data available</p>
+        <div class="table-wrapper__header">
+            {{category}}
+        </div>
+        <div class="table-wrapper__body">
+            <div class="row">
+                <span><b>Item</b></span>
+                <span><b>Price</b></span>
+            </div>
+            <div v-for="(value, key) in data" :key="key" class="row">
+                <span>{{ value.name }}</span>
+                <span><b>${{ value.price.toFixed(2) }} USD</b></span>
+            </div>
+        </div>
     </div>
 </template>
 
 <style lang="scss">
 .table-wrapper {
     color: #000;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    margin: 1rem 0 1.5rem;
+    border-radius: 1rem;
 
-    h2 {
-        margin-bottom: 20px;
-        color: #333;
+    &__header {
+        background: $primary-gradient;
+        color: $white-color;
+        font-size: 1.15rem;
+        font-weight: 500;
+        padding: 1rem 1.5rem;
+        text-align: left;
+        border-radius: 1rem 1rem 0 0;
+
+        &::first-letter {
+            text-transform: capitalize;
+        }
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
+    &__body {
+        color: $text-color;
 
-        th,
-        td {
-            padding: 12px 15px;
-            text-align: left;
-        }
+        .row {
+            margin: 1rem 1.5rem 0;
+            padding: 0 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid $border-color;
 
-        th {
-            background-color: #007bff;
-            color: #fff;
-            font-weight: bold;
-        }
+            &:last-of-type {
+                border-bottom: none;
+                margin-bottom: .5rem;
+            }
 
-        tbody {
-            tr {
-                border-bottom: 1px solid #dddddd;
+            &:first-of-type {
+                margin-top: 1.5rem;
+            }
 
-                &:nth-of-type(even) {
-                    background-color: #f9f9f9;
-                }
+            span {
 
-                &:last-of-type {
-                    border-bottom: 2px solid #007bff;
-                }
-
-                &:hover {
-                    background-color: #f1f1f1;
-                }
             }
         }
-    }
-
-    .no-data {
-        text-align: center;
-        color: #888;
-        font-style: italic;
-        margin-top: 20px;
     }
 }
 

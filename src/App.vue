@@ -13,6 +13,12 @@ import type {ICity} from "./types/cities";
 
 // import StreamDisplay from "./components/StreamDisplay.vue";
 import InfoPopup from "./components/InfoPopup.vue";
+import Nav from "./components/Nav.vue";
+import Layout from "./components/Layout.vue";
+import Footer from "./components/Footer.vue";
+import Signup from "./components/Signup.vue";
+import Spinner from "./components/Spinner.vue";
+import {useModalStore} from "./stores/modalsStore.ts";
 
 const productsStore = useProductsStore();
 const productsByCategory = computed(() => {
@@ -44,29 +50,25 @@ watch( () => selectedCountry.value, async () => {
         }
     }
 })
-
-function login () {
-    console.log('login')
-}
 </script>
 
 <template>
     <InfoPopup/>
+    <Signup/>
 
-    <div>
-        <h1>Costly</h1>
+    <Nav/>
+
+    <Layout>
+        <h1>CostlyAI</h1>
         <p>Search most commonly bought groceries and its prices in your location or location you want to visit</p>
 
-        <button @click="login">login</button>
         <div class="wrapper-control">
             <div class="wrapper-control__inputs">
                 <SelectInput
-                        label="Select a Country"
                         :options="generalStore.countries"
                         v-model="selectedCountry"
                 />
                 <SelectInput
-                        label="Select a City"
                         :options="generalStore.cities"
                         v-model="selectedCity"
                         :disabled="!selectedCountry"
@@ -74,16 +76,19 @@ function login () {
             </div>
             <div class="wrapper-control__button">
                 <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
-                             @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search</ButtonBasic>
+                             @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search Costs</ButtonBasic>
             </div>
         </div>
 
 <!--        <StreamDisplay/>-->
 
         <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
-            <div v-if="productsStore.loading" class="loader">
-                Data is about to be shown, <b>please wait...</b>
-            </div>
+            <template v-if="productsStore.loading">
+                <div class="loader">
+                    <Spinner/>
+                </div>
+                <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
+            </template>
             <div v-if="productsStore.error" class="error">{{ productsStore.error }}</div>
             <template v-if="productsStore.products">
                 <p v-if="lastDataset.country">
@@ -93,9 +98,10 @@ function login () {
                     : lastDataset.country.name}}
                     </b>.
                 </p>
-                <p v-if="lastDataset.date">
-                    This dataset is from: {{lastDataset.date}}. If you wish fresh one, or customized one, please <button @click="login">login</button>.
-                </p>
+                <div v-if="lastDataset.date && lastDataset.country" class="wrapper-data__info">
+                    <p>Data updated on: <b>{{lastDataset.date}}</b></p>
+                    <p @click="useModalStore().openModal">Sign up to create your own costs w/ fresh data</p>
+                </div>
 
                 <div class="wrapper-data__table">
                     <template v-for="(products, category) in productsByCategory">
@@ -104,10 +110,12 @@ function login () {
                 </div>
             </template>
         </div>
-    </div>
+    </Layout>
+
+    <Footer/>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '/src/assets/styles/main.scss';
 
 .error {
@@ -115,49 +123,71 @@ function login () {
 }
 
 .loader {
-    margin-top: 2rem;
+    margin: 4rem 0 1rem;
 }
 
 .wrapper-data {
-    border-top: 1px solid black;
-    padding-top: 1rem;
+    margin: 4rem 0;
 
     &__table {
-        margin: 1rem 0 2rem;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
+    }
 
-        @include respond-lg {
+    &__info {
+        display: flex;
+        text-align: left;
+        flex-direction: column;
+
+        @include respond-md {
             flex-direction: row;
+            justify-content: space-between;
+        }
+
+        p:nth-last-child(1) {
+            color: $primary-color;
+            cursor: pointer;
+
+            &:hover{
+                text-decoration: underline;
+            }
         }
     }
 }
 
 .wrapper-control {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    background: $white-color;
+    padding: 2rem 1rem 1.5rem;
     margin: 3rem auto 1rem;
     max-width: 650px;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0,0,0,10%);
 
     &__inputs {
         display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-direction: column;
 
-        .select-input {
-            max-width: 220px;
-
-            :deep(label) {
-                position: relative;
-                top: -5px;
-            }
+        @include respond-md() {
+            flex-direction: row;
         }
     }
 
     &__button {
-        display: flex;
+        margin: 0.75rem .5rem 0;
+        width: 100%;
 
-        :deep(button) {
-            width: 160px;
+        :nth-child(1) {
+            width: 100%;
+        }
+
+        @include respond-lg() {
+            margin: 1.5rem auto 0;
         }
     }
 }
