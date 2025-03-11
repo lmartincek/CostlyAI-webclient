@@ -51,7 +51,7 @@ defineProps(['data', 'category'])
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid lighten($placeholder-color, 20%);
+            border-bottom: 1px solid $border-color;
 
             &:last-of-type {
                 border-bottom: none;

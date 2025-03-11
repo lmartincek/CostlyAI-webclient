@@ -50,10 +50,6 @@ watch( () => selectedCountry.value, async () => {
         }
     }
 })
-
-function login () {
-    console.log('login')
-}
 </script>
 
 <template>
