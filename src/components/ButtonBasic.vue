@@ -4,18 +4,16 @@
             :disabled="disabled"
             @click="handleClick"
     >
-        <slot>{{ label }}</slot>
+        <slot/>
     </button>
 </template>
 
 <script setup lang="ts">
+import type {PropType} from "vue";
+
 defineProps({
-    label: {
-        type: String,
-        default: 'Click Me',
-    },
     buttonClass: {
-        type: String,
+        type: String as PropType<'btn-primary' | 'btn-white'>,
         default: 'btn-primary',
     },
     disabled: {
@@ -30,27 +28,27 @@ const handleClick = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: .8rem 1.6rem;
     cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    border-radius: .5rem;
+
+    &.btn-white {
+        background: $white-color;
+        color: $text-color;
+        border: 1px solid $placeholder-color;
+    }
+
+    &.btn-primary {
+        background: $primary-gradient;
+        color: $white-color;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
 }
 
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background-color: #0056b3;
-}
 </style>

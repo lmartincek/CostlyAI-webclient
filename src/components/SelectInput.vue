@@ -1,6 +1,6 @@
 <template>
     <div class="select-input">
-        <label :for="id" class="select-label">{{ label }}</label>
+        <label :for="id" class="select-label" v-if="label">{{ label }}</label>
         <select
             :id="id"
             v-model="selectedValue"
@@ -35,7 +35,6 @@ import type {ICity} from "../types/cities";
 defineProps({
     label: {
         type: String,
-        default: 'Select an option',
     },
     options: {
         type: Array as () => Array<ICountry | ICity>,
@@ -67,13 +66,31 @@ watch(selectedValue, (newValue) => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 select {
-    margin: 0 10px;
-    padding: 10px;
-    font-size: 16px;
+    padding: .75rem;
+    font-size: 1rem;
     cursor: pointer;
     border-radius: 5px;
+    border-color: $border-color;
+    background: $white-color;
+    color: $text-color;
+}
+
+.select-input {
+    display: flex;
+    margin: 0.25rem;
+    justify-content: center;
+    width: 100%;
+
+    //@include respond-lg() {
+    //    margin: 0 0.25rem;
+    //}
+
+    :deep(label) {
+        position: relative;
+        top: -5px;
+    }
 }
 
 option:disabled {
