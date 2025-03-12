@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
+import type {Credentials, Providers} from "../types/auth";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BASE_API_URL,
@@ -58,6 +59,51 @@ export const getCities = async (countryId: number) => {
         return response.data;
     } catch (error) {
         console.error('Error fetching cities from DB:', error);
+        throw error;
+    }
+};
+
+export const loginUserWithCredentials = async (email: string, password: string) => {
+    try {
+        const response = await apiClient.post('/loginWithCredentials', { email, password } as Credentials );
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in with credentials:', error);
+        throw error;
+    }
+};
+
+export const loginUserWithProvider = async (provider: Providers) => {
+    console.log({provider})
+    try {
+        const response = await apiClient.post('/loginWithProvider', { provider } );
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in with provider:', error);
+        throw error;
+    }
+};
+
+export const registerUser = async (email: string, password: string) => {
+    try {
+        const response = await apiClient.post('/loginWithProvider', { email, password } as Credentials );
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error registering in:', error);
+        throw error;
+    }
+};
+
+export const logoutUser = async () => {
+    try {
+        const response = await apiClient.post('/logout');
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error logging out:', error);
         throw error;
     }
 };

@@ -27,9 +27,12 @@ export const useProductsStore = defineStore('productsStore', () => {
 
     const lastDataset = ref<LastDataset>({} as LastDataset)
 
+    const recentlySearchedProducts = ref<Product[] | null>(null)
+
     const loadProducts = async (country: ICountry | null, city: ICity | null)  => {
         if (!country) return;
 
+        //TODO - if recentlySearched have it - simply return it
         loading.value = true;
         try {
             products.value = await getProducts(country, city);
@@ -58,5 +61,14 @@ export const useProductsStore = defineStore('productsStore', () => {
         }
     };
 
-    return { products, error, loading, lastDataset, loadProducts };
+    //TODO - handle multiple errors
+    const loadRecentlySearchedProducts = async (limit: number) => {
+        try {
+            recentlySearchedProducts.value = await getProducts(null, null, limit);
+        } catch (err) {
+            console.error(`Failed to fetch recently searched products: ${err}`)
+        }
+    }
+
+    return { products, error, loading, lastDataset, recentlySearchedProducts, loadProducts, loadRecentlySearchedProducts };
 });

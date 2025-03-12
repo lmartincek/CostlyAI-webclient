@@ -79,17 +79,22 @@ select {
 
 .select-input {
     display: flex;
-    margin: 0.25rem;
+    margin: 0.25rem 0;
     justify-content: center;
     width: 100%;
 
-    //@include respond-lg() {
+    //TODO - problem with mixin in other components
+    //@include respond-md() {
     //    margin: 0 0.25rem;
     //}
 
+    @media (min-width: $breakpoint-md) {
+        margin: 0 0.25rem;
+    }
+
     :deep(label) {
-        position: relative;
-        top: -5px;
+    position: relative;
+    top: -5px;
     }
 }
 
