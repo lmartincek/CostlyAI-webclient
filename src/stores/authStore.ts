@@ -31,6 +31,7 @@ export const useAuthStore = defineStore('authStore', () =>{
             }
 
             if (provider) {
+                // @ts-ignore
                 user.value = await loginUserWithProvider(provider)
                 return
             }

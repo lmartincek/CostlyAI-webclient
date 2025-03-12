@@ -13,6 +13,7 @@ const generalStore = useGeneralStore()
 const allCountries = computed<ICountry[]>(() => generalStore.countries)
 const allCities = computed<ICity[]>(() => generalStore.cities)
 
+//@ts-ignore
 const recentlySearchedPlaces = computed<{country: ICountry, city: ICountry | null}[]>(() => {
     const products = productStore.recentlySearchedProducts as Product[]
 
@@ -65,7 +66,7 @@ onMounted(async () => {
               <Card :img-left="`/src/assets/icons/flags/${place.country.code}.svg`"
                     class="card"
                     :text="place.city ? place.city.name : ''"
-                    @click="productStore.loadProducts(place.country, place.city)">
+                    @click="productStore.loadProducts(place.country, null)">
                   <template v-slot:headline>{{place.country.name}}</template>
               </Card>
             </template>
