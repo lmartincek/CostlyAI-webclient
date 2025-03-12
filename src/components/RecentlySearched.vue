@@ -35,30 +35,20 @@ const recentlySearchedPlaces = computed<{country: ICountry, city: ICountry | nul
         const country = allCountries.value.find(c => c.id === set.countryId);
         const city = set.cityId ? allCities.value.find(c => c.id === set.cityId) : null;
 
+        //todo - not returning the city properly because i need to fetch cities first
         return {country, city}
-        // return {
-        //     country: {
-        //         id: country.id,
-        //         name: country.name,
-        //         code: country.code,
-        //     },
-        //     city: city ? {
-        //         id: city.id,
-        //         name: city.name,
-        //         country_id: country.id
-        //     } : null,
-        // };
     })
 })
 
 
+//todo - move to watch - will watch countries when it's done it will fetch recently searched products
 onMounted(async () => {
     await productStore.loadRecentlySearchedProducts(80)
 })
 </script>
 
 <template>
-    <div class="recently-searched__wrapper">
+    <div class="recently-searched__wrapper" v-show="recentlySearchedPlaces">
         <span>Recently Searched</span>
 
         <div class="cards">

@@ -66,14 +66,22 @@ watch( () => selectedCountry.value, async () => {
         <div class="wrapper-control">
             <div class="wrapper-control__inputs">
                 <SelectInput
-                        :options="generalStore.countries"
-                        v-model="selectedCountry"
-                />
+                    default-option-label="Select Country"
+                    :options="generalStore.countries"
+                    v-model="selectedCountry"
+                >
+                    <template v-slot:input-icon><img src="/src/assets/icons/country.svg" width="24" height="24" alt="country icon"></template>
+                </SelectInput>
+
+<!--                TODO - disabled click - error label that needs to select country first-->
                 <SelectInput
-                        :options="generalStore.cities"
-                        v-model="selectedCity"
-                        :disabled="!selectedCountry"
-                />
+                    default-option-label="Select City"
+                    :options="generalStore.cities"
+                    v-model="selectedCity"
+                    :disabled="!selectedCountry"
+                >
+                    <template v-slot:input-icon><img src="/src/assets/icons/city.svg" width="20" height="20" alt="city icon"></template>
+                </SelectInput>
             </div>
             <div class="wrapper-control__button">
                 <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
