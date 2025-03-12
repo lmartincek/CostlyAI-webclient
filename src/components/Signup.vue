@@ -2,6 +2,17 @@
 import FullscreenModal from "./FullscreenModal.vue";
 import ButtonBasic from "./ButtonBasic.vue";
 import TextInput from "./TextInput.vue";
+import Checkbox from "./Checkbox.vue";
+import {useAuthStore} from "../stores/authStore.ts";
+import {ref} from "vue";
+
+const auth = useAuthStore()
+
+const email = ref<string>('')
+const password = ref<string>('')
+
+//TODO enum
+const step = ref<number>(1)
 </script>
 
 <template>
@@ -13,32 +24,40 @@ import TextInput from "./TextInput.vue";
           </div>
           <div class="signup-wrapper__body">
               <div class="type">
-                  <div class="sign-in">Sign In</div>
-                  <div class="sign-up">Sign Up</div>
+                  <div :class="['sign-in', {active: step === 1}]" @click="step = 1">Sign In</div>
+                  <div :class="['sign-up', {active: step === 2}]" @click="step = 2">Sign Up</div>
               </div>
 <!--              TODO - add form-->
               <div class="credentials">
                   <div class="input-wrapper">
                     <label for="">Email Address</label>
                     <TextInput class="input-wrapper__input"
+                               v-model="email"
                                placeholder="your@email.com"/>
                   </div>
                   <div class="input-wrapper">
                       <label for="">Password</label>
                       <TextInput class="input-wrapper__input"
+                                 v-model="password"
                                  type="password"/>
                   </div>
 
                   <div class="actions">
                       <div class="actions__checkbox">
-                        <input type="checkbox">Remember me
+                          <Checkbox>Remember me</Checkbox>
                       </div>
                       <div class="actions__forgot-password">
                         <span>Forgot password?</span>
                       </div>
                   </div>
 
-                  <ButtonBasic class="credentials-btn">Sign In</ButtonBasic>
+
+                  <ButtonBasic class="credentials-btn"
+                               v-show="step === 1"
+                               @click="auth.login(email, password, null)">Sign In</ButtonBasic>
+                  <ButtonBasic class="credentials-btn"
+                               v-show="step === 2"
+                               @click="auth.register(email, password)">Sign Up</ButtonBasic>
 
                   <div class="breakthrough">
                       <hr>
@@ -47,9 +66,9 @@ import TextInput from "./TextInput.vue";
 
                   <div class="socials">
                       <ButtonBasic class="socials__btn"
-                                   button-class="btn-white">Google</ButtonBasic>
+                                   button-class="btn-white" @click="auth.login(null,null,'google')">Google</ButtonBasic>
                       <ButtonBasic class="socials__btn"
-                                   button-class="btn-white">Apple</ButtonBasic>
+                                   button-class="btn-white" @click="auth.login(null,null, 'apple')">Apple</ButtonBasic>
                   </div>
               </div>
           </div>
@@ -86,14 +105,21 @@ import TextInput from "./TextInput.vue";
             text-align: center;
 
             div {
-                border-bottom: 1px solid ;
+                border-bottom: 1px solid $border-color;
                 width: 100%;
                 cursor: pointer;
                 padding: 1rem;
+                transition: .15s ease-in-out;
 
                 &:hover {
                     color: $primary-color;
                     border-bottom: 1px solid $primary-color;
+                }
+
+                &.active {
+                    color: $primary-color;
+                    font-weight: bold;
+                    border-bottom: 2px solid $primary-color;
                 }
             }
         }
