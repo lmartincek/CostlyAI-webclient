@@ -7,7 +7,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "/src/assets/styles/variables.scss";`
+        //TODO - check later the mixin problem in components
+        additionalData: `@import "/src/assets/styles/_variables.scss";`
       }
     }
   }

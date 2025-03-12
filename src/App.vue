@@ -19,6 +19,7 @@ import Footer from "./components/Footer.vue";
 import Signup from "./components/Signup.vue";
 import Spinner from "./components/Spinner.vue";
 import {useModalStore} from "./stores/modalsStore.ts";
+import RecentlySearched from "./components/RecentlySearched.vue";
 
 const productsStore = useProductsStore();
 const productsByCategory = computed(() => {
@@ -80,7 +81,9 @@ watch( () => selectedCountry.value, async () => {
             </div>
         </div>
 
-<!--        <StreamDisplay/>-->
+        <RecentlySearched/>
+
+        <!--        <StreamDisplay/>-->
 
         <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
             <template v-if="productsStore.loading">
@@ -179,14 +182,14 @@ watch( () => selectedCountry.value, async () => {
     }
 
     &__button {
-        margin: 0.75rem .5rem 0;
+        margin: 0.75rem 0 0;
         width: 100%;
 
         :nth-child(1) {
             width: 100%;
         }
 
-        @include respond-lg() {
+        @include respond-md() {
             margin: 1.5rem auto 0;
         }
     }

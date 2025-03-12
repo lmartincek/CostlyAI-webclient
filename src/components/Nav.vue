@@ -16,14 +16,13 @@ const modal = useModalStore()
 <style scoped lang="scss">
 nav {
   width: 100%;
-  height: 2.5rem;
+  height: 4.5rem;
   position: relative;
   background: $white-color;
-  padding: 1rem 0;
 
   .wrapper {
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     max-width: $breakpoint-lg;
