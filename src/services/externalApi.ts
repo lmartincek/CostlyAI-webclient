@@ -1,15 +1,9 @@
-import axios from 'axios';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
 import type {Credentials, Providers} from "../types/auth";
+import {apiClient} from "./apiClient.ts";
 
-const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
+// TODO - separate into files
 export const sendChatMessage = async (country: ICountry, city: ICity | null) => {
     try {
         const response = await apiClient.post('/chat', { countryName: country.name, cityName: country.name  } );
@@ -25,15 +19,34 @@ export const sendChatMessage = async (country: ICountry, city: ICity | null) => 
     }
 };
 
-export const getProducts = async (country: ICountry, city: ICity | null) => {
-    const url = `/products?countryId=${country.id}${city?.id ? `&cityId=${city.id}` : ''}`
+export const getProducts = async (
+    country: ICountry | null,
+    city: ICity | null,
+    limit?: number,
+) => {
+    if (!country && !limit) {
+        throw new Error('Either country or limit is required');
+    }
+
+    const queryParams = [];
+    if (country) {
+        queryParams.push(`countryId=${country.id}`);
+    }
+    if (city?.id) {
+        queryParams.push(`cityId=${city.id}`);
+    }
+    if (limit) {
+        queryParams.push(`limit=${limit}`);
+    }
+    const url = `/products${queryParams.length ? `?${queryParams.join('&')}` : ''}`;
+
     try {
         const response = await apiClient.get(url);
         return response.data;
     } catch (error) {
         // @ts-ignore
-        if (error.response.status === 404) {
-            return await sendChatMessage(country, city)
+        if (error.response?.status === 404) {
+            if (country) return await sendChatMessage(country, city);
         }
 
         console.error('Error fetching products from DB:', error);
@@ -75,11 +88,12 @@ export const loginUserWithCredentials = async (email: string, password: string) 
 };
 
 export const loginUserWithProvider = async (provider: Providers) => {
-    console.log({provider})
     try {
-        const response = await apiClient.post('/loginWithProvider', { provider } );
-        console.log(response)
-        return response.data;
+        const response = await apiClient.post('/loginWithProvider', { provider });
+
+        if (response.data.url) {
+            window.location.href = response.data.url;
+        }
     } catch (error) {
         console.error('Error logging in with provider:', error);
         throw error;
