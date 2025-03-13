@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {useModalStore} from "../stores/modalsStore.ts";
+import Icon from "./Icon.vue";
 
 const modal = useModalStore()
 </script>
@@ -7,8 +8,8 @@ const modal = useModalStore()
 <template>
   <nav>
       <div class="wrapper">
-        <div><img alt="icon" src="/src/assets/icons/globe.svg" width="26" height="26"/> CostlyAI</div>
-        <div @click="modal.openModal"><img alt="login" src="/src/assets/icons/login.svg" width="18" height="18"/> Sign in</div>
+        <div><Icon alt="logo" name="globe" width="26" height="26"/> CostlyAI</div>
+        <div @click="modal.openModal"><Icon alt="" name="login" width="18" height="18"/> Sign in</div>
       </div>
   </nav>
 </template>

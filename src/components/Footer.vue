@@ -9,5 +9,6 @@ footer {
   background: $white-color;
   padding: .5rem;
   text-align: center;
+  margin-top: 3rem;
 }
 </style>

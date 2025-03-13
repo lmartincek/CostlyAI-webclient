@@ -20,6 +20,7 @@ import Signup from "./components/Signup.vue";
 import Spinner from "./components/Spinner.vue";
 import {useModalStore} from "./stores/modalsStore.ts";
 import RecentlySearched from "./components/RecentlySearched.vue";
+import Icon from "./components/Icon.vue";
 
 const productsStore = useProductsStore();
 const productsByCategory = computed(() => {
@@ -43,6 +44,7 @@ const lastDataset = computed<LastDataset>(() => {
     return productsStore.lastDataset
 })
 
+//todo - add pagination, search query with debounce, loader in select input
 onMounted(async () => await generalStore.loadCountries())
 watch( () => selectedCountry.value, async () => {
     if (selectedCountryObj.value !== null) {
@@ -60,67 +62,73 @@ watch( () => selectedCountry.value, async () => {
     <Nav/>
 
     <Layout>
-        <h1>CostlyAI</h1>
-        <p>Search most commonly bought groceries and its prices in your location or location you want to visit</p>
+        <template v-slot:headline>
+            <h1>CostlyAI</h1>
+            <p>Discover living costs worldwide, compare prices and plan your travel budget with real-time data from cities around the globe</p>
+        </template>
 
-        <div class="wrapper-control">
-            <div class="wrapper-control__inputs">
-                <SelectInput
-                    default-option-label="Select Country"
-                    :options="generalStore.countries"
-                    v-model="selectedCountry"
-                >
-                    <template v-slot:input-icon><img src="/src/assets/icons/country.svg" width="24" height="24" alt="country icon"></template>
-                </SelectInput>
+        <template v-slot:content>
+            <div class="wrapper-control">
+                <div class="wrapper-control__inputs">
+                    <SelectInput
+                        default-option-label="Select Country"
+                        :options="generalStore.countries"
+                        v-model="selectedCountry"
+                    >
+                        <template v-slot:input-icon><Icon name="country" alt="" /></template>
+                    </SelectInput>
 
-<!--                TODO - disabled click - error label that needs to select country first-->
-                <SelectInput
-                    default-option-label="Select City"
-                    :options="generalStore.cities"
-                    v-model="selectedCity"
-                    :disabled="!selectedCountry"
-                >
-                    <template v-slot:input-icon><img src="/src/assets/icons/city.svg" width="20" height="20" alt="city icon"></template>
-                </SelectInput>
+    <!--                TODO - disabled click - error label that needs to select country first-->
+                    <SelectInput
+                        default-option-label="Select City"
+                        :options="generalStore.cities"
+                        v-model="selectedCity"
+                        :disabled="!selectedCountry"
+                    >
+                        <template v-slot:input-icon><Icon name="city" width="20" height="20" alt="" /></template>
+                    </SelectInput>
+                </div>
+                <div class="wrapper-control__button">
+                    <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
+                                 @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search Costs</ButtonBasic>
+                </div>
             </div>
-            <div class="wrapper-control__button">
-                <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
-                             @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj)">Search Costs</ButtonBasic>
+
+            <RecentlySearched/>
+
+            <!--        <StreamDisplay/>-->
+
+            <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
+                <template v-if="productsStore.loading">
+                    <div class="loader">
+                        <Spinner/>
+                    </div>
+                    <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
+                </template>
+                <div v-if="productsStore.error" class="error">{{ productsStore.error }}</div>
+                <template v-if="productsStore.products">
+                    <p v-if="lastDataset.country">
+                        Current avg. prices in
+                        <b>{{lastDataset.city
+                        ? `${lastDataset.city.name}, ${lastDataset.country.name}`
+                        : lastDataset.country.name}}
+                        </b>.
+                    </p>
+                    <div v-if="lastDataset.date && lastDataset.country" class="wrapper-data__info">
+                        <p>Data updated on: <b>{{lastDataset.date}}</b></p>
+                        <p @click="useModalStore().openModal"><Icon alt="" name="star" width="18" height="18" />
+                            Sign up to create your own costs w/ fresh data
+                        </p>
+                    </div>
+
+                    <div class="wrapper-data__table">
+                        <template v-for="(products, category) in productsByCategory">
+                            <TableDisplay :data="products" :category="category"/>
+                        </template>
+                    </div>
+                </template>
             </div>
-        </div>
-
-        <RecentlySearched/>
-
-        <!--        <StreamDisplay/>-->
-
-        <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
-            <template v-if="productsStore.loading">
-                <div class="loader">
-                    <Spinner/>
-                </div>
-                <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
-            </template>
-            <div v-if="productsStore.error" class="error">{{ productsStore.error }}</div>
-            <template v-if="productsStore.products">
-                <p v-if="lastDataset.country">
-                    Current avg. prices in
-                    <b>{{lastDataset.city
-                    ? `${lastDataset.city.name}, ${lastDataset.country.name}`
-                    : lastDataset.country.name}}
-                    </b>.
-                </p>
-                <div v-if="lastDataset.date && lastDataset.country" class="wrapper-data__info">
-                    <p>Data updated on: <b>{{lastDataset.date}}</b></p>
-                    <p @click="useModalStore().openModal">Sign up to create your own costs w/ fresh data</p>
-                </div>
-
-                <div class="wrapper-data__table">
-                    <template v-for="(products, category) in productsByCategory">
-                        <TableDisplay :data="products" :category="category"/>
-                    </template>
-                </div>
-            </template>
-        </div>
+        </template>
     </Layout>
 
     <Footer/>
@@ -159,6 +167,12 @@ watch( () => selectedCountry.value, async () => {
         p:nth-last-child(1) {
             color: $primary-color;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+
+            img {
+                margin-right: .25rem;
+            }
 
             &:hover{
                 text-decoration: underline;

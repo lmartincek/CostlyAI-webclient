@@ -55,9 +55,12 @@ export const getProducts = async (
 };
 
 export const getCountries = async () => {
+    // TODO
+    //  - add pagination
+    //  - add search query
+    //  - add debounce
     try {
         const response = await apiClient.get('/countries' );
-        console.log(response, 'countries from DB')
         return response.data;
     } catch (error) {
         console.error('Error fetching countries from DB:', error);
