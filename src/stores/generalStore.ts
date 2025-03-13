@@ -22,10 +22,10 @@ export const useGeneralStore = defineStore('generalStore', () => {
         }
     };
 
-    const loadCities = async (countryId: number) => {
+    const loadCities = async (countryIds: number[]) => {
         loading.value = true;
         try {
-            cities.value = await getCities(countryId);
+            cities.value = await getCities(countryIds);
         } catch (err) {
             error.value = 'Failed to fetch cities';
         } finally {

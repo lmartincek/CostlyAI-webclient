@@ -49,7 +49,7 @@ onMounted(async () => await generalStore.loadCountries())
 watch( () => selectedCountry.value, async () => {
     if (selectedCountryObj.value !== null) {
         if ("id" in selectedCountryObj.value) {
-            await generalStore.loadCities(selectedCountryObj.value.id)
+            await generalStore.loadCities([selectedCountryObj.value.id])
         }
     }
 })

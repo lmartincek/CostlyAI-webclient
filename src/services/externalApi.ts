@@ -68,10 +68,9 @@ export const getCountries = async () => {
     }
 };
 
-export const getCities = async (countryId: number) => {
+export const getCities = async (countryIds: number[]) => {
     try {
-        const response = await apiClient.get(`/cities?countryId=${countryId}` );
-        console.log(response, 'cities from DB')
+        const response = await apiClient.get(`/cities?countryIds=${countryIds.join(',')}` );
         return response.data;
     } catch (error) {
         console.error('Error fetching cities from DB:', error);
