@@ -24,7 +24,7 @@
                         :class="{ 'selected': selectedValue === option.name }"
                 >
                     <span class="suggestion-icon" v-if="isCountry(option)">
-                        <img :src="`/src/assets/icons/flags/${option.code}.svg`" alt="" width="20" height="20"/>
+                        <Icon folder="flags" :name="`${option.code}`" alt="" width="20" height="20"/>
                     </span>
                     <span v-html="highlightMatch(option.name)"></span>
                 </li>
@@ -37,6 +37,8 @@
 import { ref, computed } from 'vue';
 import type { ICountry } from "../types/countries";
 import type { ICity } from "../types/cities";
+
+import Icon from "./Icon.vue";
 
 interface Option {
     name: string;

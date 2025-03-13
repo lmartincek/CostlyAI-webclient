@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Icon from "./Icon.vue";
+
 defineProps({
     imgLeft: {
         type: String,
@@ -7,7 +9,7 @@ defineProps({
     imgRight: {
         type: String,
         required: false,
-        default: '/src/assets/icons/arrow-right.svg'
+        default: 'arrow-right'
     },
     text: {
         type: String,
@@ -17,21 +19,22 @@ defineProps({
         type: Boolean,
         required: false,
         default: true,
-    }
+    },
 })
 </script>
 
 <template>
   <div :class="['card', {clickable: isClickable}]">
       <div class="card__icon card__icon--left" v-if="imgLeft">
-          <img :src=imgLeft width="24" height="24" alt="flag"/>
+<!--          TODO - flags not agnostic-->
+          <Icon :name="imgLeft" folder="flags" alt=""/>
       </div>
       <div class="card__text">
         <div class="headline"><slot name="headline"/></div>
         <div class="text" v-if="text">{{text}}</div>
       </div>
       <div class="card__icon card__icon--right" v-if="imgRight">
-          <img :src=imgRight width="24" height="24" alt="icon"/>
+          <Icon :name="imgRight" alt=""/>
       </div>
   </div>
 </template>
@@ -41,11 +44,13 @@ defineProps({
   background: $white-color;
   border-radius: .75rem;
   max-width: 350px;
+  min-height: 75px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: .75rem 1rem;
+  text-align: center;
+  padding: .5rem 1rem;
   border: 1px solid transparent;
 
   &.clickable {

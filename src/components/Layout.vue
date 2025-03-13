@@ -4,7 +4,12 @@
 
 <template>
 <div class="layout">
-    <slot/>
+    <div class="layout__headline">
+        <slot name="headline"/>
+    </div>
+    <div class="layout__content">
+        <slot name="content"/>
+    </div>
 </div>
 </template>
 
@@ -16,5 +21,11 @@
   margin: 0 auto;
   text-align: center;
   padding: 0 1rem;
+
+    &__headline {
+        max-width: 600px;
+        padding: 0 1rem;
+        margin: 0 auto;
+    }
 }
 </style>
