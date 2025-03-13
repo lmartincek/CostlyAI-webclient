@@ -38,6 +38,8 @@ import { ref, computed } from 'vue';
 import type { ICountry } from "../types/countries";
 import type { ICity } from "../types/cities";
 
+import Icon from "./Icon.vue";
+
 interface Option {
     name: string;
     code?: string;
