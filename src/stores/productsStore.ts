@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getProducts } from '../services/externalApi.ts';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
 import type {Product} from "../types/products";
 import {daysAsOrdinals, months} from "../constants/date.ts";
+import {getProducts} from "../services/generalService.ts";
 
 export interface LastDataset {
     country: ICountry | null,
@@ -32,7 +32,6 @@ export const useProductsStore = defineStore('productsStore', () => {
     const loadProducts = async (country: ICountry | null, city: ICity | null)  => {
         if (!country) return;
 
-        //TODO - if recentlySearched have it - simply return it
         loading.value = true;
         try {
             products.value = await getProducts(country, city);

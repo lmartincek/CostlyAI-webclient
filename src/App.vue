@@ -30,8 +30,8 @@ const productsByCategory = computed(() => {
 
 const generalStore = useGeneralStore();
 
-const selectedCountry = ref<string | number | null>(null);
-const selectedCity = ref<string | number | null>(null);
+const selectedCountry = ref<string>('');
+const selectedCity = ref<string>('');
 
 const selectedCountryObj = computed<ICountry | null>(() => {
     return generalStore.countries.find(country => country.name === selectedCountry.value) || null
@@ -51,6 +51,9 @@ watch( () => selectedCountry.value, async () => {
         if ("id" in selectedCountryObj.value) {
             await generalStore.loadCities([selectedCountryObj.value.id])
         }
+    }
+    if (selectedCity.value) {
+        selectedCity.value = ''
     }
 })
 </script>
@@ -78,7 +81,6 @@ watch( () => selectedCountry.value, async () => {
                         <template v-slot:input-icon><Icon name="country" alt="" /></template>
                     </SelectInput>
 
-    <!--                TODO - disabled click - error label that needs to select country first-->
                     <SelectInput
                         default-option-label="Select City"
                         :options="generalStore.cities"
@@ -213,6 +215,7 @@ watch( () => selectedCountry.value, async () => {
 
         @include respond-md() {
             margin: 1.5rem auto 0;
+            padding: 0 .25rem;
         }
     }
 }

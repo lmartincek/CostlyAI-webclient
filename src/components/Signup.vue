@@ -1,80 +1,184 @@
 <script setup lang="ts">
-import FullscreenModal from "./FullscreenModal.vue";
-import ButtonBasic from "./ButtonBasic.vue";
-import TextInput from "./TextInput.vue";
-import Checkbox from "./Checkbox.vue";
-import {useAuthStore} from "../stores/authStore.ts";
-import {ref} from "vue";
+import { ref, watch } from 'vue';
+import FullscreenModal from './FullscreenModal.vue';
+import ButtonBasic from './ButtonBasic.vue';
+import TextInput from './TextInput.vue';
+import Checkbox from './Checkbox.vue';
+import Spinner from './Spinner.vue';
+import { useAuthStore } from '../stores/authStore.ts';
+import {useModalStore} from "../stores/modalsStore.ts";
 
-const auth = useAuthStore()
+const auth = useAuthStore();
 
-const email = ref<string>('')
-const password = ref<string>('')
+const email = ref<string>('');
+const password = ref<string>('');
+const errors = ref<{ email?: string; password?: string }>({});
 
-//TODO enum
-const step = ref<number>(1)
+// Realtime validation for email
+watch(email, () => {
+    if (!email.value) {
+        errors.value.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email.value)) {
+        errors.value.email = 'Email is invalid';
+    } else {
+        errors.value.email = '';
+    }
+});
+
+const validatePassword = (password: string) => {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+        errors.push('Password must be at least 8 characters.');
+    }
+    if (!/[a-z]/.test(password)) {
+        errors.push('Password must contain at least one lowercase letter (a-z).');
+    }
+    if (!/[A-Z]/.test(password)) {
+        errors.push('Password must contain at least one uppercase letter (A-Z).');
+    }
+    if (!/\d/.test(password)) {
+        errors.push('Password must contain at least one digit (0-9).');
+    }
+    if (!/[~`!@#$%^&*()_\-+={[}\]|\\:;"'<,>.?/]/.test(password)) {
+        errors.push('Password must contain at least one symbol: ~`!@#$%^&*()_-+={[}]|\\:;"\'<,>.?/');
+    }
+
+    return errors;
+};
+
+// Realtime validation for password
+watch(password, (newPassword) => {
+    errors.value.password = validatePassword(newPassword);
+});
+
+const validateForm = () => {
+    return !errors.value.email && !errors.value.password.length;
+};
+
+const AuthStep = {
+    SignIn: 1,
+    SignUp: 2,
+} as const;
+
+type AuthStep = (typeof AuthStep)[keyof typeof AuthStep];
+
+const step = ref<AuthStep>(AuthStep.SignIn);
+const isLoading = ref<boolean>(false);
+const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    isLoading.value = true;
+    try {
+        if (step.value === AuthStep.SignIn) {
+            await auth.login(email.value, password.value, null);
+        } else if (step.value === AuthStep.SignUp) {
+            await auth.register(email.value, password.value);
+        }
+    } catch (error) {
+        errors.value.form = error.message;
+    } finally {
+        isLoading.value = false;
+        useModalStore().isOpen = false;
+    }
+};
+
+const handleOAuthLogin = (provider: 'google' | 'apple') => {
+    auth.login(null, null, provider);
+};
 </script>
 
 <template>
-  <FullscreenModal>
-      <div class="signup-wrapper">
-          <div class="signup-wrapper__header">
-              <h2>Welcome to CostlyAI</h2>
-              <p>Access personalized option</p>
-          </div>
-          <div class="signup-wrapper__body">
-              <div class="type">
-                  <div :class="['sign-in', {active: step === 1}]" @click="step = 1">Sign In</div>
-                  <div :class="['sign-up', {active: step === 2}]" @click="step = 2">Sign Up</div>
-              </div>
-<!--              TODO - add form-->
-              <div class="credentials">
-                  <div class="input-wrapper">
-                    <label for="">Email Address</label>
-                    <TextInput class="input-wrapper__input"
-                               v-model="email"
-                               placeholder="your@email.com"/>
-                  </div>
-                  <div class="input-wrapper">
-                      <label for="">Password</label>
-                      <TextInput class="input-wrapper__input"
-                                 v-model="password"
-                                 type="password"/>
-                  </div>
+    <FullscreenModal>
+        <div class="signup-wrapper">
+            <div class="signup-wrapper__header">
+                <h2>Welcome to CostlyAI</h2>
+                <p>Access personalized options</p>
+            </div>
+            <div class="signup-wrapper__body">
+                <div class="type">
+                    <div :class="['sign-in', { active: step === AuthStep.SignIn }]" @click="step = AuthStep.SignIn">
+                        Sign In
+                    </div>
+                    <div :class="['sign-up', { active: step === AuthStep.SignUp }]" @click="step = AuthStep.SignUp">
+                        Sign Up
+                    </div>
+                </div>
 
-                  <div class="actions">
-                      <div class="actions__checkbox">
-                          <Checkbox>Remember me</Checkbox>
-                      </div>
-                      <div class="actions__forgot-password">
-                        <span>Forgot password?</span>
-                      </div>
-                  </div>
+                <form @submit.prevent="handleSubmit">
+                    <div class="credentials">
+                        <div class="input-wrapper">
+                            <label for="email">Email Address</label>
+                            <TextInput
+                                id="email"
+                                class="input-wrapper__input"
+                                v-model="email"
+                                placeholder="your@email.com"
+                            />
+                            <span v-if="errors.email" class="error">{{ errors.email }}</span>
+                        </div>
 
+                        <div class="input-wrapper">
+                            <label for="password">Password</label>
+                            <TextInput
+                                id="password"
+                                class="input-wrapper__input"
+                                v-model="password"
+                                type="password"
+                            />
+                            <template v-for="error in errors.password">
+                                <span v-if="error" class="error">{{ error }}</span>
+                            </template>
+                        </div>
 
-                  <ButtonBasic class="credentials-btn"
-                               v-show="step === 1"
-                               @click="auth.login(email, password, null)">Sign In</ButtonBasic>
-                  <ButtonBasic class="credentials-btn"
-                               v-show="step === 2"
-                               @click="auth.register(email, password)">Sign Up</ButtonBasic>
+                        <div class="actions">
+                            <div class="actions__checkbox">
+                                <Checkbox>Remember me</Checkbox>
+                            </div>
+                            <div class="actions__forgot-password">
+                                <span>Forgot password?</span>
+                            </div>
+                        </div>
 
-                  <div class="breakthrough">
-                      <hr>
-                      <span>Or continue with</span>
-                  </div>
+                        <ButtonBasic type="submit" class="credentials-btn" v-if="!isLoading">
+                            {{ step === AuthStep.SignIn ? 'Sign In' : 'Sign Up' }}
+                        </ButtonBasic>
+                        <Spinner v-else />
 
-                  <div class="socials">
-                      <ButtonBasic class="socials__btn"
-                                   button-class="btn-white" @click="auth.login(null,null,'google')">Google</ButtonBasic>
-                      <ButtonBasic class="socials__btn"
-                                   button-class="btn-white" @click="auth.login(null,null, 'apple')">Apple</ButtonBasic>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </FullscreenModal>
+                        <div class="breakthrough">
+                            <hr>
+                            <span>Or continue with</span>
+                        </div>
+
+                        <div class="socials">
+                            <ButtonBasic
+                                class="socials__btn"
+                                button-class="btn-white"
+                                @click="handleOAuthLogin('google')"
+                            >
+                                Google
+                            </ButtonBasic>
+                            <ButtonBasic
+                                class="socials__btn"
+                                button-class="btn-white"
+                                @click="handleOAuthLogin('apple')"
+                            >
+                                Apple
+                            </ButtonBasic>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </FullscreenModal>
 </template>
+<style scoped>
+.error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+</style>
 
 <style scoped lang="scss">
 .signup-wrapper {
@@ -141,6 +245,7 @@ const step = ref<number>(1)
             .actions {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 margin: 1.5rem 0;
 
                 &__checkbox {

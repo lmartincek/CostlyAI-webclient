@@ -30,10 +30,10 @@
 .checkbox-wrapper-42 .cbx:after {
     content: '';
     position: absolute;
-    top: 1px;
+    top: 0;
     left: 5px;
-    width: 5px;
-    height: 11px;
+    width: 4px;
+    height: 9px;
     opacity: 0;
     transform: rotate(45deg) scale(0);
     border-right: 2px solid #fff;

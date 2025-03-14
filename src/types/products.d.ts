@@ -1,13 +1,12 @@
-import {ProductCategory} from "../constants/products.ts";
+declare type ProductCategoryType = "groceries" | "services" | "others";
 
-type ProductCategoryType = ProductCategory.GROCERIES | ProductCategory.SERVICES | ProductCategory.OTHERS
-interface ProductAIResponse {
+declare interface ProductAIResponse {
     name: string,
     price: number,
     category: ProductCategoryType,
 }
 
-export interface Product extends ProductAIResponse {
+ export interface Product extends ProductAIResponse {
     id: number,
     country_id: number,
     city_id: number | null,

@@ -1,5 +1,5 @@
 <template>
-    <img :src="iconUrl" :alt="alt" :width="width" :height="height" />
+    <img :src="iconUrl" :alt="alt" :width="width" :height="height" loading="lazy" />
 </template>
 
 <script setup lang="ts">
