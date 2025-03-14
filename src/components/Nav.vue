@@ -16,9 +16,9 @@ const auth = useAuthStore()
           <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
               <Icon alt="" name="login" width="18" height="18"/> Sign in
           </div>
-          <div class="wrapper__auth--profile" v-else>
+          <div class="wrapper__auth--profile" v-if="auth.user">
 <!--              TODO profile badge with dropdown - logout, delete account -->
-              {{auth.user.email}}
+              {{ auth.user.email }}
           </div>
         </div>
       </div>
@@ -68,7 +68,7 @@ nav {
       display: flex;
       justify-content: center;
       align-items: center;
-      
+
       &:hover {
         scale: 105%;
       }
