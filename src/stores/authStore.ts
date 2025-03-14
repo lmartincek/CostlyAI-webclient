@@ -44,7 +44,7 @@ export const useAuthStore = defineStore('authStore', () =>{
         }
     };
 
-    if (!accessToken.value) {
+    if (!accessToken.value && localStorage.getItem('costly-remember-me')) {
         rehydrate().then()
     }
 
@@ -61,13 +61,16 @@ export const useAuthStore = defineStore('authStore', () =>{
         }
     }
 
-    const login = async (email: string | null, password: string | null, provider: Providers | null) => {
+    const login = async (email: string | null, password: string | null, provider: Providers | null, remember: boolean = false) => {
         loading.value = true;
 
         try {
             if (email && password) {
                 const data = await loginUserWithCredentials(email, password)
                 setUser(data)
+                if (remember) {
+                    localStorage.setItem('costly-remember-me', 'true')
+                }
             }
 
             if (provider) {
@@ -89,6 +92,9 @@ export const useAuthStore = defineStore('authStore', () =>{
         try {
             await logoutUser()
             clearUser()
+            if (localStorage.getItem('costly-remember-me')) {
+                localStorage.removeItem('costly-remember-me')
+            }
         } catch (e) {
             error.value = 'Failed to log out'
         } finally {

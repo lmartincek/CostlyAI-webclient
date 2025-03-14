@@ -21,6 +21,10 @@ defineProps({
         type: String,
         required: false,
     },
+    autocomplete: {
+        type: String,
+        required: false,
+    }
 });
 </script>
 
@@ -32,6 +36,7 @@ defineProps({
             v-model="value"
             :name="name"
             :placeholder="placeholder"
+            :autocomplete="autocomplete"
         />
     </div>
 </template>

@@ -12,6 +12,7 @@ const auth = useAuthStore();
 
 const email = ref<string>('');
 const password = ref<string>('');
+const rememberMe = ref<boolean>(false)
 const errors = ref<{ email?: string; password?: string[], form?: string }>({});
 
 // Realtime validation for email
@@ -53,7 +54,16 @@ watch(password, (newPassword) => {
 });
 
 const validateForm = () => {
-    return !errors.value.email && !errors.value.password?.length;
+    if (errors.value.email) {
+        return false
+    } else if (errors.value.password && errors.value.password.length) {
+        return false
+    } else if (!email.value || !password.value) {
+        if (!email.value) errors.value.email = 'Email is required'
+        if (!password.value) errors.value.password = ['Password is required']
+        return false
+    }
+    return true
 };
 
 const AuthStep = {
@@ -72,7 +82,7 @@ const handleSubmit = async () => {
     isLoading.value = true;
     try {
         if (step.value === AuthStep.SignIn) {
-            await auth.login(email.value, password.value, null);
+            await auth.login(email.value, password.value, null, rememberMe.value);
         } else if (step.value === AuthStep.SignUp) {
             await auth.register(email.value, password.value);
         }
@@ -117,6 +127,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                                 class="input-wrapper__input"
                                 v-model="email"
                                 placeholder="your@email.com"
+                                autocomplete="email"
                             />
                             <span v-if="errors.email" class="error">{{ errors.email }}</span>
                         </div>
@@ -128,6 +139,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                                 class="input-wrapper__input"
                                 v-model="password"
                                 type="password"
+                                autocomplete="current-password"
                             />
                             <template v-for="error in errors.password">
                                 <span v-if="error" class="error">{{ error }}</span>
@@ -136,7 +148,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 
                         <div class="actions">
                             <div class="actions__checkbox">
-                                <Checkbox>Remember me</Checkbox>
+                                <Checkbox @@update:is-checked="rememberMe = $event">Remember me</Checkbox>
                             </div>
                             <div class="actions__forgot-password">
                                 <span>Forgot password?</span>
