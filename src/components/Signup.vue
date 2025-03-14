@@ -15,14 +15,21 @@ const password = ref<string>('');
 const rememberMe = ref<boolean>(false)
 const errors = ref<{ email?: string; password?: string[], form?: string }>({});
 
-// Realtime validation for email
-watch(email, () => {
+const validateRealtime = ref<boolean>(false)
+
+const validateEmail = () => {
     if (!email.value) {
         errors.value.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email.value)) {
         errors.value.email = 'Email is invalid';
     } else {
         errors.value.email = '';
+    }
+}
+
+watch(email, () => {
+    if (validateRealtime.value) {
+        validateEmail()
     }
 });
 
@@ -48,21 +55,24 @@ const validatePassword = (password: string) => {
     return errors;
 };
 
-// Realtime validation for password
 watch(password, (newPassword) => {
-    errors.value.password = validatePassword(newPassword);
+    if (validateRealtime.value) {
+        errors.value.password = validatePassword(newPassword);
+    }
 });
 
 const validateForm = () => {
+    validateRealtime.value = true
+
+    validateEmail()
+    errors.value.password = password.value ? validatePassword(password.value) : ['Password is required']
+
     if (errors.value.email) {
         return false
     } else if (errors.value.password && errors.value.password.length) {
         return false
-    } else if (!email.value || !password.value) {
-        if (!email.value) errors.value.email = 'Email is required'
-        if (!password.value) errors.value.password = ['Password is required']
-        return false
     }
+
     return true
 };
 
@@ -148,7 +158,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 
                         <div class="actions">
                             <div class="actions__checkbox">
-                                <Checkbox @@update:is-checked="rememberMe = $event">Remember me</Checkbox>
+                                <Checkbox @update:is-checked="rememberMe = $event">Remember me</Checkbox>
                             </div>
                             <div class="actions__forgot-password">
                                 <span>Forgot password?</span>

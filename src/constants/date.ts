@@ -1,4 +1,4 @@
-export const months: { readonly [key: number]: string } = {
+export const MONTHS: { readonly [key: number]: string } = {
     1: "January",
     2: "February",
     3: "March",
@@ -13,7 +13,7 @@ export const months: { readonly [key: number]: string } = {
     12: "December"
 } as const
 
-export const daysAsOrdinals: { readonly [key: number]: string }  = {
+export const DAYS_AS_ORDINALS: { readonly [key: number]: string }  = {
     1: "1st",
     2: "2nd",
     3: "3rd",

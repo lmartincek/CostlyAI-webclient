@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {ref} from "vue";
 
-const emit = defineEmits(['@update:isChecked'])
+const emit = defineEmits(['update:isChecked'])
 
 const isChecked = ref<boolean>(false)
 
 function toggleCheck () {
     isChecked.value = !isChecked.value
-    emit('@update:isChecked', isChecked.value)
+    emit('update:isChecked', isChecked.value)
 }
 </script>
 
