@@ -2,6 +2,7 @@
 import {useModalStore} from "../stores/modalsStore.ts";
 import Icon from "./Icon.vue";
 import {useAuthStore} from "../stores/authStore.ts";
+import ProfileBadge from "./ProfileBadge.vue";
 
 const modal = useModalStore()
 const auth = useAuthStore()
@@ -16,9 +17,8 @@ const auth = useAuthStore()
           <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
               <Icon alt="" name="login" width="18" height="18"/> Sign in
           </div>
-          <div class="wrapper__auth--profile" v-if="auth.user">
-<!--              TODO profile badge with dropdown - logout, delete account -->
-              {{ auth.user.email }}
+          <div class="wrapper__auth--profile" v-else>
+              <ProfileBadge/>
           </div>
         </div>
       </div>
@@ -76,6 +76,10 @@ nav {
       img {
         margin-right: .5rem;
       }
+    }
+
+    &__auth--profile {
+
     }
   }
 }

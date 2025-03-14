@@ -2,14 +2,20 @@ import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
 import {apiClient} from "./apiClient.ts";
 import {sendChatMessage} from "./chatService.ts";
+import type {CostOfLivingCategoryNames} from "../constants/categories.ts";
 
 export const getProducts = async (
     country: ICountry | null,
     city: ICity | null,
+    selectedCategories?: CostOfLivingCategoryNames[],
     limit?: number,
 ) => {
     if (!country && !limit) {
         throw new Error('Either country or limit is required');
+    }
+
+    if (selectedCategories?.length && country) {
+        return await sendChatMessage(country, city, selectedCategories);
     }
 
     const queryParams = [];
@@ -29,8 +35,8 @@ export const getProducts = async (
         return response.data;
     } catch (error) {
         // @ts-ignore
-        if (error.response?.status === 404) {
-            if (country) return await sendChatMessage(country, city);
+        if (error.response?.status === 404 && country) {
+            return await sendChatMessage(country, city);
         }
 
         console.error('Error fetching products from DB:', error);

@@ -12,16 +12,24 @@ const auth = useAuthStore();
 
 const email = ref<string>('');
 const password = ref<string>('');
+const rememberMe = ref<boolean>(false)
 const errors = ref<{ email?: string; password?: string[], form?: string }>({});
 
-// Realtime validation for email
-watch(email, () => {
+const validateRealtime = ref<boolean>(false)
+
+const validateEmail = () => {
     if (!email.value) {
         errors.value.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email.value)) {
         errors.value.email = 'Email is invalid';
     } else {
         errors.value.email = '';
+    }
+}
+
+watch(email, () => {
+    if (validateRealtime.value) {
+        validateEmail()
     }
 });
 
@@ -47,13 +55,25 @@ const validatePassword = (password: string) => {
     return errors;
 };
 
-// Realtime validation for password
 watch(password, (newPassword) => {
-    errors.value.password = validatePassword(newPassword);
+    if (validateRealtime.value) {
+        errors.value.password = validatePassword(newPassword);
+    }
 });
 
 const validateForm = () => {
-    return !errors.value.email && !errors.value.password?.length;
+    validateRealtime.value = true
+
+    validateEmail()
+    errors.value.password = password.value ? validatePassword(password.value) : ['Password is required']
+
+    if (errors.value.email) {
+        return false
+    } else if (errors.value.password && errors.value.password.length) {
+        return false
+    }
+
+    return true
 };
 
 const AuthStep = {
@@ -64,6 +84,7 @@ const AuthStep = {
 type AuthStep = (typeof AuthStep)[keyof typeof AuthStep];
 
 const step = ref<AuthStep>(AuthStep.SignIn);
+// todo - auth loading, error fixes
 const isLoading = ref<boolean>(false);
 const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -71,7 +92,7 @@ const handleSubmit = async () => {
     isLoading.value = true;
     try {
         if (step.value === AuthStep.SignIn) {
-            await auth.login(email.value, password.value, null);
+            await auth.login(email.value, password.value, null, rememberMe.value);
         } else if (step.value === AuthStep.SignUp) {
             await auth.register(email.value, password.value);
         }
@@ -116,6 +137,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                                 class="input-wrapper__input"
                                 v-model="email"
                                 placeholder="your@email.com"
+                                autocomplete="email"
                             />
                             <span v-if="errors.email" class="error">{{ errors.email }}</span>
                         </div>
@@ -127,6 +149,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                                 class="input-wrapper__input"
                                 v-model="password"
                                 type="password"
+                                autocomplete="current-password"
                             />
                             <template v-for="error in errors.password">
                                 <span v-if="error" class="error">{{ error }}</span>
@@ -135,7 +158,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 
                         <div class="actions">
                             <div class="actions__checkbox">
-                                <Checkbox>Remember me</Checkbox>
+                                <Checkbox @update:is-checked="rememberMe = $event">Remember me</Checkbox>
                             </div>
                             <div class="actions__forgot-password">
                                 <span>Forgot password?</span>
@@ -174,9 +197,9 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
         </div>
     </FullscreenModal>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .error {
-    color: red;
+    color: $error-color;
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }

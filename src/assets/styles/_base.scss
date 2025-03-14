@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -7,7 +7,7 @@
   font-size: 16px;
 
   color-scheme: light dark;
-  color: $text-color;
+  color: variables.$text-color;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,11 +32,11 @@ a {
 
 body {
   margin: 0;
-  background: $background-color;
+  background: variables.$background-color;
 }
 
 h1,h2,h3 {
-  color: $headline-color
+  color: variables.$headline-color
 }
 
 h1 {
@@ -71,7 +71,7 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-text-fill-color: $text-color;
-  -webkit-box-shadow: 0 0 0px 1000px $white-color inset;
+  -webkit-text-fill-color: variables.$text-color;
+  -webkit-box-shadow: 0 0 0px 1000px variables.$white-color inset;
   transition: background-color 5000s ease-in-out 0s;
 }

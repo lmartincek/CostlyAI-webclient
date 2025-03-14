@@ -1,25 +1,25 @@
-@import "variables";
+@use "variables";
 
 @mixin respond-sm {
-  @media (min-width: $breakpoint-sm) {
+  @media (min-width: variables.$breakpoint-sm) {
     @content;
   }
 }
 
 @mixin respond-md {
-  @media (min-width: $breakpoint-md) {
+  @media (min-width: variables.$breakpoint-md) {
     @content;
   }
 }
 
 @mixin respond-lg {
-  @media (min-width: $breakpoint-lg) {
+  @media (min-width: variables.$breakpoint-lg) {
     @content;
   }
 }
 
 @mixin respond-xl {
-  @media (min-width: $breakpoint-xl) {
+  @media (min-width: variables.$breakpoint-xl) {
     @content;
   }
 }

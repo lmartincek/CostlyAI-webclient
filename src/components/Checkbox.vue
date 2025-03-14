@@ -1,8 +1,21 @@
+<script setup lang="ts">
+import {ref} from "vue";
+
+const emit = defineEmits(['update:isChecked'])
+
+const isChecked = ref<boolean>(false)
+
+function toggleCheck () {
+    isChecked.value = !isChecked.value
+    emit('update:isChecked', isChecked.value)
+}
+</script>
+
 <template>
   <div class="checkbox-wrapper-42">
-  <input id="cbx-42" type="checkbox" />
-  <label class="cbx" for="cbx-42"></label>
-  <label class="lbl" for="cbx-42"><slot/></label>
+    <input id="cbx-42" type="checkbox" @click="toggleCheck"/>
+    <label class="cbx" for="cbx-42"></label>
+    <label class="lbl" for="cbx-42"><slot/></label>
   </div>
 </template>
 

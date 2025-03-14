@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {ref} from "vue";
 import type {Providers} from "../types/auth";
 import {
+    deleteUser,
     loginUserWithCredentials,
     loginUserWithProvider,
     logoutUser,
@@ -43,7 +44,7 @@ export const useAuthStore = defineStore('authStore', () =>{
         }
     };
 
-    if (!accessToken.value) {
+    if (!accessToken.value && localStorage.getItem('costly-remember-me')) {
         rehydrate().then()
     }
 
@@ -60,14 +61,16 @@ export const useAuthStore = defineStore('authStore', () =>{
         }
     }
 
-    const login = async (email: string | null, password: string | null, provider: Providers | null) => {
+    const login = async (email: string | null, password: string | null, provider: Providers | null, remember: boolean = false) => {
         loading.value = true;
 
         try {
             if (email && password) {
                 const data = await loginUserWithCredentials(email, password)
                 setUser(data)
-                return
+                if (remember) {
+                    localStorage.setItem('costly-remember-me', 'true')
+                }
             }
 
             if (provider) {
@@ -89,12 +92,28 @@ export const useAuthStore = defineStore('authStore', () =>{
         try {
             await logoutUser()
             clearUser()
+            if (localStorage.getItem('costly-remember-me')) {
+                localStorage.removeItem('costly-remember-me')
+            }
         } catch (e) {
-            error.value = 'Failed to logout'
+            error.value = 'Failed to log out'
         } finally {
             loading.value = false;
         }
     }
 
-    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate}
+    const deleteAccount = async (userId: string) => {
+        loading.value = true;
+
+        try {
+            await deleteUser(userId)
+            clearUser()
+        } catch (e) {
+            error.value = 'Failed to delete account'
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate, deleteAccount}
 })

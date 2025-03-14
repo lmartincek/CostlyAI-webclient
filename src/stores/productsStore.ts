@@ -3,8 +3,9 @@ import { ref } from 'vue';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
 import type {Product} from "../types/products";
-import {daysAsOrdinals, months} from "../constants/date.ts";
+import {DAYS_AS_ORDINALS, MONTHS} from "../constants/date.ts";
 import {getProducts} from "../services/generalService.ts";
+import type {CostOfLivingCategoryNames} from "../constants/categories.ts";
 
 export interface LastDataset {
     country: ICountry | null,
@@ -13,8 +14,8 @@ export interface LastDataset {
 }
 
 function parseDate (date: Date): string | null {
-    const day = daysAsOrdinals[date.getDate()] ?? `${date.getDate()}th`;
-    const month = months[date.getMonth() + 1];
+    const day = DAYS_AS_ORDINALS[date.getDate()] ?? `${date.getDate()}th`;
+    const month = MONTHS[date.getMonth() + 1];
 
     if (day && month) return `${day} of ${month}, ${date.getFullYear()}`
     return null
@@ -29,32 +30,27 @@ export const useProductsStore = defineStore('productsStore', () => {
 
     const recentlySearchedProducts = ref<Product[] | null>(null)
 
-    const loadProducts = async (country: ICountry | null, city: ICity | null)  => {
+    const loadProducts = async (country: ICountry | null, city: ICity | null, selectedCategories?: CostOfLivingCategoryNames[]) => {
         if (!country) return;
 
         loading.value = true;
         try {
-            products.value = await getProducts(country, city);
-            lastDataset.value.country = country;
-            lastDataset.value.city = city || null;
+            const data = await getProducts(country, city, selectedCategories);
 
-            if (products.value !== null && products.value.length) {
-                lastDataset.value.date = parseDate(new Date(products.value[0].created_at))
-            }
+            products.value = data;
+            lastDataset.value = {
+                country,
+                city: city || null,
+                date: data[0]?.created_at ? parseDate(new Date(data[0].created_at)) : parseDate(new Date()),
+            };
         } catch (err) {
             error.value = 'Failed to fetch products';
 
-            if (lastDataset.value.country) {
-                lastDataset.value.country = null;
-            }
-
-            if (lastDataset.value.city) {
-                lastDataset.value.city = null;
-            }
-
-            if (lastDataset.value.date) {
-                lastDataset.value.date = null
-            }
+            lastDataset.value = {
+                country: null,
+                city: null,
+                date: null,
+            };
         } finally {
             loading.value = false;
         }
@@ -63,7 +59,7 @@ export const useProductsStore = defineStore('productsStore', () => {
     //TODO - handle multiple errors
     const loadRecentlySearchedProducts = async (limit: number) => {
         try {
-            recentlySearchedProducts.value = await getProducts(null, null, limit);
+            recentlySearchedProducts.value = await getProducts(null, null, [], limit);
         } catch (err) {
             console.error(`Failed to fetch recently searched products: ${err}`)
         }
