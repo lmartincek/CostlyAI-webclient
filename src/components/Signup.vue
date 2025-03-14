@@ -12,7 +12,7 @@ const auth = useAuthStore();
 
 const email = ref<string>('');
 const password = ref<string>('');
-const errors = ref<{ email?: string; password?: string }>({});
+const errors = ref<{ email?: string; password?: string[], form?: string }>({});
 
 // Realtime validation for email
 watch(email, () => {
@@ -53,7 +53,7 @@ watch(password, (newPassword) => {
 });
 
 const validateForm = () => {
-    return !errors.value.email && !errors.value.password.length;
+    return !errors.value.email && !errors.value.password?.length;
 };
 
 const AuthStep = {
@@ -75,8 +75,9 @@ const handleSubmit = async () => {
         } else if (step.value === AuthStep.SignUp) {
             await auth.register(email.value, password.value);
         }
-    } catch (error) {
-        errors.value.form = error.message;
+    } catch (error: any) {
+        // TODO either like this or return errors from the store
+        errors.value.form = auth.error;
     } finally {
         isLoading.value = false;
         useModalStore().isOpen = false;
@@ -105,6 +106,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                     </div>
                 </div>
 
+<!--             TODO add errors.form -->
                 <form @submit.prevent="handleSubmit">
                     <div class="credentials">
                         <div class="input-wrapper">

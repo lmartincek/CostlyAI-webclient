@@ -10,7 +10,8 @@ import {
 } from "../services/authService.ts";
 
 export const useAuthStore = defineStore('authStore', () =>{
-    const user = ref(null)
+    //todo add auth types
+    const user = ref<any>(null)
     const accessToken = ref<string | null>(null);
     const isAuthenticated = ref<boolean>(false);
 
@@ -95,5 +96,5 @@ export const useAuthStore = defineStore('authStore', () =>{
         }
     }
 
-    return {user, isAuthenticated, accessToken, register, login, logout, rehydrate}
+    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate}
 })
