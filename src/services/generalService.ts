@@ -29,8 +29,8 @@ export const getProducts = async (
         return response.data;
     } catch (error) {
         // @ts-ignore
-        if (error.response?.status === 404) {
-            if (country) return await sendChatMessage(country, city);
+        if (error.response?.status === 404 && country) {
+            return await sendChatMessage(country, city);
         }
 
         console.error('Error fetching products from DB:', error);

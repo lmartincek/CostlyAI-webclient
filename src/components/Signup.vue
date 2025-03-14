@@ -64,6 +64,7 @@ const AuthStep = {
 type AuthStep = (typeof AuthStep)[keyof typeof AuthStep];
 
 const step = ref<AuthStep>(AuthStep.SignIn);
+// todo - auth loading, error fixes
 const isLoading = ref<boolean>(false);
 const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -174,9 +175,9 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
         </div>
     </FullscreenModal>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .error {
-    color: red;
+    color: $error-color;
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }

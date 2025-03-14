@@ -145,7 +145,7 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
   margin: 0.25rem 0;
   width: 100%;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-md {
     margin: 0 0.25rem;
   }
 }
@@ -176,7 +176,7 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
 
   &:focus {
     outline: none;
-    border-color: darken($border-color, 10%);
+    border-color: $placeholder-color;
   }
 
   &.disabled {
@@ -217,11 +217,11 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
 }
 
 .suggestions-list li:hover {
-  background-color: darken($white-color, 5%);
+  background-color: $white-darker-5p;
 }
 
 .suggestions-list li.selected {
-  background-color: darken($white-color, 10%);
+  background-color: $white-darker-10p;
 }
 
 .select-label {
@@ -245,7 +245,7 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
     justify-content: center;
 
     &:hover {
-        color: darken($text-color, 20%);
+        color: $white-darker-20p;
     }
 
     &:focus {

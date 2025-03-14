@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {ref} from "vue";
 import type {Providers} from "../types/auth";
 import {
+    deleteUser,
     loginUserWithCredentials,
     loginUserWithProvider,
     logoutUser,
@@ -67,7 +68,6 @@ export const useAuthStore = defineStore('authStore', () =>{
             if (email && password) {
                 const data = await loginUserWithCredentials(email, password)
                 setUser(data)
-                return
             }
 
             if (provider) {
@@ -90,11 +90,24 @@ export const useAuthStore = defineStore('authStore', () =>{
             await logoutUser()
             clearUser()
         } catch (e) {
-            error.value = 'Failed to logout'
+            error.value = 'Failed to log out'
         } finally {
             loading.value = false;
         }
     }
 
-    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate}
+    const deleteAccount = async (userId: string) => {
+        loading.value = true;
+
+        try {
+            await deleteUser(userId)
+            clearUser()
+        } catch (e) {
+            error.value = 'Failed to delete account'
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate, deleteAccount}
 })

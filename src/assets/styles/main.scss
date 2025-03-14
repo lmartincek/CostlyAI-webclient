@@ -1,3 +1,4 @@
-@import 'variables';
-@import 'media';
-@import 'base';
+@forward './variables';
+@forward './media';
+@forward './base';
+

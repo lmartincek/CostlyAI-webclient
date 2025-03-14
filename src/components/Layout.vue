@@ -1,8 +1,9 @@
 <script setup lang="ts">
-
+import Nav from "./Nav.vue";
 </script>
 
 <template>
+<Nav/>
 <div class="layout">
     <div class="layout__headline">
         <slot name="headline"/>

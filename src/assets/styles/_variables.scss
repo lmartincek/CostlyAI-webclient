@@ -1,11 +1,21 @@
+@use "sass:color";
+
 $breakpoint-sm: 480px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
 
 $white-color: #ffffff;
+
+$white-darker-5p: color.adjust($white-color, $lightness: -5%, $space: hsl);
+$white-darker-10p: color.adjust($white-color, $lightness: -10%, $space: hsl);
+$white-darker-20p: color.adjust($white-color, $lightness: -20%, $space: hsl);
+
 $primary-color: #4F46E5;
 $secondary-color: #7C3AED;
+
+$success-color: #4caf50;
+$error-color: #f44336;
 
 $primary-gradient: linear-gradient(to right, $primary-color, $secondary-color);
 $headline-color: #1F2937;

@@ -13,7 +13,7 @@ export const registerUser = async (email: string, password: string) => {
 
 export const loginUserWithCredentials = async (email: string, password: string) => {
     try {
-        const response = await apiClient.post('/loginWithCredentials', { email, password } as Credentials , { withCredentials: true});
+        const response = await apiClient.post('/login-with-credentials', { email, password } as Credentials , { withCredentials: true});
         return response.data;
     } catch (error) {
         console.error('Error logging in with credentials:', error);
@@ -23,7 +23,7 @@ export const loginUserWithCredentials = async (email: string, password: string) 
 
 export const loginUserWithProvider = async (provider: Providers) => {
     try {
-        const response = await apiClient.post('/loginWithProvider', { provider });
+        const response = await apiClient.post('/login-with-provider', { provider });
 
         if (response.data.url) {
             window.location.href = response.data.url;
@@ -41,6 +41,17 @@ export const logoutUser = async () => {
         return response.data;
     } catch (error) {
         console.error('Error logging out:', error);
+        throw error;
+    }
+};
+
+export const deleteUser = async (userId: string) => {
+    try {
+        const response = await apiClient.post('/delete-account', { userId });
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting account:', error);
         throw error;
     }
 };

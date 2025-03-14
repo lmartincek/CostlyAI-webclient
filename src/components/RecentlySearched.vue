@@ -87,7 +87,7 @@ watch(allCountries, async (newValue) => {
 
 <template>
     <div class="recently-searched__wrapper" v-if="allCities.length && recentlySearchedPlaces.length">
-        <span>Recently Searched</span>
+        <span>Recently people searched</span>
 <!--        TODO - loader placeholder cards-->
         <div class="cards">
             <template v-for="place in recentlySearchedPlaces">
@@ -106,7 +106,7 @@ watch(allCountries, async (newValue) => {
 .recently-searched__wrapper {
   background: rgba(255,255,255, .5);
   padding: 1.5rem 1rem;
-  margin: 3rem auto 1rem;
+  margin: 3rem auto 5rem;
   max-width: 650px;
   border-radius: 1rem;
   text-align: left;
@@ -122,7 +122,7 @@ watch(allCountries, async (newValue) => {
     grid-template-rows: repeat(1, 1fr);
     gap: 1rem;
 
-    @media (min-width: $breakpoint-md) {
+    @include respond-md {
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
     }
