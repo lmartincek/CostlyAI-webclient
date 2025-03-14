@@ -77,7 +77,7 @@ const handleSubmit = async () => {
         }
     } catch (error: any) {
         // TODO either like this or return errors from the store
-        errors.value.form = auth.error;
+        errors.value.form = error;
     } finally {
         isLoading.value = false;
         useModalStore().isOpen = false;
