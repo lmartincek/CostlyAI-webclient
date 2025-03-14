@@ -7,7 +7,7 @@ import type {ICountry} from "../types/countries";
 import type {Product} from "../types/products";
 import type {ICity} from "../types/cities";
 import {useGeneralStore} from "../stores/generalStore.ts";
-import {getCities} from "../services/externalApi.ts";
+import {getCities} from "../services/generalService.ts";
 
 const productStore = useProductsStore()
 const generalStore = useGeneralStore()
@@ -86,9 +86,9 @@ watch(allCountries, async (newValue) => {
 </script>
 
 <template>
-    <div class="recently-searched__wrapper" v-if="allCities && recentlySearchedPlaces">
+    <div class="recently-searched__wrapper" v-if="allCities.length && recentlySearchedPlaces.length">
         <span>Recently Searched</span>
-
+<!--        TODO - loader placeholder cards-->
         <div class="cards">
             <template v-for="place in recentlySearchedPlaces">
               <Card :img-left="place.country.code"

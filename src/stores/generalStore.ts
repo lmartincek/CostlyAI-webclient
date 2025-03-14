@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import {getCities, getCountries} from '../services/externalApi.ts';
 import type {ICountry} from "../types/countries";
 import type {ICity} from "../types/cities";
+import {getCities, getCountries} from "../services/generalService.ts";
 
 export const useGeneralStore = defineStore('generalStore', () => {
     const countries = ref<ICountry[]>([]);

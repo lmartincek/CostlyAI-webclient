@@ -1,27 +1,35 @@
 <template>
     <div class="select-container">
-        <label :for="id" class="select-label" v-if="label">{{ label }}</label>
+        <label class="select-label" v-if="label">{{ label }}</label>
         <div class="custom-select">
             <span class="input-icon">
                 <slot name="input-icon"/>
             </span>
             <input
-                    type="text"
-                    :id="id"
-                    v-model="searchQuery"
-                    @input="handleInput"
-                    @focus="showSuggestions = true"
-                    @blur="handleBlur"
-                    :disabled="disabled"
-                    :class="['select-input-field', { disabled }]"
-                    :placeholder="defaultOptionLabel"
+                type="text"
+                v-model="searchQuery"
+                @input="handleInput"
+                @focus="showSuggestions = true"
+                @blur="handleBlur"
+                :disabled="disabled"
+                autocomplete="off"
+                :class="['select-input-field', { disabled }]"
+                :placeholder="defaultOptionLabel"
             />
+            <button
+                v-if="selectedValue"
+                class="clear-button"
+                @click="clearValue"
+                type="button"
+            >
+                &times;
+            </button>
             <ul v-if="showSuggestions && filteredOptions.length > 0" class="suggestions-list">
                 <li
-                        v-for="option in filteredOptions"
-                        :key="option.name"
-                        @mousedown="handleSelect(option)"
-                        :class="{ 'selected': selectedValue === option.name }"
+                    v-for="option in filteredOptions"
+                    :key="option.name"
+                    @mousedown="handleSelect(option)"
+                    :class="{ 'selected': selectedValue === option.name }"
                 >
                     <span class="suggestion-icon" v-if="isCountry(option)">
                         <Icon folder="flags" :name="`${option.code}`" alt="" width="20" height="20"/>
@@ -34,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { ICountry } from "../types/countries";
 import type { ICity } from "../types/cities";
 
@@ -58,21 +66,26 @@ const props = defineProps({
         type: String,
         default: 'Select an option...',
     },
-    id: {
-        type: String,
-        default: 'select-input',
-    },
     disabled: {
         type: Boolean,
         default: false,
     },
+    modelValue: {
+        type: String,
+        required: true,
+    },
 });
 
-const searchQuery = ref<string>('');
-const selectedValue = ref<any>(null);
+const emit = defineEmits(['update:modelValue']);
+
+const searchQuery = ref<string>(props.modelValue || '');
+const selectedValue = ref<string>(props.modelValue || '');
 const showSuggestions = ref<boolean>(false);
 
-const emit = defineEmits(['update:modelValue']);
+watch(() => props.modelValue, (newValue) => {
+    searchQuery.value = newValue || '';
+    selectedValue.value = newValue || '';
+});
 
 const filteredOptions = computed(() => {
     if (props.options) {
@@ -80,7 +93,7 @@ const filteredOptions = computed(() => {
             option.name.toLowerCase().includes(searchQuery.value.toLowerCase())
         );
     }
-    return []
+    return [];
 });
 
 const handleInput = () => {
@@ -98,6 +111,12 @@ const handleBlur = () => {
     setTimeout(() => {
         showSuggestions.value = false;
     }, 200);
+};
+
+const clearValue = () => {
+    selectedValue.value = '';
+    searchQuery.value = '';
+    emit('update:modelValue', '');
 };
 
 const highlightMatch = (text: string) => {
@@ -149,7 +168,6 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
 .select-input-field {
   padding: .75rem .75rem .75rem 2.5rem;
   font-size: 1rem;
-  cursor: pointer;
   border-radius: 5px;
   border: 1px solid $border-color;
   background: $white-color;
@@ -210,5 +228,29 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
   font-weight: bold;
   margin-bottom: 0.5rem;
   display: block;
+}
+
+.clear-button {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $text-color;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        color: darken($text-color, 20%);
+    }
+
+    &:focus {
+        outline: none;
+        border: none;
+    }
 }
 </style>

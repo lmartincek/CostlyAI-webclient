@@ -49,5 +49,10 @@ const modalsStore = useModalStore()
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+
+    &:focus {
+        outline: none;
+        border: none;
+    }
 }
 </style>
