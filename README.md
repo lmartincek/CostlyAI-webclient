@@ -33,9 +33,5 @@ npm run dev
 npm run build
 ```
 
-## ToDo / Work in Progress
-- [ ] Show from what date is data being shown, if it's fresh let the user know about it
-- [ ] Add loader while calling chat completion
-- [ ] Add typing option to select inputs with suggestion set
-- [ ] Add register/login
-- [ ] Add customized data set option for auth user
+## Work in Progress
+ - More features for registered users. 
