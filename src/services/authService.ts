@@ -65,7 +65,7 @@ export const getUser = async () => {
     }
 }
 
-export const setUserSession = async (accessToken: string, refreshToken: string) => {
+export const setUserSession = async (accessToken: string, refreshToken: string | null) => {
     try {
         const response = await apiClient.post('/set-user', {accessToken, refreshToken}, { withCredentials: true });
         return response.data

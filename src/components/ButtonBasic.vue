@@ -22,7 +22,7 @@ defineProps({
         default: false,
     },
     type: {
-        type: String,
+        type: String as PropType<'button' | 'submit' | 'reset'>,
         default: 'button'
     }
 });
