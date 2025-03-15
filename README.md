@@ -21,7 +21,7 @@ Clone the repository and install the dependencies.
 ```bash
 git clone https://github.com/lmartincek/CostlyAI-webclient.git
 
-cd swing-client
+cd CostlyAI-webclient
 
 # Install dependencies
 npm install
