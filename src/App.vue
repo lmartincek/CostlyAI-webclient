@@ -9,8 +9,34 @@ import Notification from './components/Notification.vue';
 import {useNotificationsStore} from "./stores/notificationsStore.ts";
 import SearchCosts from "./components/SearchCosts.vue";
 import CostsWrapper from "./components/CostsWrapper.vue";
+import {onMounted} from "vue";
+import {setUserSession} from "./services/authService.ts";
+import {useAuthStore} from "./stores/authStore.ts";
 
 const { notifications } = useNotificationsStore();
+const authStore = useAuthStore()
+
+async function handleOAuthCallback() {
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+
+    if (accessToken) {
+        await setUserSession(accessToken, refreshToken)
+        window.history.pushState({}, document.title, "/");
+    }
+}
+
+onMounted(async () => {
+    await handleOAuthCallback();
+
+    if (!authStore.accessToken && localStorage.getItem('costly-remember-me')) {
+        await authStore.rehydrate();
+    }
+})
+
 </script>
 
 <template>

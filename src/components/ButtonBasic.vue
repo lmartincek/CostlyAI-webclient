@@ -3,6 +3,7 @@
             :class="buttonClass"
             :disabled="disabled"
             @click="handleClick"
+            :type="type"
     >
         <slot/>
     </button>
@@ -20,6 +21,10 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    type: {
+        type: String as PropType<'button' | 'submit' | 'reset'>,
+        default: 'button'
+    }
 });
 
 const emit = defineEmits(['click']);
@@ -33,16 +38,28 @@ button {
     padding: .8rem 1.6rem;
     cursor: pointer;
     border-radius: .5rem;
+    transition: .3s ease;
+    border: 2px solid transparent;
 
     &.btn-white {
         background: $white-color;
         color: $text-color;
-        border: 1px solid $placeholder-color;
+        border-color: $placeholder-color;
+
+        &:hover {
+            background: $text-color;
+            color: $white-color;
+            border-color: $border-color;
+        }
     }
 
     &.btn-primary {
         background: $primary-gradient;
         color: $white-color;
+
+        &:hover {
+            border-color: $primary-color-light;
+        }
     }
 
     &:disabled {

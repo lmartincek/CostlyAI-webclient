@@ -15,7 +15,7 @@ defineProps({
     type: {
         type: String,
         default: 'success',
-        validator: (value: string) => ['success', 'error'].includes(value),
+        validator: (value: string) => ['success', 'error', 'default'].includes(value),
     },
 });
 </script>
@@ -29,6 +29,7 @@ defineProps({
     padding: 1rem 2rem;
     border-radius: 4px;
     color: $white-color;
+    text-align: center;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -36,14 +37,18 @@ defineProps({
     z-index: 1000;
     max-width: 350px;
     width: 100%;
-}
 
-.notification.success {
-    background-color: $success-color;
-}
+    &.success {
+        background-color: $success-color;
+    }
 
-.notification.error {
-    background-color: $error-color;
+    &.error {
+        background-color: $error-color;
+    }
+
+    &.default {
+        background-color: $headline-color;
+    }
 }
 
 .notification-message {

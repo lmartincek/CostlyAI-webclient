@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import {computed, ref, watch} from 'vue';
 import FullscreenModal from './FullscreenModal.vue';
 import ButtonBasic from './ButtonBasic.vue';
 import TextInput from './TextInput.vue';
@@ -7,6 +7,7 @@ import Checkbox from './Checkbox.vue';
 import Spinner from './Spinner.vue';
 import { useAuthStore } from '../stores/authStore.ts';
 import {useModalStore} from "../stores/modalsStore.ts";
+import {useNotificationsStore} from "../stores/notificationsStore.ts";
 
 const auth = useAuthStore();
 
@@ -82,22 +83,43 @@ const AuthStep = {
 } as const;
 
 type AuthStep = (typeof AuthStep)[keyof typeof AuthStep];
-
 const step = ref<AuthStep>(AuthStep.SignIn);
-// todo - auth loading, error fixes
+const stepText = computed(() => step.value === AuthStep.SignIn ? 'Sign In' : 'Sign Up')
+
 const isLoading = ref<boolean>(false);
+
+const { showNotification } = useNotificationsStore()
 const handleSubmit = async () => {
     if (!validateForm()) return;
 
     isLoading.value = true;
     try {
         if (step.value === AuthStep.SignIn) {
-            await auth.login(email.value, password.value, null, rememberMe.value);
+            try {
+                await auth.login(email.value, password.value, null, rememberMe.value);
+                showNotification({
+                    message: "Logged in",
+                })
+            } catch (e) {
+                showNotification({
+                    message: e.message,
+                    type: "error"
+                })
+            }
         } else if (step.value === AuthStep.SignUp) {
-            await auth.register(email.value, password.value);
+            try {
+                await auth.register(email.value, password.value, rememberMe.value);
+                showNotification({
+                    message: "Registered and logged in",
+                })
+            } catch (e) {
+                showNotification({
+                    message: e.message,
+                    type: "error"
+                })
+            }
         }
     } catch (error: any) {
-        // TODO either like this or return errors from the store
         errors.value.form = error;
     } finally {
         isLoading.value = false;
@@ -165,8 +187,10 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                             </div>
                         </div>
 
-                        <ButtonBasic type="submit" class="credentials-btn" v-if="!isLoading">
-                            {{ step === AuthStep.SignIn ? 'Sign In' : 'Sign Up' }}
+                        <ButtonBasic type="submit"
+                                     class="credentials-btn"
+                                     v-if="!isLoading">
+                            {{ stepText }}
                         </ButtonBasic>
                         <Spinner v-else />
 
@@ -181,14 +205,8 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                                 button-class="btn-white"
                                 @click="handleOAuthLogin('google')"
                             >
-                                Google
-                            </ButtonBasic>
-                            <ButtonBasic
-                                class="socials__btn"
-                                button-class="btn-white"
-                                @click="handleOAuthLogin('apple')"
-                            >
-                                Apple
+                                <font-awesome-icon icon="fa-brands fa-google" style="margin-right: 5px"/>
+                                {{ stepText }} with Google
                             </ButtonBasic>
                         </div>
                     </div>
@@ -273,10 +291,6 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                 align-items: center;
                 margin: 1.5rem 0;
 
-                &__checkbox {
-                //    TODO - checkbox
-                }
-
                 &__forgot-password {
                     color: $primary-color;
                     cursor: pointer;
@@ -309,10 +323,6 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 
                 &__btn {
                     width: 100%;
-
-                    &:first-of-type {
-                        margin-right: 1rem;
-                    }
                 }
             }
         }
