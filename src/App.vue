@@ -13,7 +13,7 @@ import {onMounted} from "vue";
 import {setUserSession} from "./services/authService.ts";
 import {useAuthStore} from "./stores/authStore.ts";
 
-const { notifications } = useNotificationsStore();
+const { notifications, showNotification } = useNotificationsStore();
 const authStore = useAuthStore()
 
 async function handleOAuthCallback() {
@@ -24,7 +24,17 @@ async function handleOAuthCallback() {
     const refreshToken = params.get("refresh_token");
 
     if (accessToken) {
-        await setUserSession(accessToken, refreshToken)
+        try {
+            await setUserSession(accessToken, refreshToken)
+            showNotification({
+                message: "Successfully logged in"
+            })
+        } catch (e) {
+            showNotification({
+                message: e.message,
+                type: "error"
+            })
+        }
         window.history.pushState({}, document.title, "/");
     }
 }

@@ -98,7 +98,7 @@ const handleSubmit = async () => {
             try {
                 await auth.login(email.value, password.value, null, rememberMe.value);
                 showNotification({
-                    message: "Logged in",
+                    message: "Successfully logged in",
                 })
             } catch (e) {
                 showNotification({

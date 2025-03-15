@@ -27,7 +27,7 @@ const logout = async () => {
     try {
         await auth.logout()
         showNotification({
-            message: "Logged out",
+            message: "Successfully Logged out",
             type: "default"
         })
     } catch (e) {
