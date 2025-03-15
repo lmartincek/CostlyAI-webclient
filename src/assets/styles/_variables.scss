@@ -13,6 +13,7 @@ $white-darker-20p: color.adjust($white-color, $lightness: -20%, $space: hsl);
 
 $primary-color: #4F46E5;
 $primary-color-light: color.adjust($primary-color, $lightness: 20%, $space: hsl);
+$primary-color-light-2: color.adjust($primary-color, $lightness: 10%, $space: hsl);
 $secondary-color: #7C3AED;
 
 $success-color: #4caf50;

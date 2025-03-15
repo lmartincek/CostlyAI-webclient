@@ -8,7 +8,6 @@
             <template #content>
                 <div class="dropdown-item">{{ auth.user.email }}</div>
                 <div class="dropdown-item" @click="logout">Logout</div>
-<!--                <div class="dropdown-item" @click="deleteAccount">Delete Account</div>-->
             </template>
         </Dropdown>
     </div>
@@ -18,16 +17,26 @@
 import Dropdown from './Dropdown.vue';
 import Icon from "./Icon.vue";
 import {useAuthStore} from "../stores/authStore.ts";
+import {useNotificationsStore} from "../stores/notificationsStore.ts";
 
 const auth = useAuthStore()
 
-const logout = async () => {
-    await auth.logout()
-};
+const { showNotification } = useNotificationsStore()
 
-// const deleteAccount = async () => {
-//     await auth.deleteAccount(auth.user.id)
-// };
+const logout = async () => {
+    try {
+        await auth.logout()
+        showNotification({
+            message: "Logged out",
+            type: "default"
+        })
+    } catch (e) {
+        showNotification({
+            message: e.message,
+            type: "error"
+        })
+    }
+};
 </script>
 
 <style scoped lang="scss">
@@ -36,7 +45,6 @@ const logout = async () => {
     justify-content: center;
     align-items: center;
     position: relative;
-    cursor: pointer;
     background: $primary-gradient;
     border-radius: 3rem;
     height: 2.5rem;

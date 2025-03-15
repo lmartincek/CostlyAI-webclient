@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import {defineStore} from "pinia";
 
-type NotificationType = 'success' | 'error';
+type NotificationType = 'success' | 'error' | 'default';
 
 interface Notification {
     message: string;

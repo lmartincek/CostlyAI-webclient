@@ -34,8 +34,8 @@ const modalsStore = useModalStore()
     position: relative;
     background: white;
     border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
+    width: 95%;
+    max-width: 450px;
     max-height: 90vh;
     overflow: auto;
     outline: none;

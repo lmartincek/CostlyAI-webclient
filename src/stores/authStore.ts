@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 import {ref} from "vue";
 import type {Providers} from "../types/auth";
 import {
-    deleteUser,
+    getUser,
     loginUserWithCredentials,
     loginUserWithProvider,
     logoutUser,
-    refreshToken,
+    refreshUserToken,
     registerUser
 } from "../services/authService.ts";
 
@@ -15,8 +15,6 @@ export const useAuthStore = defineStore('authStore', () =>{
     const user = ref<any>(null)
     const accessToken = ref<string | null>(null);
     const isAuthenticated = ref<boolean>(false);
-
-    const error = ref<string | null>(null);
     const loading = ref<boolean>(false);
 
     function setUser (data: any) {
@@ -33,29 +31,38 @@ export const useAuthStore = defineStore('authStore', () =>{
 
     const rehydrate = async () => {
         try {
-            const data = await refreshToken();
-            if (data) {
-                setUser(data)
-            } else {
-                clearUser()
-            }
+            const data = await getUser()
+            setUser(data);
         } catch (error) {
-            console.error('Error rehydrating token:', error);
+            await refreshToken();
+            console.error('Session expired, trying to refresh:', error);
+            throw error
         }
     };
 
-    if (!accessToken.value && localStorage.getItem('costly-remember-me')) {
-        rehydrate().then()
-    }
+    const refreshToken = async () => {
+        try {
+            const data = await refreshUserToken()
+            setUser(data);
+        } catch (error) {
+            await logout();
+            console.error(`Refresh token expired, logging out: ${error}`);
+            throw error
+        }
+    };
 
-    const register = async (email: string, password: string) => {
+    const register = async (email: string, password: string, remember: boolean = false) => {
         loading.value = true;
 
         try {
             const data = await registerUser(email, password)
             setUser(data)
+
+            if (remember) {
+                localStorage.setItem('costly-remember-me', 'true')
+            }
         } catch (e) {
-            error.value = 'Failed to register user'
+            throw e
         } finally {
             loading.value = false;
         }
@@ -74,13 +81,11 @@ export const useAuthStore = defineStore('authStore', () =>{
             }
 
             if (provider) {
-                // @ts-ignore
-                user.value = await loginUserWithProvider(provider)
-                return
+                localStorage.setItem('costly-remember-me', 'true')
+                await loginUserWithProvider(provider)
             }
-
         } catch (e) {
-            error.value = `Failed to login w/ ${provider ? provider : 'credentials'}`
+            throw e
         } finally {
             loading.value = false;
         }
@@ -96,24 +101,11 @@ export const useAuthStore = defineStore('authStore', () =>{
                 localStorage.removeItem('costly-remember-me')
             }
         } catch (e) {
-            error.value = 'Failed to log out'
+            throw e
         } finally {
             loading.value = false;
         }
     }
 
-    const deleteAccount = async (userId: string) => {
-        loading.value = true;
-
-        try {
-            await deleteUser(userId)
-            clearUser()
-        } catch (e) {
-            error.value = 'Failed to delete account'
-        } finally {
-            loading.value = false;
-        }
-    }
-
-    return {error, user, isAuthenticated, accessToken, register, login, logout, rehydrate, deleteAccount}
+    return {user, isAuthenticated, accessToken, register, login, logout, rehydrate, setUser}
 })
