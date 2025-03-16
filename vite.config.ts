@@ -10,5 +10,16 @@ export default defineConfig({
         additionalData: `@use "/src/assets/styles/main.scss" as *;`,
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    }
   }
 })

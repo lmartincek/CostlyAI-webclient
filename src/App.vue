@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import InfoPopup from "./components/InfoPopup.vue";
 import Layout from "./components/Layout.vue";
 import Footer from "./components/Footer.vue";
 import Signup from "./components/Signup.vue";
@@ -57,8 +56,6 @@ onMounted(async () => {
             :duration="notification.duration"
         />
     </template>
-
-    <InfoPopup/>
     <Signup/>
 
     <Layout>

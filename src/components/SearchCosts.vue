@@ -2,15 +2,14 @@
 import ButtonBasic from "./ButtonBasic.vue";
 import Icon from "./Icon.vue";
 import SelectInput from "./SelectInput.vue";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, defineAsyncComponent, onMounted, ref, watch} from "vue";
 import type {ICity} from "../types/cities";
 import type {ICountry} from "../types/countries";
 import {useGeneralStore} from "../stores/generalStore.ts";
 import {useProductsStore} from "../stores/productsStore.ts";
-import Tag from "./Tag.vue";
-import {COST_OF_LIVING_CATEGORIES} from "../constants/categories.ts";
-import type { CostOfLivingCategory } from "../constants/categories.ts"
 import {useAuthStore} from "../stores/authStore.ts";
+import type {CostOfLivingCategoryNames} from "../constants/categories.ts";
+const CostCategories = defineAsyncComponent(() => import('../components/CostCategories.vue'));
 
 const generalStore = useGeneralStore();
 const productsStore = useProductsStore();
@@ -41,15 +40,7 @@ watch( () => selectedCountry.value, async () => {
     }
 })
 
-const selectedTags = ref<string[]>([])
-const isMaximumCount = computed<boolean>(() => selectedTags.value.length >= 5)
-function handleTagClick(event: boolean, tag: CostOfLivingCategory) {
-    if (event) {
-        selectedTags.value = [...selectedTags.value, tag.name]
-    } else {
-        selectedTags.value = selectedTags.value.filter(selectedTag => tag.name !== selectedTag)
-    }
-}
+const selectedCategories = ref<CostOfLivingCategoryNames[]>([])
 </script>
 
 <template>
@@ -74,18 +65,11 @@ function handleTagClick(event: boolean, tag: CostOfLivingCategory) {
         </div>
         <div class="wrapper-control__auth-section" v-if="authStore.isAuthenticated">
             <span>Click and select what are you interested in <b>(max: 5 categories)</b>:</span>
-            <div class="tags">
-                <Tag v-for="tag in COST_OF_LIVING_CATEGORIES"
-                     :icon="tag.name"
-                     :disabled="isMaximumCount && !selectedTags.includes(tag.name)"
-                     @update:is-selected="handleTagClick($event, tag)">
-                    <template v-slot:icon><font-awesome-icon :icon="tag.icon" style="margin-right: 10px;" /></template>
-                    {{ tag.name }}</Tag>
-            </div>
+            <CostCategories @update:selected-tags=""/>
         </div>
         <div class="wrapper-control__button">
             <ButtonBasic :disabled="!selectedCountry || productsStore.loading"
-                         @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj, selectedTags)">Search Costs</ButtonBasic>
+                         @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj, selectedCategories)">Search Costs</ButtonBasic>
         </div>
     </div>
 
@@ -122,20 +106,6 @@ function handleTagClick(event: boolean, tag: CostOfLivingCategory) {
             font-size: .9rem;
             margin: 0 .25rem;
         }
-
-       .tags {
-           display: flex;
-           flex-wrap: wrap;
-           gap: 1rem;
-           margin-top: 1rem;
-
-           :deep(.tag) {
-               flex: 1 1 auto;
-               min-width: 150px;
-               max-width: 200px;
-               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-           }
-       }
     }
 
   &__button {
