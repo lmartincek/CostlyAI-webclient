@@ -61,12 +61,7 @@ export const useAuthStore = defineStore('authStore', () => {
     loading.value = true
 
     try {
-      const data = await registerUser(email, password)
-      setUser(data)
-
-      if (remember) {
-        localStorage.setItem('costly-remember-me', 'true')
-      }
+      await registerUser(email, password)
     } catch (e) {
       throw e
     } finally {
@@ -92,7 +87,6 @@ export const useAuthStore = defineStore('authStore', () => {
       }
 
       if (provider) {
-        localStorage.setItem('costly-remember-me', 'true')
         await loginUserWithProvider(provider)
       }
     } catch (e) {

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Signup Modal', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the page where the modal can be triggered
-    await page.goto('https://costlyai.xyz');
+    await page.goto('/');
     // Trigger the modal (e.g., by clicking a button that opens the modal)
     await page.click('.wrapper__auth--login');
   });

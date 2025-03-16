@@ -24,7 +24,10 @@ async function handleOAuthCallback() {
 
   if (accessToken) {
     try {
-      await setUserSession(accessToken, refreshToken)
+      const data = await setUserSession(accessToken, refreshToken)
+      authStore.setUser(data)
+      localStorage.setItem('costly-remember-me', 'true')
+
       showNotification({
         message: 'Successfully logged in',
       })

@@ -17,7 +17,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
 
     setTimeout(() => {
       notifications.value.shift()
-    }, notification.duration || 3000)
+    }, notification.duration || 1500)
   }
 
   return {

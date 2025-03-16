@@ -8,6 +8,7 @@ import Spinner from '@/components/SpinnerCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import { useModalStore } from '@/stores/modalsStore.ts'
 import { useNotificationsStore } from '@/stores/notificationsStore.ts'
+import {resetPassword} from "@/services/authService.ts";
 
 const auth = useAuthStore()
 
@@ -82,16 +83,46 @@ const validateForm = () => {
 const AuthStep = {
   SignIn: 1,
   SignUp: 2,
+  ForgotPassword: 3,
 } as const
 
 type AuthStep = (typeof AuthStep)[keyof typeof AuthStep]
 const step = ref<AuthStep>(AuthStep.SignIn)
-const stepText = computed(() => (step.value === AuthStep.SignIn ? 'Sign In' : 'Sign Up'))
+const stepText = computed(() => {
+  if (step.value === AuthStep.SignIn) return 'Sign In'
+  else if (step.value === AuthStep.SignUp) return 'Sign Up'
+  else return 'Set new password'
+})
 
 const isLoading = ref<boolean>(false)
 
 const { showNotification } = useNotificationsStore()
+const modal = useModalStore()
 const handleSubmit = async () => {
+  if (step.value === AuthStep.ForgotPassword) {
+    validateEmail()
+
+    if (errors.value.email) {
+      return
+    }
+
+    try {
+      await resetPassword(email.value)
+      showNotification({
+        message: 'Please, go and check your email',
+      })
+    } catch (e) {
+      showNotification({
+        message: e.message,
+        type: 'error',
+      })
+    } finally {
+      modal.isOpen = false
+    }
+
+    return
+  }
+
   if (!validateForm()) return
 
   isLoading.value = true
@@ -110,9 +141,10 @@ const handleSubmit = async () => {
       }
     } else if (step.value === AuthStep.SignUp) {
       try {
-        await auth.register(email.value, password.value, rememberMe.value)
+        await auth.register(email.value, password.value)
         showNotification({
-          message: 'Registered and logged in',
+          message: 'Please, go check and confirm your email',
+          duration: 5000
         })
       } catch (e) {
         showNotification({
@@ -125,7 +157,7 @@ const handleSubmit = async () => {
     console.error(error.message)
   } finally {
     isLoading.value = false
-    useModalStore().isOpen = false
+    modal.isOpen = false
   }
 }
 
@@ -171,7 +203,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
               <span v-if="errors.email" class="error">{{ errors.email }}</span>
             </div>
 
-            <div class="input-wrapper">
+            <div class="input-wrapper" v-if="step !== AuthStep.ForgotPassword">
               <label for="password">Password</label>
               <TextInput
                 id="password"
@@ -185,16 +217,18 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
               </template>
             </div>
 
-            <div class="actions">
+            <div class="actions" v-if="step === AuthStep.SignIn">
               <div class="actions__checkbox">
                 <Checkbox @update:is-checked="rememberMe = $event">Remember me</Checkbox>
               </div>
-              <div class="actions__forgot-password">
+              <div class="actions__forgot-password" @click="step = AuthStep.ForgotPassword">
                 <span>Forgot password?</span>
               </div>
             </div>
 
-            <ButtonBasic type="submit" class="credentials-btn" v-if="!isLoading">
+            <ButtonBasic type="submit"
+                         class="credentials-btn"
+                         v-if="!isLoading">
               {{ stepText }}
             </ButtonBasic>
             <Spinner v-else />
@@ -211,7 +245,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                 @click="handleOAuthLogin('google')"
               >
                 <font-awesome-icon icon="fa-brands fa-google" style="margin-right: 5px" />
-                {{ stepText }} with Google
+                Google
               </ButtonBasic>
             </div>
           </div>
@@ -293,16 +327,18 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 1.5rem 0;
+        margin: 1.5rem 0 .5rem;
 
         &__forgot-password {
           color: $primary-color;
           cursor: pointer;
+          font-size: .9rem;
         }
       }
 
       .credentials-btn {
         width: 100%;
+        margin-top: 1rem;
       }
 
       .breakthrough {
