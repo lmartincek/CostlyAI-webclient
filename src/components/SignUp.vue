@@ -8,7 +8,7 @@ import Spinner from '@/components/SpinnerCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import { useModalStore } from '@/stores/modalsStore.ts'
 import { useNotificationsStore } from '@/stores/notificationsStore.ts'
-import {resetPassword} from "@/services/authService.ts";
+import { resetPassword } from '@/services/authService.ts'
 
 const auth = useAuthStore()
 
@@ -110,6 +110,7 @@ const handleSubmit = async () => {
       await resetPassword(email.value)
       showNotification({
         message: 'Please, go and check your email',
+        duration: 5000,
       })
     } catch (e) {
       showNotification({
@@ -144,7 +145,7 @@ const handleSubmit = async () => {
         await auth.register(email.value, password.value)
         showNotification({
           message: 'Please, go check and confirm your email',
-          duration: 5000
+          duration: 5000,
         })
       } catch (e) {
         showNotification({
@@ -226,9 +227,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
               </div>
             </div>
 
-            <ButtonBasic type="submit"
-                         class="credentials-btn"
-                         v-if="!isLoading">
+            <ButtonBasic type="submit" class="credentials-btn" v-if="!isLoading">
               {{ stepText }}
             </ButtonBasic>
             <Spinner v-else />
@@ -327,12 +326,12 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 1.5rem 0 .5rem;
+        margin: 1.5rem 0 0.5rem;
 
         &__forgot-password {
           color: $primary-color;
           cursor: pointer;
-          font-size: .9rem;
+          font-size: 0.9rem;
         }
       }
 

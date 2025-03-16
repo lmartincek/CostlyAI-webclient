@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   }
 
-  const register = async (email: string, password: string, remember: boolean = false) => {
+  const register = async (email: string, password: string) => {
     loading.value = true
 
     try {

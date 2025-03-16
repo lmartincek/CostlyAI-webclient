@@ -8,7 +8,7 @@ const mockOptions = [
   { name: 'Poland', code: 'pl', id: 3 },
 ]
 
-describe('SelectComponent', () => {
+describe('SelectInput.vue', () => {
   it('renders correctly with props', () => {
     const wrapper = mount(SelectInput, {
       props: { options: mockOptions, modelValue: '' },

@@ -91,10 +91,7 @@ export const setUserSession = async (accessToken: string, refreshToken: string |
 
 export const resetPassword = async (email: string) => {
   try {
-    const response = await apiClient.post(
-      '/reset-password',
-      { email },
-    )
+    const response = await apiClient.post('/reset-password', { email })
     return response.data
   } catch (error) {
     console.error(`Error refreshing token: ${error}`)
