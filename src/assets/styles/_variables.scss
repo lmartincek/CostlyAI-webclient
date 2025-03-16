@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 $breakpoint-sm: 480px;
 $breakpoint-md: 768px;
@@ -11,21 +11,21 @@ $white-darker-5p: color.adjust($white-color, $lightness: -5%, $space: hsl);
 $white-darker-10p: color.adjust($white-color, $lightness: -10%, $space: hsl);
 $white-darker-20p: color.adjust($white-color, $lightness: -20%, $space: hsl);
 
-$primary-color: #4F46E5;
+$primary-color: #4f46e5;
 $primary-color-light: color.adjust($primary-color, $lightness: 20%, $space: hsl);
 $primary-color-light-2: color.adjust($primary-color, $lightness: 10%, $space: hsl);
-$secondary-color: #7C3AED;
+$secondary-color: #7c3aed;
 
 $success-color: #4caf50;
 $error-color: #f44336;
 
 $primary-gradient: linear-gradient(to right, $primary-color, $secondary-color);
-$headline-color: #1F2937;
-$text-color: #4B5563;
-$background-color: linear-gradient(#EFF6FF, #F5F3FF);
+$headline-color: #1f2937;
+$text-color: #4b5563;
+$background-color: linear-gradient(#eff6ff, #f5f3ff);
 
-$placeholder-color: #ADAEBC;
-$border-color: #E5E7EB;
+$placeholder-color: #adaebc;
+$border-color: #e5e7eb;
 
 $spacing-xs: 4px;
 $spacing-sm: 8px;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {useModalStore} from "../stores/modalsStore.ts";
-import Icon from "./Icon.vue";
-import {useAuthStore} from "../stores/authStore.ts";
-import ProfileBadge from "./ProfileBadge.vue";
+import { useModalStore } from '@/stores/modalsStore.ts'
+import Icon from '@/components/IconCostly.vue'
+import { useAuthStore } from '@/stores/authStore.ts'
+import ProfileBadge from '@/components/ProfileBadge.vue'
 
 const modal = useModalStore()
 const auth = useAuthStore()
@@ -10,18 +10,20 @@ const auth = useAuthStore()
 
 <template>
   <nav>
-      <div class="wrapper">
-        <div class="wrapper__logo"><Icon alt="logo" name="globe" width="26" height="26"/> CostlyAI</div>
+    <div class="wrapper">
+      <div class="wrapper__logo">
+        <Icon alt="logo" name="globe" width="26" height="26" /> CostlyAI
+      </div>
 
-        <div class="wrapper__auth">
-          <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
-              <Icon alt="" name="login" width="18" height="18"/> Sign in
-          </div>
-          <div class="wrapper__auth--profile" v-else>
-              <ProfileBadge/>
-          </div>
+      <div class="wrapper__auth">
+        <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
+          <Icon alt="" name="login" width="18" height="18" /> Sign in
+        </div>
+        <div class="wrapper__auth--profile" v-else>
+          <ProfileBadge v-if="auth.user" />
         </div>
       </div>
+    </div>
   </nav>
 </template>
 
@@ -40,7 +42,8 @@ nav {
     max-width: 900px;
     height: 100%;
 
-    &__logo, &__auth {
+    &__logo,
+    &__auth {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -52,7 +55,7 @@ nav {
       color: $primary-color;
 
       img {
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
     }
 
@@ -63,7 +66,7 @@ nav {
       font-weight: 500;
       transition: scale 300ms ease-in-out;
       cursor: pointer;
-      padding: .5rem 1rem;
+      padding: 0.5rem 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -73,12 +76,11 @@ nav {
       }
 
       img {
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
     }
 
     &__auth--profile {
-
     }
   }
 }

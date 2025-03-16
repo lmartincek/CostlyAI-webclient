@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import Nav from "./Nav.vue";
+import Nav from './NavCostly.vue'
 </script>
 
 <template>
-<Nav/>
-<div class="layout">
+  <header>
+    <Nav />
+  </header>
+  <div class="layout">
     <div class="layout__headline">
-        <slot name="headline"/>
+      <slot name="headline" />
     </div>
     <div class="layout__content">
-        <slot name="content"/>
+      <slot name="content" />
     </div>
-</div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -23,10 +25,10 @@ import Nav from "./Nav.vue";
   text-align: center;
   padding: 0 1rem;
 
-    &__headline {
-        max-width: 600px;
-        padding: 0 1rem;
-        margin: 0 auto;
-    }
+  &__headline {
+    max-width: 600px;
+    padding: 0 1rem;
+    margin: 0 auto;
+  }
 }
 </style>

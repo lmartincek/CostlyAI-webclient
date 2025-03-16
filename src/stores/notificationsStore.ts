@@ -1,27 +1,27 @@
-import { ref } from 'vue';
-import {defineStore} from "pinia";
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
 
-type NotificationType = 'success' | 'error' | 'default';
+type NotificationType = 'success' | 'error' | 'default'
 
 interface Notification {
-    message: string;
-    type?: NotificationType;
-    duration?: number;
+  message: string
+  type?: NotificationType
+  duration?: number
 }
 
 export const useNotificationsStore = defineStore('notificationsStore', () => {
-    const notifications = ref<Notification[]>([]);
+  const notifications = ref<Notification[]>([])
 
-    const showNotification = (notification: Notification) => {
-        notifications.value.push(notification);
+  const showNotification = (notification: Notification) => {
+    notifications.value.push(notification)
 
-        setTimeout(() => {
-            notifications.value.shift();
-        }, notification.duration || 3000);
-    };
+    setTimeout(() => {
+      notifications.value.shift()
+    }, notification.duration || 3000)
+  }
 
-    return {
-        notifications,
-        showNotification,
-    };
+  return {
+    notifications,
+    showNotification,
+  }
 })
