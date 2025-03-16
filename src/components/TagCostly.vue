@@ -47,7 +47,7 @@ function handleClick() {
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0 .25rem .5rem;
+  padding: 0.4rem 0.4rem .4rem .6rem;
   border-radius: 0.5rem;
   background-color: $white-darker-5p;
   color: $text-color;
@@ -55,14 +55,14 @@ function handleClick() {
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
 
   @include respond-md {
+    border: 2px solid transparent;
     padding: .5rem;
-  }
 
-  &:hover {
-    border-color: $primary-color-light;
+    &:hover {
+      border-color: $primary-color-light;
+    }
   }
 
   &.selected {
