@@ -1,5 +1,5 @@
 <template>
-<div class="spinner"/>
+  <div class="spinner" />
 </template>
 
 <style scoped lang="scss">
@@ -9,8 +9,9 @@
   height: 60px;
   border-radius: 50%;
   border: 7.5px solid $primary-color;
-  animation: spinner-bulqg1 1.1199999999999999s infinite linear alternate,
-  spinner-oaa3wk 2.2399999999999998s infinite linear;
+  animation:
+    spinner-bulqg1 1.1199999999999999s infinite linear alternate,
+    spinner-oaa3wk 2.2399999999999998s infinite linear;
 }
 
 @keyframes spinner-bulqg1 {
