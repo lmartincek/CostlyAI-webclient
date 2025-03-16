@@ -3,7 +3,9 @@ import Nav from "./Nav.vue";
 </script>
 
 <template>
-<Nav/>
+<header>
+    <Nav/>
+</header>
 <div class="layout">
     <div class="layout__headline">
         <slot name="headline"/>
