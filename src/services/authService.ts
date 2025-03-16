@@ -88,3 +88,13 @@ export const setUserSession = async (accessToken: string, refreshToken: string |
     throw new Error(handleApiError(error))
   }
 }
+
+export const resetPassword = async (email: string) => {
+  try {
+    const response = await apiClient.post('/reset-password', { email })
+    return response.data
+  } catch (error) {
+    console.error(`Error refreshing token: ${error}`)
+    throw new Error(handleApiError(error))
+  }
+}

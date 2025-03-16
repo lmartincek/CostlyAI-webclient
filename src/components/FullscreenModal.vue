@@ -48,6 +48,7 @@ const modalsStore = useModalStore()
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
+      color: $white-color;
 
       &:focus {
         outline: none;
