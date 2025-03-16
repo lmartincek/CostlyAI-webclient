@@ -37,14 +37,13 @@ nav {
     padding: 1rem;
     display: flex;
     justify-content: space-between;
-    max-width: $breakpoint-lg;
+    max-width: 900px;
     height: 100%;
 
     &__logo, &__auth {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-width: 100px;
     }
 
     &__logo {

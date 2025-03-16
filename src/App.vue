@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import InfoPopup from "./components/InfoPopup.vue";
 import Layout from "./components/Layout.vue";
 import Footer from "./components/Footer.vue";
 import Signup from "./components/Signup.vue";
@@ -13,7 +12,7 @@ import {onMounted} from "vue";
 import {setUserSession} from "./services/authService.ts";
 import {useAuthStore} from "./stores/authStore.ts";
 
-const { notifications } = useNotificationsStore();
+const { notifications, showNotification } = useNotificationsStore();
 const authStore = useAuthStore()
 
 async function handleOAuthCallback() {
@@ -24,7 +23,17 @@ async function handleOAuthCallback() {
     const refreshToken = params.get("refresh_token");
 
     if (accessToken) {
-        await setUserSession(accessToken, refreshToken)
+        try {
+            await setUserSession(accessToken, refreshToken)
+            showNotification({
+                message: "Successfully logged in"
+            })
+        } catch (e) {
+            showNotification({
+                message: e.message,
+                type: "error"
+            })
+        }
         window.history.pushState({}, document.title, "/");
     }
 }
@@ -47,8 +56,6 @@ onMounted(async () => {
             :duration="notification.duration"
         />
     </template>
-
-    <InfoPopup/>
     <Signup/>
 
     <Layout>
