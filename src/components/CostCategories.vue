@@ -45,9 +45,15 @@ function handleTagClick(event: boolean, tag: CostOfLivingCategory) {
 
   :deep(.tag) {
     flex: 1 1 auto;
-    min-width: 150px;
-    max-width: 200px;
+    min-width: 100px;
+    max-width: 190px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    @include respond-md() {
+      min-width: 150px;
+      max-width: 200px;
+    }
+
   }
 }
 </style>
