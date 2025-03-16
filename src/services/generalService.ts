@@ -15,7 +15,11 @@ export const getProducts = async (
   }
 
   if (selectedCategories?.length && country) {
-    return await sendChatMessage(country, city, selectedCategories)
+    try {
+      return await sendChatMessage(country, city, selectedCategories)
+    } catch (e) {
+      throw e
+    }
   }
 
   const queryParams = []

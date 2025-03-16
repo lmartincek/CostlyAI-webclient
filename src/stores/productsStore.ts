@@ -6,6 +6,7 @@ import type { Product } from '@/types/products'
 import { DAYS_AS_ORDINALS, MONTHS } from '../constants/date.ts'
 import { getProducts } from '../services/generalService.ts'
 import type { CostOfLivingCategoryNames } from '../constants/categories.ts'
+import { useNotificationsStore } from '@/stores/notificationsStore.ts'
 
 export interface LastDataset {
   country: ICountry | null
@@ -23,7 +24,6 @@ function parseDate(date: Date): string | null {
 
 export const useProductsStore = defineStore('productsStore', () => {
   const products = ref<Product[] | null>(null)
-  const error = ref<string | null>(null)
   const loading = ref<boolean>(false)
 
   const lastDataset = ref<LastDataset>({} as LastDataset)
@@ -48,7 +48,13 @@ export const useProductsStore = defineStore('productsStore', () => {
         date: data[0]?.created_at ? parseDate(new Date(data[0].created_at)) : parseDate(new Date()),
       }
     } catch (err) {
-      error.value = `Failed to fetch products ${err}`
+      useNotificationsStore().showNotification({
+        message: 'Please, try again. The server is busy.',
+        type: 'error',
+        duration: 3000,
+      })
+
+      console.error(err)
 
       lastDataset.value = {
         country: null,
@@ -60,7 +66,6 @@ export const useProductsStore = defineStore('productsStore', () => {
     }
   }
 
-  //TODO - handle multiple errors
   const loadRecentlySearchedProducts = async (limit: number) => {
     try {
       recentlySearchedProducts.value = await getProducts(null, null, [], limit)
@@ -71,7 +76,6 @@ export const useProductsStore = defineStore('productsStore', () => {
 
   return {
     products,
-    error,
     loading,
     lastDataset,
     recentlySearchedProducts,

@@ -28,7 +28,6 @@ const lastDataset = computed<LastDataset>(() => {
       </div>
       <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
     </template>
-    <div v-if="productsStore.error" class="error">{{ productsStore.error }}</div>
     <template v-if="productsStore.products">
       <p v-if="lastDataset.country">
         Current avg. prices in
