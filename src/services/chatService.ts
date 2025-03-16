@@ -28,7 +28,7 @@ export const sendChatMessage = async (
 
     return response.data
   } catch (error) {
-    console.error('Error fetching data from API:', error)
+    console.error('Error fetching data from openAI API:', error)
     throw error
   }
 }
