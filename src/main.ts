@@ -22,6 +22,8 @@ import {
   faUtensils,
   faVolleyball,
   faWifi,
+  faSquareXmark,
+  faSquareCheck
 } from '@fortawesome/free-solid-svg-icons'
 import { faAirbnb, faGoogle } from '@fortawesome/free-brands-svg-icons'
 library.add(
@@ -44,6 +46,8 @@ library.add(
   faCarSide,
   faAirbnb,
   faGoogle,
+  faSquareXmark,
+  faSquareCheck
 )
 
 const app = createApp(App)
