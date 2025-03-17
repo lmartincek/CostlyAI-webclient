@@ -13,67 +13,61 @@ import { resetPassword } from '@/services/authService.ts'
 const auth = useAuthStore()
 
 const email = ref<string>('')
-const password = ref<string>('')
-const rememberMe = ref<boolean>(false)
-const errors = ref<{ email?: string; password?: string[] }>({})
-
-const validateRealtime = ref<boolean>(false)
-
+const errorEmail = ref<string>('')
 const validateEmail = () => {
   if (!email.value) {
-    errors.value.email = 'Email is required'
+    errorEmail.value = 'Email is required'
   } else if (!/\S+@\S+\.\S+/.test(email.value)) {
-    errors.value.email = 'Email is invalid'
+    errorEmail.value = 'Email is invalid'
   } else {
-    errors.value.email = ''
+    errorEmail.value = ''
   }
 }
 
 watch(email, () => {
-  if (validateRealtime.value) {
-    validateEmail()
-  }
+  validateEmail()
 })
 
+const ErrorsPassword = {
+  Length: 1,
+  LowerCase: 2,
+  UpperCase: 3,
+  Digit: 4,
+  Required: 5,
+} as const
+
+const errorsPassword = ref<{ id: number; label: string; isFulfilled: boolean }[]>([
+  { id: ErrorsPassword.Length, label: '8 characters minimum', isFulfilled: false },
+  { id: ErrorsPassword.LowerCase, label: 'One lowercase character', isFulfilled: false },
+  { id: ErrorsPassword.UpperCase, label: 'One uppercase character', isFulfilled: false },
+  { id: ErrorsPassword.Digit, label: 'One number', isFulfilled: false },
+])
+
 const validatePassword = (password: string) => {
-  const errors: string[] = []
-
-  if (password.length < 8) {
-    errors.push('Password must be at least 8 characters.')
-  }
-  if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter (a-z).')
-  }
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter (A-Z).')
-  }
-  if (!/\d/.test(password)) {
-    errors.push('Password must contain at least one digit (0-9).')
-  }
-  if (!/[~`!@#$%^&*()_\-+={[}\]|\\:;"'<,>.?/]/.test(password)) {
-    errors.push('Password must contain at least one symbol: ~`!@#$%^&*()_-+={[}]|\\:;"\'<,>.?/')
-  }
-
-  return errors
+  errorsPassword.value.find((e) => e.id === ErrorsPassword.Length)!.isFulfilled =
+    password.length >= 8
+  errorsPassword.value.find((e) => e.id === ErrorsPassword.LowerCase)!.isFulfilled = /[a-z]/.test(
+    password,
+  )
+  errorsPassword.value.find((e) => e.id === ErrorsPassword.UpperCase)!.isFulfilled = /[A-Z]/.test(
+    password,
+  )
+  errorsPassword.value.find((e) => e.id === ErrorsPassword.Digit)!.isFulfilled = /\d/.test(password)
 }
 
+const password = ref('')
+
 watch(password, (newPassword) => {
-  if (validateRealtime.value) {
-    errors.value.password = validatePassword(newPassword)
-  }
+  validatePassword(newPassword)
 })
 
 const validateForm = () => {
-  validateRealtime.value = true
-
   validateEmail()
-  errors.value.password = password.value
-    ? validatePassword(password.value)
-    : ['Password is required']
+  validatePassword(password.value)
 
-  if (errors.value.email) {
+  if (errorEmail.value) {
     return false
-  } else if (errors.value.password && errors.value.password.length) {
+  } else if (errorsPassword.value.find((error) => error.isFulfilled === false)) {
     return false
   }
 
@@ -98,11 +92,13 @@ const isLoading = ref<boolean>(false)
 
 const { showNotification } = useNotificationsStore()
 const modal = useModalStore()
+const rememberMe = ref<boolean>(false)
+
 const handleSubmit = async () => {
   if (step.value === AuthStep.ForgotPassword) {
     validateEmail()
 
-    if (errors.value.email) {
+    if (errorEmail.value) {
       return
     }
 
@@ -165,6 +161,10 @@ const handleSubmit = async () => {
 const handleOAuthLogin = (provider: 'google' | 'apple') => {
   auth.login(null, null, provider)
 }
+
+watch(step, (newStep, oldStep) => {
+  if (newStep !== oldStep) email.value = ''; password.value = ''; errorEmail.value = '';
+})
 </script>
 
 <template>
@@ -201,7 +201,7 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                 placeholder="your@email.com"
                 autocomplete="email"
               />
-              <span v-if="errors.email" class="error">{{ errors.email }}</span>
+              <span v-if="errorEmail" class="error">{{ errorEmail }}</span>
             </div>
 
             <div class="input-wrapper" v-if="step !== AuthStep.ForgotPassword">
@@ -213,9 +213,15 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
                 type="password"
                 autocomplete="current-password"
               />
-              <template v-for="(error, i) in errors.password" :key="'signup-form-error' + i">
-                <span v-if="error" class="error">{{ error }}</span>
-              </template>
+              <div class="input-wrapper__password-errors">
+                <template v-for="(error, i) in errorsPassword" :key="'signup-form-error' + i">
+                  <span
+                    :class="['error', { fulfilled: error.isFulfilled }]"
+                  >
+                   <font-awesome-icon :icon="error.isFulfilled ? 'fa-solid fa-square-check' : 'fa-solid fa-square-xmark'" /> {{ error.label }}
+                  </span>
+                </template>
+              </div>
             </div>
 
             <div class="actions" v-if="step === AuthStep.SignIn">
@@ -256,12 +262,22 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 <style scoped lang="scss">
 .error {
   color: $error-color;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   margin-top: 0.25rem;
-}
-</style>
 
-<style scoped lang="scss">
+  svg {
+    height: 1rem;
+    width: 1rem;
+    color: $border-color;
+    position: relative;
+    top: 2px;
+  }
+
+  &.fulfilled svg {
+    color: $primary-color;
+  }
+}
+
 .signup-wrapper {
   &__header {
     background: $primary-gradient;
@@ -319,6 +335,17 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
         &__input {
           display: flex;
           width: 100%;
+        }
+
+        &__password-errors {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: .5rem;
+
+          .error {
+            flex: 50%;
+            color: $text-color;
+          }
         }
       }
 
