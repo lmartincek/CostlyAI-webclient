@@ -163,7 +163,9 @@ const handleOAuthLogin = (provider: 'google' | 'apple') => {
 }
 
 watch(step, (newStep, oldStep) => {
-  if (newStep !== oldStep) email.value = ''; password.value = ''; errorEmail.value = '';
+  if (newStep !== oldStep) email.value = ''
+  password.value = ''
+  errorEmail.value = ''
 })
 </script>
 
@@ -215,10 +217,13 @@ watch(step, (newStep, oldStep) => {
               />
               <div class="input-wrapper__password-errors">
                 <template v-for="(error, i) in errorsPassword" :key="'signup-form-error' + i">
-                  <span
-                    :class="['error', { fulfilled: error.isFulfilled }]"
-                  >
-                   <font-awesome-icon :icon="error.isFulfilled ? 'fa-solid fa-square-check' : 'fa-solid fa-square-xmark'" /> {{ error.label }}
+                  <span :class="['error', { fulfilled: error.isFulfilled }]">
+                    <font-awesome-icon
+                      :icon="
+                        error.isFulfilled ? 'fa-solid fa-square-check' : 'fa-solid fa-square-xmark'
+                      "
+                    />
+                    {{ error.label }}
                   </span>
                 </template>
               </div>
@@ -340,7 +345,7 @@ watch(step, (newStep, oldStep) => {
         &__password-errors {
           display: flex;
           flex-wrap: wrap;
-          margin-top: .5rem;
+          margin-top: 0.5rem;
 
           .error {
             flex: 50%;
