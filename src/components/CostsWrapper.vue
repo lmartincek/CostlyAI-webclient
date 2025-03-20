@@ -8,6 +8,7 @@ import { useProductsStore } from '@/stores/productsStore.ts'
 import type { LastDataset } from '@/stores/productsStore.ts'
 import { computed } from 'vue'
 import { groupProductsByCategory } from '@/utils/objectHelpers.ts'
+import IconCostly from '@/components/IconCostly.vue'
 
 const productsStore = useProductsStore()
 const productsByCategory = computed(() => {
@@ -29,15 +30,16 @@ const lastDataset = computed<LastDataset>(() => {
       <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
     </template>
     <template v-if="productsStore.products">
-      <p v-if="lastDataset.country">
+      <p v-if="lastDataset.country" class="wrapper-data__last-country">
         Current avg. prices in
-        <b
-          >{{
+        <b>
+          {{
             lastDataset.city
               ? `${lastDataset.city.name}, ${lastDataset.country.name}`
               : lastDataset.country.name
-          }} </b
-        >.
+          }}
+        </b>
+        <IconCostly :name="lastDataset.country.code" folder="flags" alt="" />
       </p>
       <div v-if="lastDataset.date && lastDataset.country" class="wrapper-data__info">
         <p>
@@ -66,6 +68,20 @@ const lastDataset = computed<LastDataset>(() => {
 .wrapper-data {
   margin: 4rem 0;
 
+  &__last-country {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    b {
+      margin: 0 0.25rem;
+    }
+
+    img {
+      margin: 0 0.25rem;
+    }
+  }
+
   .error {
     color: $error-color;
   }
@@ -77,7 +93,8 @@ const lastDataset = computed<LastDataset>(() => {
   &__table {
     display: flex;
     justify-content: space-between;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   &__info {

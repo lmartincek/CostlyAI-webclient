@@ -12,7 +12,9 @@ const auth = useAuthStore()
   <nav>
     <div class="wrapper">
       <div class="wrapper__logo">
-        <Icon alt="logo" name="globe" width="26" height="26" /> CostlyAI
+        <router-link to="/"
+          ><Icon alt="logo" name="globe" width="26" height="26" /> CostlyAI</router-link
+        >
       </div>
 
       <div class="wrapper__auth">
@@ -20,6 +22,7 @@ const auth = useAuthStore()
           <Icon alt="" name="login" width="18" height="18" /> Sign in
         </div>
         <div class="wrapper__auth--profile" v-else>
+          <router-link to="/my-recent-searches"> My recent searches</router-link>
           <ProfileBadge v-if="auth.user" />
         </div>
       </div>
@@ -54,6 +57,11 @@ nav {
       font-size: 1.2rem;
       color: $primary-color;
 
+      a {
+        display: flex;
+        align-items: center;
+      }
+
       img {
         margin-right: 0.5rem;
       }
@@ -81,6 +89,9 @@ nav {
     }
 
     &__auth--profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
   }
 }

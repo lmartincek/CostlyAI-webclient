@@ -19,7 +19,7 @@ import Nav from './NavCostly.vue'
 <style scoped lang="scss">
 .layout {
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 90vh;
   max-width: 900px;
   margin: 0 auto;
   text-align: center;

@@ -25,7 +25,9 @@ const selectedCityObj = computed<ICity | null>(() => {
   return generalStore.cities.find((country) => country.name === selectedCity.value) || null
 })
 
-onMounted(async () => await generalStore.loadCountries())
+if (!generalStore.countries.length) {
+  onMounted(async () => await generalStore.loadCountries())
+}
 
 //todo - add pagination, search query with debounce, loader in select input
 //todo watcher on new product load scroll to its section

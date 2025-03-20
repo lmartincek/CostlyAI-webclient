@@ -7,6 +7,9 @@
 
       <template #content>
         <div class="dropdown-item" v-if="auth.user !== null">{{ auth.user.email }}</div>
+        <div class="dropdown-item">
+          <router-link to="/my-recent-searches"> My recent searches</router-link>
+        </div>
         <div class="dropdown-item" @click="logout">Logout</div>
       </template>
     </Dropdown>

@@ -28,7 +28,6 @@ export const loginUserWithCredentials = async (email: string, password: string) 
   }
 }
 
-// TODO remember me
 export const loginUserWithProvider = async (provider: Providers) => {
   try {
     const response = await apiClient.post(

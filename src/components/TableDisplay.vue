@@ -13,8 +13,8 @@ defineProps(['data', 'category'])
         <span><b>Price</b></span>
       </div>
       <div v-for="(value, key) in data" :key="key" class="row">
-        <span>{{ value.name }}</span>
-        <span
+        <span class="name">{{ value.name }}</span>
+        <span class="price"
           ><b>${{ value.price.toFixed(2) }} USD</b></span
         >
       </div>
@@ -29,6 +29,8 @@ defineProps(['data', 'category'])
   background-color: #fff;
   margin: 1rem 0 1.5rem;
   border-radius: 1rem;
+  flex: 1 1 300px;
+  min-width: 200px;
 
   &__header {
     background: $primary-gradient;
@@ -64,7 +66,12 @@ defineProps(['data', 'category'])
         margin-top: 1.5rem;
       }
 
-      span {
+      .name {
+        text-align: left;
+      }
+
+      .price {
+        text-align: right;
       }
     }
   }

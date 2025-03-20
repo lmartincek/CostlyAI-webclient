@@ -158,8 +158,15 @@ const handleSubmit = async () => {
   }
 }
 
-const handleOAuthLogin = (provider: 'google' | 'apple') => {
-  auth.login(null, null, provider)
+const handleOAuthLogin = async (provider: 'google' | 'apple') => {
+  try {
+    await auth.login(null, null, provider)
+  } catch (e) {
+    showNotification({
+      message: e.message,
+      type: 'error',
+    })
+  }
 }
 
 watch(step, (newStep, oldStep) => {

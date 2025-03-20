@@ -9,6 +9,7 @@ import {
   refreshUserToken,
   registerUser,
 } from '../services/authService.ts'
+import router from '@/router/index.ts'
 
 //todo add auth types
 interface User {
@@ -105,6 +106,7 @@ export const useAuthStore = defineStore('authStore', () => {
       if (localStorage.getItem('costly-remember-me')) {
         localStorage.removeItem('costly-remember-me')
       }
+      await router.replace('/')
     } catch (e) {
       throw e
     } finally {

@@ -8,6 +8,7 @@ import type { Product } from '@/types/products'
 import type { ICity } from '@/types/cities'
 import { useGeneralStore } from '@/stores/generalStore.ts'
 import { getCities } from '@/services/generalService.ts'
+import SpinnerCostly from './SpinnerCostly.vue'
 
 const productStore = useProductsStore()
 const generalStore = useGeneralStore()
@@ -85,10 +86,10 @@ watch(allCountries, async (newValue) => {
 </script>
 
 <template>
-  <div class="recently-searched__wrapper" v-if="allCities.length && recentlySearchedPlaces.length">
+  <div class="recently-searched__wrapper">
     <span>Recently people searched</span>
     <!--        TODO - loader placeholder cards-->
-    <div class="cards">
+    <div class="cards" v-if="recentlySearchedPlaces.length">
       <template v-for="(place, i) in recentlySearchedPlaces" :key="'recentlySearchedPlace' + i">
         <Card
           :img-left="place.country.code"
@@ -100,6 +101,7 @@ watch(allCountries, async (newValue) => {
         </Card>
       </template>
     </div>
+    <SpinnerCostly v-else />
   </div>
 </template>
 
