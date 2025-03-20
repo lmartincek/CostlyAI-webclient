@@ -6,9 +6,9 @@ test.describe('Signup Modal', () => {
   });
 
   test('should render products if clicked on card', async ({ page }) => {
-    await expect(page.locator('.recently-searched__wrapper .card__text').first()).toBeVisible();
+    await expect(page.locator('.recently-searched__wrapper .cards .card').first()).toBeVisible();
 
-    await page.click('.recently-searched__wrapper .card__text');
+    await page.click('.recently-searched__wrapper .cards .card');
 
     await expect(page.locator('.wrapper-data__table')).toBeVisible();
   });

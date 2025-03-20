@@ -48,19 +48,20 @@ test.describe('Signup Modal', () => {
   });
 
   test('should validate password input', async ({ page }) => {
+    const errors = page.locator('.input-wrapper:has(#password) .error')
+    const count = await errors.count()
+
     // Test empty password
     await page.fill('#password input', '');
-    await page.click('button[type="submit"]');
-    await expect(page.locator('.input-wrapper:has(#password) .error')).toContainText('Password is required');
-
-    // Test invalid password
-    await page.fill('#password input', 'weak');
-    await page.click('button[type="submit"]');
-    await expect(page.locator('.input-wrapper:has(#password) .error').first()).toContainText('Password must be at least 8 characters.');
-
-    // Test valid password
-    await page.fill('#password input', 'StrongPass1!');
-    await expect(page.locator('.input-wrapper:has(#password) .error')).toBeHidden();
+    for (let i = 0; i < count; ++i) {
+      await expect(page.locator('.input-wrapper:has(#password) .error').nth(i)).not.toHaveClass('fulfilled');
+    }
+    
+    // Test password has at least 8 characters, 1 lowercase character, 1 uppercase character and one number
+    await page.fill('#password input', 'abcD1abc');
+    for (let i = 0; i < count; ++i) {
+      await expect(page.locator('.input-wrapper:has(#password) .error').nth(i)).toHaveClass('error fulfilled');
+    }
   });
 
   test('should close the modal when clicking outside or on the close button', async ({ page }) => {

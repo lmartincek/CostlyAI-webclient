@@ -1,57 +1,22 @@
 <script setup lang="ts">
-import Layout from './components/LayoutCostly.vue'
 import Footer from './components/FooterCostly.vue'
 import Signup from './components/SignUp.vue'
-import RecentlySearched from './components/RecentlySearched.vue'
 
 import { useNotificationsStore } from './stores/notificationsStore.ts'
-import SearchCosts from './components/SearchCosts.vue'
-import CostsWrapper from './components/CostsWrapper.vue'
-import { onMounted } from 'vue'
-import { setUserSession } from './services/authService.ts'
-import { useAuthStore } from './stores/authStore.ts'
 import NotificationCostly from '@/components/NotificationCostly.vue'
+import { useAuthStore } from '@/stores/authStore.ts'
+import {onMounted} from "vue";
 
-const { notifications, showNotification } = useNotificationsStore()
-const authStore = useAuthStore()
-
-async function handleOAuthCallback() {
-  const hash = window.location.hash.substring(1)
-  const params = new URLSearchParams(hash)
-
-  const accessToken = params.get('access_token')
-  const refreshToken = params.get('refresh_token')
-
-  if (accessToken) {
-    try {
-      const data = await setUserSession(accessToken, refreshToken)
-      authStore.setUser(data)
-      localStorage.setItem('costly-remember-me', 'true')
-
-      showNotification({
-        message: 'Successfully logged in',
-      })
-    } catch (e) {
-      showNotification({
-        message: e.message,
-        type: 'error',
-      })
-    }
-    window.history.pushState({}, document.title, '/')
-  }
-}
+const notificationsStore = useNotificationsStore()
+const { rehydrate } = useAuthStore()
 
 onMounted(async () => {
-  await handleOAuthCallback()
-
-  if (!authStore.accessToken && localStorage.getItem('costly-remember-me')) {
-    await authStore.rehydrate()
-  }
+  if (localStorage.getItem('costly-remember-me')) await rehydrate()
 })
 </script>
 
 <template>
-  <template v-for="(notification, _i) in notifications" :key="_i">
+  <template v-for="(notification, i) in notificationsStore.notifications" :key="'notification' + i">
     <NotificationCostly
       :message="notification.message"
       :type="notification.type"
@@ -60,21 +25,7 @@ onMounted(async () => {
   </template>
   <Signup />
 
-  <Layout>
-    <template v-slot:headline>
-      <h1>CostlyAI</h1>
-      <p>
-        Discover living costs worldwide, compare prices and plan your travel budget with real-time
-        data from cities around the globe
-      </p>
-    </template>
-
-    <template v-slot:content>
-      <SearchCosts />
-      <CostsWrapper />
-      <RecentlySearched />
-    </template>
-  </Layout>
+  <RouterView />
 
   <Footer />
 </template>

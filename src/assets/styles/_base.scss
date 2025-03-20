@@ -21,11 +21,13 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: variables.$primary-color;
+  transition: 0.3s ease;
   text-decoration: inherit;
 
   &:hover {
-    color: #535bf2;
+    color: variables.$primary-color-dark;
+    scale: 1.025;
   }
 }
 
