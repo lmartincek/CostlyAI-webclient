@@ -14,51 +14,41 @@ const productStore = useProductsStore()
 const generalStore = useGeneralStore()
 
 const allCountries = computed<ICountry[]>(() => generalStore.countries)
-const allCities = ref<ICity[]>([])
+const allCities = ref<Map<number, ICity>>(new Map())
 
-const extractUniqueCountryIds = (products: Product[]): number[] => {
-  return [...new Set(products.map((product) => product.country_id))]
-}
-
-// Fetch cities for the given country IDs
 const fetchCitiesForCountries = async (countryIds: number[]): Promise<void> => {
   const cities = await getCities(countryIds)
 
   if (Array.isArray(cities)) {
-    allCities.value = [...allCities.value, ...cities] // Append new cities to the existing list
+    cities.forEach((city) => allCities.value.set(city.id, city))
   } else {
     console.error('Failed to fetch cities for countries:', countryIds)
   }
 }
 
-// Watch for changes in recently searched products
 const products = computed(() => productStore.recentlySearchedProducts as Product[])
 
-watch(products, (newProducts) => {
+const extractUniqueCountryIds = (products: Product[]): Set<number> => {
+  return new Set(products.filter((p) => p.city_id).map((p) => p.country_id))
+}
+
+watch(products, async (newProducts) => {
   if (!newProducts) return
 
-  // Extract unique country IDs from the products
   const uniqueCountryIds = extractUniqueCountryIds(newProducts)
-
-  // Fetch cities for the unique country IDs (if not already fetched)
-  const missingCountryIds = uniqueCountryIds.filter(
-    (countryId) => !allCities.value.some((city) => city.country_id === countryId),
+  const missingCountryIds = [...uniqueCountryIds].filter(
+    (id) => !Array.from(allCities.value.values()).some((city) => city.country_id === id),
   )
 
   if (missingCountryIds.length > 0) {
-    fetchCitiesForCountries(missingCountryIds) // Fetch cities for missing country IDs
+    await fetchCitiesForCountries(missingCountryIds)
   }
-})
 
-// Map products to their countries and cities
-const recentlySearchedPlaces = computed<{ country: ICountry; city: ICity | null }[]>(() => {
-  if (!products.value) return []
+  if (allCities.value.size === 0) return
 
-  const uniqueCombinations = [
-    ...new Set(products.value.map((product) => `${product.country_id}-${product.city_id}`)),
-  ]
+  const uniqueCombinations = new Set(newProducts.map((p) => `${p.country_id}-${p.city_id}`))
 
-  const uniqueSets = uniqueCombinations.map((combo) => {
+  const uniqueSets = Array.from(uniqueCombinations, (combo) => {
     const [country_id, city_id] = combo.split('-')
     return {
       countryId: parseInt(country_id),
@@ -66,20 +56,23 @@ const recentlySearchedPlaces = computed<{ country: ICountry; city: ICity | null 
     }
   })
 
-  return uniqueSets.map((set) => {
-    const country = allCountries.value.find((c) => c.id === set.countryId)
-    const city = set.cityId ? allCities.value.find((c) => c.id === set.cityId) : null
+  const countryMap = new Map(allCountries.value.map((c) => [c.id, c]))
 
-    return { country, city } as { country: ICountry; city: ICity | null }
-  })
+  const recentlySearchedPlaces = uniqueSets.map(({ countryId, cityId }) => ({
+    country: countryMap.get(countryId) as ICountry,
+    city: cityId ? allCities.value.get(cityId) || null : null,
+  }))
+
+  if (recentlySearchedPlaces.length) {
+    generalStore.recentlySearchedPlaces = recentlySearchedPlaces
+  }
 })
 
 //todo - update recently searched when new request is made
 //todo - scroll down to section after click
 
-//Only because on the production when server spins down, it wouldn't fetch again when it restarts, otherwise onMounted
 watch(allCountries, async (newValue) => {
-  if (newValue && !recentlySearchedPlaces.value.length) {
+  if (newValue && !generalStore.recentlySearchedPlaces.length) {
     await productStore.loadRecentlySearchedProducts(80)
   }
 })
@@ -89,8 +82,11 @@ watch(allCountries, async (newValue) => {
   <div class="recently-searched__wrapper">
     <span>Recently people searched</span>
     <!--        TODO - loader placeholder cards-->
-    <div class="cards" v-if="recentlySearchedPlaces.length">
-      <template v-for="(place, i) in recentlySearchedPlaces" :key="'recentlySearchedPlace' + i">
+    <div class="cards" v-if="generalStore.recentlySearchedPlaces.length">
+      <template
+        v-for="(place, i) in generalStore.recentlySearchedPlaces"
+        :key="'recentlySearchedPlace' + i"
+      >
         <Card
           :img-left="place.country.code"
           class="card"
