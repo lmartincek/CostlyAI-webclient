@@ -4,15 +4,8 @@ import Signup from './components/SignUp.vue'
 
 import { useNotificationsStore } from './stores/notificationsStore.ts'
 import NotificationCostly from '@/components/NotificationCostly.vue'
-import { useAuthStore } from '@/stores/authStore.ts'
-import {onMounted} from "vue";
 
 const notificationsStore = useNotificationsStore()
-const { rehydrate } = useAuthStore()
-
-onMounted(async () => {
-  if (localStorage.getItem('costly-remember-me')) await rehydrate()
-})
 </script>
 
 <template>
