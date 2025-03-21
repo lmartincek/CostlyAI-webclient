@@ -27,6 +27,7 @@ import {
   faSquareCheck,
 } from '@fortawesome/free-solid-svg-icons'
 import { faAirbnb, faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { useAuthStore } from '@/stores/authStore.ts'
 library.add(
   faHouse,
   faBus,
@@ -53,7 +54,20 @@ library.add(
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(createPinia())
 
-app.use(router)
-app.mount('#app')
+const pinia = createPinia()
+app.use(pinia)
+
+const authStore = useAuthStore()
+
+const shouldRehydrate = localStorage.getItem('costly-remember-me')
+
+const initializeApp = async () => {
+  if (shouldRehydrate) {
+    await authStore.rehydrate()
+  }
+  app.use(router)
+  app.mount('#app')
+}
+
+initializeApp().then()

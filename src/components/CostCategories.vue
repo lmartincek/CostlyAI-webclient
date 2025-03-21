@@ -53,7 +53,6 @@ function handleTagClick(event: boolean, tag: CostOfLivingCategory) {
       min-width: 150px;
       max-width: 200px;
     }
-
   }
 }
 </style>

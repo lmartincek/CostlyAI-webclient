@@ -8,6 +8,8 @@ export const useGeneralStore = defineStore('generalStore', () => {
   const countries = ref<ICountry[]>([])
   const cities = ref<ICity[]>([])
 
+  const recentlySearchedPlaces = ref([] as { country: ICountry; city: ICity | null }[])
+
   const error = ref<string | null>(null)
   const loading = ref<boolean>(false)
 
@@ -33,5 +35,5 @@ export const useGeneralStore = defineStore('generalStore', () => {
     }
   }
 
-  return { countries, cities, error, loading, loadCountries, loadCities }
+  return { countries, cities, recentlySearchedPlaces, error, loading, loadCountries, loadCities }
 })
