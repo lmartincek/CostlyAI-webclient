@@ -45,7 +45,6 @@ export const useAuthStore = defineStore('authStore', () => {
       const data = await getUser()
       setUser(data)
     } catch (error) {
-      // TODO - debug when app crashes
       await refreshToken()
       console.error('Session expired, trying to refresh:', error)
       throw error
