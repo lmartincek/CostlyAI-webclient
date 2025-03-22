@@ -32,7 +32,7 @@ defineProps({
   text-align: center;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   max-width: 350px;

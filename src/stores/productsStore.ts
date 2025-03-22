@@ -3,10 +3,10 @@ import { ref } from 'vue'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
 import type { Product } from '@/types/products'
-import { DAYS_AS_ORDINALS, MONTHS } from '../constants/date.ts'
-import { getProducts } from '../services/generalService.ts'
+import { getProducts } from '../services/productService.ts'
 import type { CostOfLivingCategoryNames } from '../constants/categories.ts'
 import { useNotificationsStore } from '@/stores/notificationsStore.ts'
+import { parseDateAsOrdinalsWithMonths } from '@/utils/dateHelpers.ts'
 
 export interface LastDataset {
   country: ICountry | null
@@ -14,40 +14,37 @@ export interface LastDataset {
   date: string | null
 }
 
-function parseDate(date: Date): string | null {
-  const day = DAYS_AS_ORDINALS[date.getDate()] ?? `${date.getDate()}th`
-  const month = MONTHS[date.getMonth() + 1]
-
-  if (day && month) return `${day} of ${month}, ${date.getFullYear()}`
-  return null
-}
-
 export const useProductsStore = defineStore('productsStore', () => {
-  const products = ref<Product[] | null>(null)
+  const products = ref<Product[]>([])
   const loading = ref<boolean>(false)
 
   const lastDataset = ref<LastDataset>({} as LastDataset)
-
-  const recentlySearchedProducts = ref<Product[] | null>(null)
 
   const loadProducts = async (
     country: ICountry | null,
     city: ICity | null,
     selectedCategories?: CostOfLivingCategoryNames[],
+    userId?: string,
   ) => {
     if (!country) return
 
     loading.value = true
     try {
-      const data = await getProducts(country, city, selectedCategories)
+      const data = await getProducts(country, city, selectedCategories, userId)
 
       products.value = data
       lastDataset.value = {
         country,
         city: city || null,
-        date: data[0]?.created_at ? parseDate(new Date(data[0].created_at)) : parseDate(new Date()),
+        date: data[0]?.created_at
+          ? parseDateAsOrdinalsWithMonths(new Date(data[0].created_at))
+          : parseDateAsOrdinalsWithMonths(new Date()),
       }
     } catch (err) {
+      if (products.value.length) {
+        products.value = []
+      }
+
       useNotificationsStore().showNotification({
         message: 'Please, try again. The server is busy.',
         type: 'error',
@@ -66,20 +63,10 @@ export const useProductsStore = defineStore('productsStore', () => {
     }
   }
 
-  const loadRecentlySearchedProducts = async (limit: number) => {
-    try {
-      recentlySearchedProducts.value = await getProducts(null, null, [], limit)
-    } catch (err) {
-      console.error(`Failed to fetch recently searched products: ${err}`)
-    }
-  }
-
   return {
     products,
     loading,
     lastDataset,
-    recentlySearchedProducts,
     loadProducts,
-    loadRecentlySearchedProducts,
   }
 })

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { Providers } from '@/types/auth'
 import {
   getUser,
@@ -11,7 +11,7 @@ import {
 } from '../services/authService.ts'
 import router from '@/router/index.ts'
 
-//todo add auth types
+//TODO - add auth types
 interface User {
   email: string
   id: string
@@ -20,7 +20,11 @@ interface User {
 export const useAuthStore = defineStore('authStore', () => {
   const user = ref<User | null>(null)
   const accessToken = ref<string | null>(null)
+
+  // TODO - change to computed
   const isAuthenticated = ref<boolean>(false)
+  const userId = computed<string | undefined>(() => user.value?.id)
+
   const loading = ref<boolean>(false)
 
   //@ts-expect-error - will add types later
@@ -114,5 +118,5 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   }
 
-  return { user, isAuthenticated, accessToken, register, login, logout, rehydrate, setUser }
+  return { user, userId, isAuthenticated, accessToken, register, login, logout, rehydrate, setUser }
 })

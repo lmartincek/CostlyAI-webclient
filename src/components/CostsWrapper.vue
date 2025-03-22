@@ -12,7 +12,7 @@ import IconCostly from '@/components/IconCostly.vue'
 
 const productsStore = useProductsStore()
 const productsByCategory = computed(() => {
-  if (productsStore.products) return groupProductsByCategory(productsStore.products)
+  if (productsStore.products.length) return groupProductsByCategory(productsStore.products)
   return []
 })
 
@@ -29,7 +29,7 @@ const lastDataset = computed<LastDataset>(() => {
       </div>
       <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
     </template>
-    <template v-if="productsStore.products">
+    <template v-if="productsStore.products.length">
       <p v-if="lastDataset.country" class="wrapper-data__last-country">
         Current avg. prices in
         <b>
@@ -94,7 +94,7 @@ const lastDataset = computed<LastDataset>(() => {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0.625rem;
   }
 
   &__info {

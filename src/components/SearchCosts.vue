@@ -29,8 +29,8 @@ if (!generalStore.countries.length) {
   onMounted(async () => await generalStore.loadCountries())
 }
 
-//todo - add pagination, search query with debounce, loader in select input
-//todo watcher on new product load scroll to its section
+//TODO - add pagination, search query with debounce, loader in select input
+//TODO - watcher on new product load scroll to its section
 watch(
   () => selectedCountry.value,
   async () => {
@@ -75,7 +75,14 @@ const selectedCategories = ref<CostOfLivingCategoryNames[]>([])
     <div class="wrapper-control__button">
       <ButtonBasic
         :disabled="!selectedCountry || productsStore.loading"
-        @click="productsStore.loadProducts(selectedCountryObj, selectedCityObj, selectedCategories)"
+        @click="
+          productsStore.loadProducts(
+            selectedCountryObj,
+            selectedCityObj,
+            selectedCategories,
+            authStore.userId,
+          )
+        "
         >Search Costs</ButtonBasic
       >
     </div>

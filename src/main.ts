@@ -64,7 +64,9 @@ const shouldRehydrate = localStorage.getItem('costly-remember-me')
 
 const initializeApp = async () => {
   if (shouldRehydrate) {
-    await authStore.rehydrate()
+    try {
+      await authStore.rehydrate()
+    } catch {}
   }
   app.use(router)
   app.mount('#app')
