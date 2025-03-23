@@ -53,7 +53,8 @@ export const useGeneralStore = defineStore('generalStore', () => {
     }
   }
 
-  const loadUserSearchedPlaces = async (userId: string) => {
+  const loadUserSearchedPlaces = async (userId: string | null) => {
+    if (!userId) throw new Error('user is not identified')
     loading.value = true
     try {
       mySearchedPlaces.value = await getUserSearchedPlaces(userId)

@@ -8,11 +8,11 @@ export function parseDateAsOrdinalsWithMonths(date: Date): string | null {
   return null
 }
 
-const DateFormats = {
+export const DateFormats = {
   DayMonthYear: 'DD-MM-YYYY',
   YearMonthDay: 'YYYY-MM-DD',
 } as const
-type DateFormat = (typeof DateFormats)[keyof typeof DateFormats]
+export type DateFormat = (typeof DateFormats)[keyof typeof DateFormats]
 
 export function parseDateStandard(
   date: string,
