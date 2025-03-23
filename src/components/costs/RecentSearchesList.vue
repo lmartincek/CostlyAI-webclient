@@ -6,6 +6,7 @@ import type {IPlace, IUserSearch} from "@/types/general";
 import {parseDateStandard} from "@/utils/dateHelpers.ts";
 
 const props = defineProps<{
+  text: string
   items: T[]
   loadItems: () => Promise<void>
   itemClickHandler: (item: T) => void
@@ -20,7 +21,7 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
 
 <template>
   <div class="recent-searches">
-    <span>Recently Searched</span>
+    <span>{{ text }}</span>
     <div class="recent-searches__cards" v-if="!isLoading">
       <template v-for="(item, i) in items" :key="'recentlySearchedItem' + i">
         <div class="recent-searches__card-wrapper">
