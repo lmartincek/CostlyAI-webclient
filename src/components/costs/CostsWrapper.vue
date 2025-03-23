@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useModalStore } from '@/stores/modalsStore.ts'
 import { useAuthStore } from '@/stores/authStore.ts'
-import Spinner from '@/components/SpinnerCostly.vue'
-import Icon from '@/components/IconCostly.vue'
-import TableDisplay from '@/components/TableDisplay.vue'
+import Spinner from '@/components/common/SpinnerCostly.vue'
+import Icon from '@/components/common/IconCostly.vue'
+import TableDisplay from '@/components/costs/TableDisplay.vue'
 import { useProductsStore } from '@/stores/productsStore.ts'
 import type { LastDataset } from '@/stores/productsStore.ts'
 import { computed } from 'vue'
 import { groupProductsByCategory } from '@/utils/objectHelpers.ts'
-import IconCostly from '@/components/IconCostly.vue'
+import IconCostly from '@/components/common/IconCostly.vue'
 
 const productsStore = useProductsStore()
 const productsByCategory = computed(() => {

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import SelectInput from '@/components/SelectInput.vue'
+import SelectInput from '@/components/input/SelectInput.vue'
 
 const mockOptions = [
   { name: 'Slovakia', code: 'sk', id: 1 },

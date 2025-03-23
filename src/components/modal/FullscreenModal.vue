@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { useModalStore } from '../stores/modalsStore.ts'
+import { useModalStore } from '@/stores/modalsStore.ts'
 
 const modalsStore = useModalStore()
 </script>

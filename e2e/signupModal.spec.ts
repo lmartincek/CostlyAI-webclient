@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Signup Modal', () => {
+test.describe('Signup modal', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the page where the modal can be triggered
     await page.goto('/');
@@ -56,7 +56,7 @@ test.describe('Signup Modal', () => {
     for (let i = 0; i < count; ++i) {
       await expect(page.locator('.input-wrapper:has(#password) .error').nth(i)).not.toHaveClass('fulfilled');
     }
-    
+
     // Test password has at least 8 characters, 1 lowercase character, 1 uppercase character and one number
     await page.fill('#password input', 'abcD1abc');
     for (let i = 0; i < count; ++i) {

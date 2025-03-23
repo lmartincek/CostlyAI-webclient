@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import Dropdown from '@/components/DropDown.vue'
-import Icon from '@/components/IconCostly.vue'
+import Dropdown from '@/components/common/DropDown.vue'
+import Icon from '@/components/common/IconCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import { useNotificationsStore } from '@/stores/notificationsStore.ts'
 

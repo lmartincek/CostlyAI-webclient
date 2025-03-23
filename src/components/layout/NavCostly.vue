@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useModalStore } from '@/stores/modalsStore.ts'
-import Icon from '@/components/IconCostly.vue'
+import Icon from '@/components/common/IconCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
-import ProfileBadge from '@/components/ProfileBadge.vue'
+import ProfileBadge from '@/components/user/ProfileBadge.vue'
 
 const modal = useModalStore()
 const auth = useAuthStore()

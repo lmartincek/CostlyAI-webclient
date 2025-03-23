@@ -1,7 +1,7 @@
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
-import { apiClient } from './apiClient.ts'
-import type { CostOfLivingCategoryNames } from '../constants/categories.ts'
+import { apiClient } from '@/services/apiClient.ts'
+import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
 import { postProducts, postUserProducts } from '@/services/productService.ts'
 import { postUserSearchedPlaces } from '@/services/generalService.ts'
 

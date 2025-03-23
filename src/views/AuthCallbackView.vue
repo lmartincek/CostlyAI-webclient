@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import LayoutCostly from '@/components/LayoutCostly.vue'
-import SpinnerCostly from '@/components/SpinnerCostly.vue'
+import LayoutCostly from '@/components/layout/LayoutCostly.vue'
+import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 import { useNotificationsStore } from '@/stores/notificationsStore'
 
 import { useRouter } from 'vue-router'
-import { useOAuthCallback } from '@/composables/useOAuthCallback.ts'
+import { useAuthCallback } from '@/composables/useAuthCallback.ts'
 import { onMounted } from 'vue'
 
 const router = useRouter()
@@ -24,7 +24,7 @@ const { showNotification } = useNotificationsStore()
 
 onMounted(async () => {
   try {
-    await useOAuthCallback()
+    await useAuthCallback()
     showNotification({ message: 'Successfully logged in' })
   } catch (e) {
     showNotification({ message: e.message, type: 'error' })
