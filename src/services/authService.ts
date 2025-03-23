@@ -1,6 +1,6 @@
-import { apiClient } from './apiClient.ts'
-import type { Credentials, Providers } from '../types/auth'
-import { handleApiError } from '../utils/handleApiError.ts'
+import { apiClient } from '@/services/apiClient.ts'
+import type { Credentials, Providers } from '@/types/auth'
+import { handleApiError } from '@/utils/handleApiError.ts'
 
 export const registerUser = async (email: string, password: string) => {
   try {

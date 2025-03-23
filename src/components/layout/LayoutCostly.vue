@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Nav from './NavCostly.vue'
+import Nav from '@/components/layout/NavCostly.vue'
+import FooterCostly from '@/components/layout/FooterCostly.vue'
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import Nav from './NavCostly.vue'
       <slot name="content" />
     </div>
   </div>
+  <FooterCostly />
 </template>
 
 <style scoped lang="scss">

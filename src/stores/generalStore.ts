@@ -7,7 +7,7 @@ import {
   getCountries,
   getRecentlySearchedPlaces,
   getUserSearchedPlaces,
-} from '../services/generalService.ts'
+} from '@/services/generalService.ts'
 import type { IPlace, IUserSearch } from '@/types/general'
 
 export const useGeneralStore = defineStore('generalStore', () => {

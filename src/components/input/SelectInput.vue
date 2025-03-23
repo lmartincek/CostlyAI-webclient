@@ -41,7 +41,7 @@ import { ref, computed, watch } from 'vue'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
 
-import Icon from '@/components/IconCostly.vue'
+import Icon from '@/components/common/IconCostly.vue'
 
 interface Option {
   name: string

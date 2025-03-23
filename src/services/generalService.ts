@@ -1,4 +1,4 @@
-import { apiClient } from './apiClient.ts'
+import { apiClient } from '@/services/apiClient.ts'
 import { handleApiError } from '@/utils/handleApiError.ts'
 import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
 import type { ICountry } from '@/types/countries'

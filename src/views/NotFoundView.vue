@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import LayoutCostly from '@/components/LayoutCostly.vue'
+import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 </script>
 
 <style></style>

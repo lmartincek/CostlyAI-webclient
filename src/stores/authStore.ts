@@ -8,7 +8,7 @@ import {
   logoutUser,
   refreshUserToken,
   registerUser,
-} from '../services/authService.ts'
+} from '@/services/authService.ts'
 import router from '@/router/index.ts'
 
 //TODO - add auth types

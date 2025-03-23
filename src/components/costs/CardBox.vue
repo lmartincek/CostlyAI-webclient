@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from './IconCostly.vue'
+import Icon from '@/components/common/IconCostly.vue'
 
 defineProps({
   imgLeft: {
@@ -26,7 +26,7 @@ defineProps({
 <template>
   <div :class="['card', { clickable: isClickable }]">
     <div class="card__icon card__icon--left" v-if="imgLeft">
-      <!--          TODO - flags not agnostic-->
+      <!--          TODO - flags are not agnostic-->
       <Icon :name="imgLeft" folder="flags" alt="" />
     </div>
     <div class="card__text">

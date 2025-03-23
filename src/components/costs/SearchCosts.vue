@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ButtonBasic from '@/components/ButtonBasic.vue'
-import Icon from '@/components/IconCostly.vue'
-import SelectInput from '@/components/SelectInput.vue'
+import ButtonBasic from '@/components/common/ButtonBasic.vue'
+import Icon from '@/components/common/IconCostly.vue'
+import SelectInput from '@/components/input/SelectInput.vue'
 import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import type { ICity } from '@/types/cities'
 import type { ICountry } from '@/types/countries'
@@ -9,7 +9,7 @@ import { useGeneralStore } from '@/stores/generalStore.ts'
 import { useProductsStore } from '@/stores/productsStore.ts'
 import { useAuthStore } from '@/stores/authStore.ts'
 import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
-const CostCategories = defineAsyncComponent(() => import('@/components/CostCategories.vue'))
+const CostCategories = defineAsyncComponent(() => import('@/components/costs/CostCategories.vue'))
 
 const generalStore = useGeneralStore()
 const productsStore = useProductsStore()

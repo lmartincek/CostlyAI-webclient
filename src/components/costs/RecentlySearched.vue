@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useProductsStore } from '@/stores/productsStore.ts'
 import { useGeneralStore } from '@/stores/generalStore.ts'
-import SpinnerCostly from './SpinnerCostly.vue'
+import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 import { computed, onMounted } from 'vue'
 import type { IPlace } from '@/types/general'
-import CardBox from '@/components/CardBox.vue'
+import CardBox from '@/components/costs/CardBox.vue'
 
 const productStore = useProductsStore()
 const generalStore = useGeneralStore()

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Signup Modal', () => {
+test.describe('Signup modal', () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/');
   });

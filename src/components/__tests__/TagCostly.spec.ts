@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import TagComponent from '@/components/TagCostly.vue'
+import TagComponent from '@/components/common/TagCostly.vue'
 
 describe('TagCostly.vue', () => {
   let wrapper: ReturnType<typeof mount>

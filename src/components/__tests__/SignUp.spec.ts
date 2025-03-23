@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia, type TestingPinia } from '@pinia/testing'
-import SignUp from '@/components/SignUp.vue'
+import SignUp from '@/components/user/SignUp.vue'
 import { useModalStore } from '@/stores/modalsStore'
 import { vi } from 'vitest'
 

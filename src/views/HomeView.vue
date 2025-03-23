@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import CostsWrapper from '@/components/CostsWrapper.vue'
-import LayoutCostly from '@/components/LayoutCostly.vue'
-import RecentlySearched from '@/components/RecentlySearched.vue'
-import SearchCosts from '@/components/SearchCosts.vue'
+import CostsWrapper from '@/components/costs/CostsWrapper.vue'
+import LayoutCostly from '@/components/layout/LayoutCostly.vue'
+import RecentlySearched from '@/components/costs/RecentlySearched.vue'
+import SearchCosts from '@/components/costs/SearchCosts.vue'
 </script>
 
 <style lang="scss" scoped></style>

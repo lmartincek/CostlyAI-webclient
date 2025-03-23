@@ -40,7 +40,8 @@ const closeDropdown = () => {
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-85%);
+  transform: translateX(-90%);
+  min-width: 200px;
   margin-top: 10px;
   background-color: $white-color;
   border: 1px solid $border-color;
@@ -60,6 +61,6 @@ const closeDropdown = () => {
 .slide-down-enter-from,
 .slide-down-leave-to {
   opacity: 0;
-  transform: translateY(-20px) translateX(-85%);
+  transform: translateY(-20px) translateX(-90%);
 }
 </style>

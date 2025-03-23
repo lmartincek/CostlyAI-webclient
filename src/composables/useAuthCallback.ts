@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/authStore'
 import { setUserSession } from '@/services/authService'
 
-export async function useOAuthCallback() {
+export async function useAuthCallback() {
   const { setUser } = useAuthStore()
 
   const hash = window.location.hash.substring(1)

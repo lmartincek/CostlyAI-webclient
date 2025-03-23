@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import Footer from './components/FooterCostly.vue'
-import Signup from './components/SignUp.vue'
+import Signup from '@/components/user/SignUp.vue'
 
-import { useNotificationsStore } from './stores/notificationsStore.ts'
-import NotificationCostly from '@/components/NotificationCostly.vue'
+import { useNotificationsStore } from '@/stores/notificationsStore.ts'
+import NotificationCostly from '@/components/common/NotificationCostly.vue'
 
 const notificationsStore = useNotificationsStore()
 </script>
@@ -19,6 +18,4 @@ const notificationsStore = useNotificationsStore()
   <Signup />
 
   <RouterView />
-
-  <Footer />
 </template>

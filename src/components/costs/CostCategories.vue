@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { COST_OF_LIVING_CATEGORIES } from '@/constants/categories.ts'
 import type { CostOfLivingCategory } from '@/constants/categories.ts'
-import Tag from '@/components/TagCostly.vue'
+import Tag from '@/components/common/TagCostly.vue'
 
 const selectedTags = ref<string[]>([])
 const isMaximumCount = computed<boolean>(() => selectedTags.value.length >= 5)
