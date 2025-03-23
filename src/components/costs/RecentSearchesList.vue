@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import CardBox from '@/components/costs/CardBox.vue'
 import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
-import type {IPlace, IUserSearch} from "@/types/general";
-import {parseDateStandard} from "@/utils/dateHelpers.ts";
+import type { IPlace, IUserSearch } from '@/types/general'
+import { parseDateStandard } from '@/utils/dateHelpers.ts'
 
 const props = defineProps<{
   text: string
@@ -30,7 +30,9 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
             :text="item.city ? item.city.name : ''"
             @click="itemClickHandler(item)"
           >
-            <template #floating-label v-if="isUserSearch(item)">{{ parseDateStandard(item.created_at) }}</template>
+            <template #floating-label v-if="isUserSearch(item)">{{
+              parseDateStandard(item.created_at)
+            }}</template>
             <template #headline>{{ item.country.name }}</template>
           </CardBox>
         </div>

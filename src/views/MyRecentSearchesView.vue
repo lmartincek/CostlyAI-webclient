@@ -35,8 +35,8 @@ import RecentSearchesList from '@/components/costs/RecentSearchesList.vue'
 import { computed, onMounted } from 'vue'
 import type { IUserSearch } from '@/types/general'
 import { useProducts } from '@/composables/productsProvider.ts'
-import TableDisplay from "@/components/costs/TableDisplay.vue";
-import LayoutCostly from "@/components/layout/LayoutCostly.vue";
+import TableDisplay from '@/components/costs/TableDisplay.vue'
+import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 
 const generalStore = useGeneralStore()
 const authStore = useAuthStore()
