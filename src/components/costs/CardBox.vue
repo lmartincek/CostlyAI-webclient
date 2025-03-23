@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Icon from '@/components/common/IconCostly.vue'
+import {getIconContext} from "@/utils/iconFolderHelper.ts";
 
 defineProps({
   imgLeft: {
@@ -25,9 +26,10 @@ defineProps({
 
 <template>
   <div :class="['card', { clickable: isClickable }]">
+    <div v-if="$slots['floating-label']"
+         class="floating-label"><slot name="floating-label"/></div>
     <div class="card__icon card__icon--left" v-if="imgLeft">
-      <!--          TODO - flags are not agnostic-->
-      <Icon :name="imgLeft" folder="flags" alt="" />
+      <Icon :name="imgLeft" :folder="getIconContext(imgLeft)" alt="" />
     </div>
     <div class="card__text">
       <div class="headline"><slot name="headline" /></div>
@@ -50,8 +52,9 @@ defineProps({
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   border: 1px solid transparent;
+  position: relative;
 
   &.clickable {
     cursor: pointer;
@@ -60,6 +63,13 @@ defineProps({
     &:hover {
       border-color: $primary-color;
     }
+  }
+
+  .floating-label {
+    position: absolute;
+    top: 2.5px;
+    left: 10px;
+    font-size: .75rem;
   }
 
   &__icon--left {
