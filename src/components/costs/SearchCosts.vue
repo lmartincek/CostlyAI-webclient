@@ -34,7 +34,6 @@ if (!generalStore.countries.length) {
 }
 
 //TODO - add pagination, search query with debounce, loader in select input
-//TODO - watcher on new product load scroll to its section
 watch(
   () => selectedCountry.value,
   async () => {

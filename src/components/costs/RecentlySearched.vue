@@ -25,6 +25,7 @@ const handleItemClick = (place: IPlace) => {
 
 <template>
   <RecentSearchesList
+    text="People recently searched"
     :items="places"
     :loadItems="generalStore.loadRecentlySearchedPlaces"
     :itemClickHandler="handleItemClick"
