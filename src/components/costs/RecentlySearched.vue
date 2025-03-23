@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { useProductsStore } from '@/stores/productsStore.ts'
 import { useGeneralStore } from '@/stores/generalStore.ts'
 import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 import { computed, onMounted } from 'vue'
 import type { IPlace } from '@/types/general'
 import CardBox from '@/components/costs/CardBox.vue'
+import type { LoadProductsArgs } from '@/composables/productsProvider.ts'
 
-const productStore = useProductsStore()
+defineProps<{
+  loadProducts: (args: LoadProductsArgs) => Promise<void>
+}>()
+
 const generalStore = useGeneralStore()
-
 const places = computed<IPlace[]>(() => generalStore.recentlySearchedPlaces)
 
 //TODO - update recently searched when new request is made
@@ -31,7 +33,7 @@ onMounted(async () => {
           :img-left="place.country.code"
           class="card"
           :text="place.city ? place.city.name : ''"
-          @click="productStore.loadProducts(place.country, place.city)"
+          @click="loadProducts({ country: place.country, city: place.city })"
         >
           <template v-slot:headline>{{ place.country.name }}</template>
         </CardBox>

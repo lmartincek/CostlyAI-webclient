@@ -9,9 +9,13 @@
     </template>
 
     <template v-slot:content>
-      <SearchCosts />
-      <CostsWrapper />
-      <RecentlySearched />
+      <SearchCosts :products-loading="loading" :load-products="loadProducts" />
+      <CostsWrapper
+        :products-loading="loading"
+        :last-dataset="lastDataset"
+        :products-by-category="productsByCategory"
+      />
+      <RecentlySearched :load-products="loadProducts" />
     </template>
   </LayoutCostly>
 </template>
@@ -21,6 +25,7 @@ import CostsWrapper from '@/components/costs/CostsWrapper.vue'
 import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 import RecentlySearched from '@/components/costs/RecentlySearched.vue'
 import SearchCosts from '@/components/costs/SearchCosts.vue'
-</script>
+import { useProducts } from '@/composables/productsProvider.ts'
 
-<style lang="scss" scoped></style>
+const { productsByCategory, loading, lastDataset, loadProducts } = useProducts()
+</script>

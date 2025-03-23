@@ -1,28 +1,9 @@
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
-import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
-import { sendChatMessage } from '@/services/chatService.ts'
 import { apiClient } from '@/services/apiClient.ts'
 import type { ProductAIResponse } from '@/types/products'
 
-export const getProducts = async (
-  country: ICountry | null,
-  city: ICity | null,
-  selectedCategories?: CostOfLivingCategoryNames[],
-  userId?: string,
-) => {
-  if (!country) {
-    throw new Error('country is required')
-  }
-
-  if (selectedCategories?.length && country) {
-    try {
-      return await sendChatMessage(country, city, selectedCategories, userId)
-    } catch (e) {
-      throw e
-    }
-  }
-
+export const getProducts = async (country: ICountry | null, city: ICity | null) => {
   const queryParams = []
   if (country) {
     queryParams.push(`countryId=${country.id}`)
@@ -36,10 +17,6 @@ export const getProducts = async (
     const response = await apiClient.get(url)
     return response.data
   } catch (error) {
-    if (error.response?.status === 404 && country) {
-      return await sendChatMessage(country, city)
-    }
-
     console.error('Error fetching products from DB:', error)
     throw error
   }
@@ -65,10 +42,6 @@ export const postProducts = async (
 }
 
 export const getUserProducts = async (userId: string, searchId: number) => {
-  if (!userId || !searchId) {
-    throw new Error('both userId and searchId is required')
-  }
-
   try {
     const response = await apiClient.get(`/products/user?userId=${userId}&searchId=${searchId}`)
     return response.data

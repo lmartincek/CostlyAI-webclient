@@ -15,8 +15,8 @@ import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 import { useNotificationsStore } from '@/stores/notificationsStore'
 
 import { useRouter } from 'vue-router'
-import { useAuthCallback } from '@/composables/useAuthCallback.ts'
 import { onMounted } from 'vue'
+import { useAuthCallback } from '@/composables/authCallback.ts'
 
 const router = useRouter()
 

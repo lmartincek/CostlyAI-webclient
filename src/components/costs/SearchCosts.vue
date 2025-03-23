@@ -6,13 +6,17 @@ import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import type { ICity } from '@/types/cities'
 import type { ICountry } from '@/types/countries'
 import { useGeneralStore } from '@/stores/generalStore.ts'
-import { useProductsStore } from '@/stores/productsStore.ts'
 import { useAuthStore } from '@/stores/authStore.ts'
 import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
+import type { LoadProductsArgs } from '@/composables/productsProvider.ts'
 const CostCategories = defineAsyncComponent(() => import('@/components/costs/CostCategories.vue'))
 
+defineProps<{
+  productsLoading: boolean
+  loadProducts: (args: LoadProductsArgs) => Promise<void>
+}>()
+
 const generalStore = useGeneralStore()
-const productsStore = useProductsStore()
 const authStore = useAuthStore()
 
 const selectedCountry = ref<string>('')
@@ -74,14 +78,14 @@ const selectedCategories = ref<CostOfLivingCategoryNames[]>([])
     </div>
     <div class="wrapper-control__button">
       <ButtonBasic
-        :disabled="!selectedCountry || productsStore.loading"
+        :disabled="!selectedCountry || productsLoading"
         @click="
-          productsStore.loadProducts(
-            selectedCountryObj,
-            selectedCityObj,
+          loadProducts({
+            country: selectedCountryObj,
+            city: selectedCityObj,
             selectedCategories,
-            authStore.userId,
-          )
+            userId: authStore.userId,
+          })
         "
         >Search Costs</ButtonBasic
       >

@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
   // TODO - change to computed
   const isAuthenticated = ref<boolean>(false)
-  const userId = computed<string | undefined>(() => user.value?.id)
+  const userId = computed<string | null>(() => user.value?.id || null)
 
   const loading = ref<boolean>(false)
 
