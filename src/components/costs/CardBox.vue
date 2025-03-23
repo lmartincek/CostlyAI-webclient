@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Icon from '@/components/common/IconCostly.vue'
-import {getIconContext} from "@/utils/iconFolderHelper.ts";
+import { getIconContext } from '@/utils/iconFolderHelper.ts'
 
 defineProps({
   imgLeft: {
@@ -26,8 +26,7 @@ defineProps({
 
 <template>
   <div :class="['card', { clickable: isClickable }]">
-    <div v-if="$slots['floating-label']"
-         class="floating-label"><slot name="floating-label"/></div>
+    <div v-if="$slots['floating-label']" class="floating-label"><slot name="floating-label" /></div>
     <div class="card__icon card__icon--left" v-if="imgLeft">
       <Icon :name="imgLeft" :folder="getIconContext(imgLeft)" alt="" />
     </div>
@@ -69,7 +68,7 @@ defineProps({
     position: absolute;
     top: 2.5px;
     left: 10px;
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
 
   &__icon--left {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import type {Providers, User} from '@/types/auth'
+import type { Providers, User } from '@/types/auth'
 import {
   getUser,
   loginUserWithCredentials,
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
   const loading = ref<boolean>(false)
 
-  function setUser(data: { user: User, accessToken: string}) {
+  function setUser(data: { user: User; accessToken: string }) {
     user.value = data.user
     accessToken.value = data.accessToken
     isAuthenticated.value = true
