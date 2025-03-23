@@ -4,32 +4,26 @@ import { useAuthStore } from '@/stores/authStore.ts'
 import Spinner from '@/components/common/SpinnerCostly.vue'
 import Icon from '@/components/common/IconCostly.vue'
 import TableDisplay from '@/components/costs/TableDisplay.vue'
-import { useProductsStore } from '@/stores/productsStore.ts'
-import type { LastDataset } from '@/stores/productsStore.ts'
-import { computed } from 'vue'
-import { groupProductsByCategory } from '@/utils/objectHelpers.ts'
 import IconCostly from '@/components/common/IconCostly.vue'
+import type { ProductGroups } from '@/types/products'
+import type { LastDataset } from '@/composables/productsProvider.ts'
 
-const productsStore = useProductsStore()
-const productsByCategory = computed(() => {
-  if (productsStore.products.length) return groupProductsByCategory(productsStore.products)
-  return []
-})
-
-const lastDataset = computed<LastDataset>(() => {
-  return productsStore.lastDataset
-})
+defineProps<{
+  productsLoading: boolean
+  productsByCategory: ProductGroups | null
+  lastDataset: LastDataset
+}>()
 </script>
 
 <template>
-  <div class="wrapper-data" v-show="productsStore.loading || productsStore.products">
-    <template v-if="productsStore.loading">
+  <div class="wrapper-data" v-show="productsLoading || productsByCategory !== null">
+    <template v-if="productsLoading">
       <div class="loader">
         <Spinner />
       </div>
       <span>Fetching latest prices... This might take a few moments, <b>please wait...</b></span>
     </template>
-    <template v-if="productsStore.products.length">
+    <template v-if="productsByCategory !== null">
       <p v-if="lastDataset.country" class="wrapper-data__last-country">
         Current avg. prices in
         <b>

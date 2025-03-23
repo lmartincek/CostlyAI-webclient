@@ -16,7 +16,7 @@
             <CardBox
               :img-left="search.country.code"
               :text="search.city ? search.city.name : ''"
-              @click="loadProducts(search.id)"
+              @click="loadProductsBySearchId(authStore.userId, search.id)"
             >
               <template #headline>{{ search.country.name }}</template>
             </CardBox>
@@ -31,7 +31,7 @@
         <router-link to="/">here</router-link> and select location you're interested in.
       </div>
 
-      <div class="wrapper-data__table" v-if="products.length">
+      <div class="wrapper-data__table" v-if="productsByCategory !== null">
         <template v-for="(products, category) in productsByCategory" :key="category">
           <TableDisplay :data="products" :category="category" />
         </template>
@@ -42,40 +42,27 @@
 
 <script setup lang="ts">
 import LayoutCostly from '@/components/layout/LayoutCostly.vue'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import CardBox from '@/components/costs/CardBox.vue'
 import type { IUserSearch } from '@/types/general'
 import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 import { parseDateStandard } from '@/utils/dateHelpers.ts'
 import TableDisplay from '@/components/costs/TableDisplay.vue'
-import type { Product } from '@/types/products'
-import { groupProductsByCategory } from '@/utils/objectHelpers.ts'
-import { getUserProducts } from '@/services/productService.ts'
 import { useGeneralStore } from '@/stores/generalStore.ts'
-import { useProductsStore } from '@/stores/productsStore.ts'
+import { useProducts } from '@/composables/productsProvider.ts'
 
 const generalStore = useGeneralStore()
 const searches = computed<IUserSearch[]>(() => generalStore.mySearchedPlaces)
 
-const products = ref<Product[]>([])
 const authStore = useAuthStore()
-const loadProducts = async (searchId: number) => {
-  if (authStore.userId) {
-    products.value = await getUserProducts(authStore.userId, searchId)
-    return
-  }
-  console.error('apparently not signed in')
-}
 
-const productsByCategory = computed(() => {
-  if (products.value) return groupProductsByCategory(products.value)
-  return []
-})
+const { productsByCategory, loadProductsBySearchId } = useProducts()
 
 onMounted(async () => {
-  if (generalStore.mySearchedPlaces.length && !useProductsStore().products.length) return
-  if (typeof authStore.userId === 'string') {
+  // TODO - if searched on a homepage i want to fetch it again
+  if (generalStore.mySearchedPlaces.length) return
+  if (!!authStore.userId) {
     await generalStore.loadUserSearchedPlaces(authStore.userId as string)
   }
 })
