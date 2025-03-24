@@ -7,7 +7,7 @@
 
     <template v-slot:content>
       <RecentSearchesList
-        text="My recent searches"
+        wrapper-text="My recent searches"
         :items="searches"
         :loadItems="() => generalStore.loadUserSearchedPlaces(authStore.userId)"
         :itemClickHandler="handleItemClick"

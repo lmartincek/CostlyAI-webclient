@@ -26,7 +26,15 @@ defineProps({
 
 <template>
   <div :class="['card', { clickable: isClickable }]">
-    <div v-if="$slots['floating-label']" class="floating-label"><slot name="floating-label" /></div>
+    <div
+      v-if="$slots['floating-label-bottom']"
+      class="card__floating-label card__floating-label--bottom"
+    >
+      <slot name="floating-label-bottom" />
+    </div>
+    <div v-if="$slots['floating-label-top']" class="card__floating-label card__floating-label--top">
+      <slot name="floating-label-top" />
+    </div>
     <div class="card__icon card__icon--left" v-if="imgLeft">
       <Icon :name="imgLeft" :folder="getIconContext(imgLeft)" alt="" />
     </div>
@@ -64,11 +72,25 @@ defineProps({
     }
   }
 
-  .floating-label {
+  &:has(.card__floating-label) {
+    padding: 4rem 1.25rem 2rem;
+  }
+
+  &__floating-label {
     position: absolute;
-    top: 2.5px;
-    left: 10px;
     font-size: 0.75rem;
+
+    &--bottom {
+      bottom: 10px;
+      left: 10px;
+      text-align: left;
+    }
+
+    &--top {
+      top: 2.5px;
+      right: 10px;
+      text-align: right;
+    }
   }
 
   &__icon--left {
@@ -84,9 +106,6 @@ defineProps({
     font-size: 1.1rem;
     font-weight: 600;
     color: $headline-color;
-  }
-
-  .text {
   }
 }
 </style>
