@@ -9,8 +9,8 @@ export function parseDateAsOrdinalsWithMonths(date: Date): string | null {
 }
 
 export const DateFormats = {
-  DayMonthYear: 'DD-MM-YYYY',
-  YearMonthDay: 'YYYY-MM-DD',
+  DayMonthYear: 'DD/MM/YYYY',
+  YearMonthDay: 'YYYY/MM/DD',
 } as const
 export type DateFormat = (typeof DateFormats)[keyof typeof DateFormats]
 
@@ -26,7 +26,7 @@ export function parseDateStandard(
   const month = parsedDate.getMonth() + 1
   const year = parsedDate.getFullYear()
 
-  if (format === DateFormats.DayMonthYear) return `${day}.${month}.${year}`
-  if (format === DateFormats.YearMonthDay) return `${year}.${month}.${day}`
+  if (format === DateFormats.DayMonthYear) return `${day}/${month}/${year}`
+  if (format === DateFormats.YearMonthDay) return `${year}/${month}/${day}`
   return null
 }

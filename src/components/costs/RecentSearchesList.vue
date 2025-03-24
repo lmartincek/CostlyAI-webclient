@@ -6,7 +6,7 @@ import type { IPlace, IUserSearch } from '@/types/general'
 import { parseDateStandard } from '@/utils/dateHelpers.ts'
 
 const props = defineProps<{
-  text: string
+  wrapperText: string
   items: T[]
   loadItems: () => Promise<void>
   itemClickHandler: (item: T) => void
@@ -21,7 +21,7 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
 
 <template>
   <div class="recent-searches">
-    <span>{{ text }}</span>
+    <b>{{ wrapperText }}</b>
     <div class="recent-searches__cards" v-if="!isLoading">
       <template v-for="(item, i) in items" :key="'recentlySearchedItem' + i">
         <div class="recent-searches__card-wrapper">
@@ -30,7 +30,14 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
             :text="item.city ? item.city.name : ''"
             @click="itemClickHandler(item)"
           >
-            <template #floating-label v-if="isUserSearch(item)">{{
+            <template #floating-label-top v-if="isUserSearch(item)">
+              <div class="tags">
+                <span v-for="category in item.categories" class="tag" :key="category"
+                  >{{ category }}
+                </span>
+              </div>
+            </template>
+            <template #floating-label-bottom v-if="isUserSearch(item)">{{
               parseDateStandard(item.created_at)
             }}</template>
             <template #headline>{{ item.country.name }}</template>
@@ -56,6 +63,20 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
 
     @include respond-md {
       text-align: left;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: right;
+
+      .tag {
+        background: $border-color;
+        margin: 0.175rem;
+        padding: 0.0875rem 0.175rem;
+        border: 1px solid $placeholder-color;
+        border-radius: 0.25rem;
+      }
     }
   }
 
