@@ -37,9 +37,9 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
                 </span>
               </div>
             </template>
-            <template #floating-label-bottom v-if="isUserSearch(item)">{{
+            <template #floating-label-bottom v-if="isUserSearch(item)"><b>{{
               parseDateStandard(item.created_at)
-            }}</template>
+            }}</b></template>
             <template #headline>{{ item.country.name }}</template>
           </CardBox>
         </div>
