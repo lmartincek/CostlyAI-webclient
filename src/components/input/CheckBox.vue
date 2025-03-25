@@ -5,31 +5,43 @@ const emit = defineEmits(['update:isChecked'])
 
 const isChecked = ref<boolean>(false)
 
+defineProps({
+  name: {
+    type: String,
+    default: 'remember-me'
+  }
+})
+
 function toggleCheck() {
   isChecked.value = !isChecked.value
+  console.log(isChecked.value)
   emit('update:isChecked', isChecked.value)
 }
 </script>
 
 <template>
-  <div class="checkbox-wrapper-42">
-    <input id="cbx-42" type="checkbox" @click="toggleCheck" />
-    <label class="cbx" for="cbx-42"></label>
-    <label class="lbl" for="cbx-42"><slot /></label>
+  <div :class="['checkbox-wrapper', {'checked': isChecked}]"
+       tabindex="0"
+       @click.prevent="toggleCheck"
+       @keydown.enter="toggleCheck"
+  >
+    <input :id="name" type="checkbox"/>
+    <label class="cbx" :for="name"></label>
+    <label class="lbl" :for="name"><slot /></label>
   </div>
 </template>
 
 <style scoped lang="scss">
-.checkbox-wrapper-42 input[type='checkbox'] {
+.checkbox-wrapper input[type='checkbox'] {
   display: none;
   visibility: hidden;
 }
 
-.checkbox-wrapper-42 label {
+.checkbox-wrapper label {
   display: inline-block;
 }
 
-.checkbox-wrapper-42 .cbx {
+.checkbox-wrapper .cbx {
   position: relative;
   top: 1px;
   width: 17px;
@@ -40,7 +52,7 @@ function toggleCheck() {
   transition: background 0.1s ease;
   cursor: pointer;
 }
-.checkbox-wrapper-42 .cbx:after {
+.checkbox-wrapper .cbx:after {
   content: '';
   position: absolute;
   top: 0;
@@ -54,28 +66,28 @@ function toggleCheck() {
   transition: all 0.3s ease;
   transition-delay: 0.1s;
 }
-.checkbox-wrapper-42 .lbl {
+.checkbox-wrapper .lbl {
   margin-left: 5px;
   vertical-align: middle;
   cursor: pointer;
 }
-.checkbox-wrapper-42 input[type='checkbox']:checked ~ .cbx {
+.checkbox-wrapper.checked .cbx {
   border-color: transparent;
   background: $primary-gradient;
-  animation: jelly-42 0.4s ease;
+  animation: jelly 0.4s ease;
 }
-.checkbox-wrapper-42 input[type='checkbox']:checked ~ .cbx:after {
+.checkbox-wrapper.checked .cbx:after {
   opacity: 1;
   transform: rotate(45deg) scale(1);
 }
-.checkbox-wrapper-42 .cntr {
+.checkbox-wrapper .cntr {
   position: absolute;
   top: 50%;
   left: 0;
   width: 100%;
   text-align: center;
 }
-@-moz-keyframes jelly-42 {
+@-moz-keyframes jelly {
   from {
     transform: scale(1, 1);
   }
@@ -98,7 +110,7 @@ function toggleCheck() {
     transform: scale(1, 1);
   }
 }
-@-webkit-keyframes jelly-42 {
+@-webkit-keyframes jelly {
   from {
     transform: scale(1, 1);
   }
@@ -121,7 +133,7 @@ function toggleCheck() {
     transform: scale(1, 1);
   }
 }
-@-o-keyframes jelly-42 {
+@-o-keyframes jelly {
   from {
     transform: scale(1, 1);
   }
@@ -144,7 +156,7 @@ function toggleCheck() {
     transform: scale(1, 1);
   }
 }
-@keyframes jelly-42 {
+@keyframes jelly {
   from {
     transform: scale(1, 1);
   }

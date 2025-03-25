@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 import HomeView from '@/views/HomeView.vue'
-import MyRecentSearchesView from '@/views/MyRecentSearchesView.vue'
-import NotFoundView from '@/views/NotFoundView.vue'
-import { useAuthStore } from '@/stores/authStore'
-import AuthCallbackView from '@/views/AuthCallbackView.vue'
+const MyRecentSearchesView = import('@/views/MyRecentSearchesView.vue')
+const NotFoundView = import('@/views/NotFoundView.vue')
+const AuthCallbackView = import('@/views/AuthCallbackView.vue')
 
 const routes = [
   { path: '/', component: HomeView },

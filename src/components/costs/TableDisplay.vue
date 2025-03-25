@@ -3,23 +3,27 @@ defineProps(['data', 'category'])
 </script>
 
 <template>
-  <div class="table-wrapper">
-    <div class="table-wrapper__header">
-      {{ category }}
-    </div>
-    <div class="table-wrapper__body">
-      <div class="row">
-        <span><b>Item</b></span>
-        <span><b>Price</b></span>
-      </div>
-      <div v-for="(value, key) in data" :key="key" class="row">
-        <span class="name">{{ value.name }}</span>
-        <span class="price"
-          ><b>${{ value.price.toFixed(2) }} USD</b></span
+  <table class="table-wrapper">
+    <thead class="table-wrapper__header">
+      <tr>
+        <th aria-label="Product category">
+          {{ category }}
+        </th>
+      </tr>
+    </thead>
+    <tbody class="table-wrapper__body">
+      <tr class="row">
+        <td><b>Item</b></td>
+        <td><b>Price</b></td>
+      </tr>
+      <tr v-for="(value, key) in data" :key="key" class="row">
+        <td class="name" aria-label="Product name">{{ value.name }}</td>
+        <td class="price" aria-label="Product price"
+          ><b>${{ value.price.toFixed(2) }} USD</b></td
         >
-      </div>
-    </div>
-  </div>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <style lang="scss">
@@ -37,12 +41,14 @@ defineProps(['data', 'category'])
     color: $white-color;
     font-size: 1.15rem;
     font-weight: 500;
-    padding: 1rem 1.5rem;
     text-align: left;
-    border-radius: 1rem 1rem 0 0;
 
-    &::first-letter {
-      text-transform: capitalize;
+    th {
+      border-radius: 1rem 1rem 0 0;
+      padding: 1rem 1.5rem;
+      &::first-letter {
+        text-transform: capitalize;
+      }
     }
   }
 
@@ -56,6 +62,10 @@ defineProps(['data', 'category'])
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid $border-color;
+
+      &:first-of-type {
+        text-decoration: underline;
+      }
 
       &:last-of-type {
         border-bottom: none;

@@ -55,7 +55,7 @@ const selectedCategories = ref<CostOfLivingCategoryNames[]>([])
   <div class="wrapper-control">
     <div class="wrapper-control__inputs">
       <SelectInput
-        default-option-label="Select Country"
+        default-option-label="Vietnam"
         :options="generalStore.countries"
         v-model="selectedCountry"
       >
@@ -63,7 +63,7 @@ const selectedCategories = ref<CostOfLivingCategoryNames[]>([])
       </SelectInput>
 
       <SelectInput
-        default-option-label="Select City"
+        default-option-label="Hanoi"
         :options="generalStore.cities"
         v-model="selectedCity"
         :disabled="!selectedCountry"
