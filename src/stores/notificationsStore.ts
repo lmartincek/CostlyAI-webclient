@@ -13,6 +13,11 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
   const notifications = ref<Notification[]>([])
 
   const showNotification = (notification: Notification) => {
+    if (!notification.message) {
+      console.error('notification without message was received')
+      return
+    }
+
     notifications.value.push(notification)
 
     setTimeout(() => {

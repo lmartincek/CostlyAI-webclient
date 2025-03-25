@@ -9,6 +9,12 @@ describe('SignUp.vue', () => {
   let pinia: TestingPinia
   let modalsStore
 
+  const globalComponents = {
+    'font-awesome-icon': {
+      template: '<span />'
+    }
+  }
+
   beforeEach(() => {
     pinia = createTestingPinia({
       createSpy: vi.fn,
@@ -21,6 +27,7 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
+        components: globalComponents
       },
     })
 
@@ -33,10 +40,11 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
+        components: globalComponents
       },
     })
 
-    await wrapper.find('#email input').setValue('invalid-email')
+    await wrapper.find('input[name="email"]').setValue('invalid-email')
     await wrapper.find('form').trigger('submit.prevent')
 
     expect(wrapper.find('.error').text()).toBe('Email is invalid')
@@ -46,10 +54,11 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
+        components: globalComponents
       },
     })
 
-    await wrapper.find('#password input').setValue('short')
+    await wrapper.find('input[name="password"]').setValue('short')
     await wrapper.find('form').trigger('submit.prevent')
 
     const errors = wrapper.findAll('.error')
