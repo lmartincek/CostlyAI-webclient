@@ -169,11 +169,9 @@ const handleOAuthLogin = async (provider: 'google' | 'apple') => {
   }
 }
 
-watch(step, (newStep, oldStep) => {
-  if (newStep !== oldStep) email.value = ''
-  password.value = ''
-  errorEmail.value = ''
-})
+const setStep = (stepValue: AuthStep) => {
+  step.value = stepValue
+}
 </script>
 
 <template>
@@ -186,14 +184,18 @@ watch(step, (newStep, oldStep) => {
       <div class="signup-wrapper__body">
         <div class="type">
           <div
+            tabindex="0"
             :class="['sign-in', { active: step === AuthStep.SignIn }]"
-            @click="step = AuthStep.SignIn"
+            @keydown.enter="setStep(AuthStep.SignIn)"
+            @click="setStep(AuthStep.SignIn)"
           >
             Sign In
           </div>
           <div
+            tabindex="0"
             :class="['sign-up', { active: step === AuthStep.SignUp }]"
-            @click="step = AuthStep.SignUp"
+            @keydown.enter="setStep(AuthStep.SignUp)"
+            @click="setStep(AuthStep.SignUp)"
           >
             Sign Up
           </div>
@@ -202,21 +204,22 @@ watch(step, (newStep, oldStep) => {
         <form @submit.prevent="handleSubmit">
           <div class="credentials">
             <div class="input-wrapper">
-              <label for="email">Email Address</label>
               <TextInput
-                id="email"
+                name="email"
+                label="Email Address"
                 class="input-wrapper__input"
                 v-model="email"
                 placeholder="your@email.com"
                 autocomplete="email"
+                autofocus
               />
               <span v-if="errorEmail" class="error">{{ errorEmail }}</span>
             </div>
 
             <div class="input-wrapper" v-if="step !== AuthStep.ForgotPassword">
-              <label for="password">Password</label>
               <TextInput
-                id="password"
+                name="password"
+                label="Password"
                 class="input-wrapper__input"
                 v-model="password"
                 type="password"
@@ -240,7 +243,10 @@ watch(step, (newStep, oldStep) => {
               <div class="actions__checkbox">
                 <Checkbox @update:is-checked="rememberMe = $event">Remember me</Checkbox>
               </div>
-              <div class="actions__forgot-password" @click="step = AuthStep.ForgotPassword">
+              <div class="actions__forgot-password"
+                   tabindex="0"
+                   @keydown.enter="setStep(AuthStep.ForgotPassword)"
+                   @click="setStep(AuthStep.ForgotPassword)">
                 <span>Forgot password?</span>
               </div>
             </div>

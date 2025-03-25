@@ -38,7 +38,6 @@ const modalsStore = useModalStore()
     max-width: 450px;
     max-height: 90vh;
     overflow: auto;
-    outline: none;
 
     .close-button {
       position: absolute;
@@ -51,7 +50,6 @@ const modalsStore = useModalStore()
       color: $white-color;
 
       &:focus {
-        outline: none;
         border: none;
       }
     }

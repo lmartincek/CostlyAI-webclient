@@ -15,16 +15,20 @@ defineProps({
   },
   label: {
     type: String,
-    required: false,
+    required: true,
   },
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   autocomplete: {
     type: String,
     required: false,
   },
+  autofocus: {
+    type: Boolean,
+    required: false
+  }
 })
 </script>
 
@@ -37,12 +41,16 @@ defineProps({
       :name="name"
       :placeholder="placeholder"
       :autocomplete="autocomplete"
+      :autofocus="autofocus"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
 .text-input {
+  display: flex;
+  flex-direction: column;
+
   input {
     padding: 0.75rem;
     font-size: 1rem;
@@ -51,7 +59,6 @@ defineProps({
     color: $text-color;
     width: inherit;
     border: 1px solid $border-color;
-    outline: none;
 
     &:focus {
       border-color: $primary-color;

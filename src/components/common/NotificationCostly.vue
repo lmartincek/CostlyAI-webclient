@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-fade">
-    <div :class="['notification', type]" v-show="message">
+    <div :class="['notification', type]" v-show="message" aria-live="polite">
       <span class="notification-message">{{ message }}</span>
     </div>
   </transition>

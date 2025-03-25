@@ -26,8 +26,10 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
       <template v-for="(item, i) in items" :key="'recentlySearchedItem' + i">
         <div class="recent-searches__card-wrapper">
           <CardBox
+            tabindex="0"
             :img-left="item.country.code"
             :text="item.city ? item.city.name : ''"
+            @keydown.enter="itemClickHandler(item)"
             @click="itemClickHandler(item)"
           >
             <template #floating-label-top v-if="isUserSearch(item)">

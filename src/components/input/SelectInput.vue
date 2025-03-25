@@ -173,7 +173,6 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
   width: 100%;
 
   &:focus {
-    outline: none;
     border-color: $placeholder-color;
   }
 
@@ -247,7 +246,6 @@ const isCountry = (option: ICountry | ICity): option is ICountry => {
   }
 
   &:focus {
-    outline: none;
     border: none;
   }
 }
