@@ -33,8 +33,9 @@ const ErrorsPassword = {
   LowerCase: 2,
   UpperCase: 3,
   Digit: 4,
-  Required: 5,
 } as const
+
+const errorPassword = ref<string>('')
 
 const errorsPassword = ref<{ id: number; label: string; isFulfilled: boolean }[]>([
   { id: ErrorsPassword.Length, label: '8 characters minimum', isFulfilled: false },
@@ -44,15 +45,24 @@ const errorsPassword = ref<{ id: number; label: string; isFulfilled: boolean }[]
 ])
 
 const validatePassword = (password: string) => {
-  errorsPassword.value.find((e) => e.id === ErrorsPassword.Length)!.isFulfilled =
-    password.length >= 8
-  errorsPassword.value.find((e) => e.id === ErrorsPassword.LowerCase)!.isFulfilled = /[a-z]/.test(
-    password,
-  )
-  errorsPassword.value.find((e) => e.id === ErrorsPassword.UpperCase)!.isFulfilled = /[A-Z]/.test(
-    password,
-  )
-  errorsPassword.value.find((e) => e.id === ErrorsPassword.Digit)!.isFulfilled = /\d/.test(password)
+  if (step.value === AuthStep.SignIn) {
+    errorPassword.value = !password ? 'Password is required' : ''
+    return
+  }
+
+  if (step.value === AuthStep.SignUp) {
+    errorsPassword.value.find((e) => e.id === ErrorsPassword.Length)!.isFulfilled =
+      password.length >= 8
+    errorsPassword.value.find((e) => e.id === ErrorsPassword.LowerCase)!.isFulfilled = /[a-z]/.test(
+      password,
+    )
+    errorsPassword.value.find((e) => e.id === ErrorsPassword.UpperCase)!.isFulfilled = /[A-Z]/.test(
+      password,
+    )
+    errorsPassword.value.find((e) => e.id === ErrorsPassword.Digit)!.isFulfilled = /\d/.test(
+      password,
+    )
+  }
 }
 
 const password = ref('')
@@ -225,7 +235,10 @@ const setStep = (stepValue: AuthStep) => {
                 type="password"
                 autocomplete="current-password"
               />
-              <div class="input-wrapper__password-errors">
+              <template v-if="step === AuthStep.SignIn">
+                <span v-if="errorPassword" class="error">{{ errorPassword }}</span>
+              </template>
+              <div class="input-wrapper__password-errors" v-if="step === AuthStep.SignUp">
                 <template v-for="(error, i) in errorsPassword" :key="'signup-form-error' + i">
                   <span :class="['error', { fulfilled: error.isFulfilled }]">
                     <font-awesome-icon
@@ -243,10 +256,12 @@ const setStep = (stepValue: AuthStep) => {
               <div class="actions__checkbox">
                 <Checkbox @update:is-checked="rememberMe = $event">Remember me</Checkbox>
               </div>
-              <div class="actions__forgot-password"
-                   tabindex="0"
-                   @keydown.enter="setStep(AuthStep.ForgotPassword)"
-                   @click="setStep(AuthStep.ForgotPassword)">
+              <div
+                class="actions__forgot-password"
+                tabindex="0"
+                @keydown.enter="setStep(AuthStep.ForgotPassword)"
+                @click="setStep(AuthStep.ForgotPassword)"
+              >
                 <span>Forgot password?</span>
               </div>
             </div>

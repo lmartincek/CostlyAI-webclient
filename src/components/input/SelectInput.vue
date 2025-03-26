@@ -1,7 +1,5 @@
 <template>
-  <div class="select-container"
-       ref="target"
-  >
+  <div class="select-container" ref="target">
     <label class="select-label" v-if="label">{{ label }}</label>
     <div class="custom-select">
       <span class="input-icon">
@@ -40,7 +38,7 @@
 
 <script setup lang="ts">
 import { useFocusWithin } from '@vueuse/core'
-import {ref, computed, watch, useTemplateRef } from 'vue'
+import { ref, computed, watch, useTemplateRef } from 'vue'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
 
@@ -123,7 +121,6 @@ const handleBlur = () => {
   }, 200)
 }
 
-
 const clearValue = () => {
   selectedValue.value = ''
   searchQuery.value = ''
@@ -147,7 +144,6 @@ const highlightMatch = (text: string) => {
 const isCountry = (option: ICountry | ICity): option is ICountry => {
   return 'code' in option
 }
-
 </script>
 
 <style scoped lang="scss">

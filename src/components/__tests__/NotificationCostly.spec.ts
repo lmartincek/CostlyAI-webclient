@@ -8,8 +8,8 @@ describe('Notification Component', () => {
     return mount(Notification, {
       props: {
         message: 'Test message',
-        ...props
-      }
+        ...props,
+      },
     })
   }
 

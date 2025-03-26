@@ -8,8 +8,8 @@ const isChecked = ref<boolean>(false)
 defineProps({
   name: {
     type: String,
-    default: 'remember-me'
-  }
+    default: 'remember-me',
+  },
 })
 
 function toggleCheck() {
@@ -20,12 +20,13 @@ function toggleCheck() {
 </script>
 
 <template>
-  <div :class="['checkbox-wrapper', {'checked': isChecked}]"
-       tabindex="0"
-       @click.prevent="toggleCheck"
-       @keydown.enter="toggleCheck"
+  <div
+    :class="['checkbox-wrapper', { checked: isChecked }]"
+    tabindex="0"
+    @click.prevent="toggleCheck"
+    @keydown.enter="toggleCheck"
   >
-    <input :id="name" type="checkbox"/>
+    <input :id="name" type="checkbox" />
     <label class="cbx" :for="name"></label>
     <label class="lbl" :for="name"><slot /></label>
   </div>

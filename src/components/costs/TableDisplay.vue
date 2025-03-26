@@ -18,9 +18,9 @@ defineProps(['data', 'category'])
       </tr>
       <tr v-for="(value, key) in data" :key="key" class="row">
         <td class="name" aria-label="Product name">{{ value.name }}</td>
-        <td class="price" aria-label="Product price"
-          ><b>${{ value.price.toFixed(2) }} USD</b></td
-        >
+        <td class="price" aria-label="Product price">
+          <b>${{ value.price.toFixed(2) }} USD</b>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -29,6 +29,8 @@ coverage
 test-results/
 playwright-report/
 
+.husky/_
+
 # ENV
 .env.local
 .env.production

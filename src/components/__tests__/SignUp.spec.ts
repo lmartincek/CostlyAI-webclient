@@ -11,8 +11,8 @@ describe('SignUp.vue', () => {
 
   const globalComponents = {
     'font-awesome-icon': {
-      template: '<span />'
-    }
+      template: '<span />',
+    },
   }
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
-        components: globalComponents
+        components: globalComponents,
       },
     })
 
@@ -40,7 +40,7 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
-        components: globalComponents
+        components: globalComponents,
       },
     })
 
@@ -54,7 +54,7 @@ describe('SignUp.vue', () => {
     const wrapper = mount(SignUp, {
       global: {
         plugins: [pinia],
-        components: globalComponents
+        components: globalComponents,
       },
     })
 

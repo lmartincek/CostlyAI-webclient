@@ -6,7 +6,7 @@ describe('DataTable Component', () => {
   const mockData = {
     item1: { name: 'Product A', price: 19.99 },
     item2: { name: 'Product B', price: 29.99 },
-    item3: { name: 'Product C', price: 39.99 }
+    item3: { name: 'Product C', price: 39.99 },
   }
 
   const mockCategory = 'Electronics'
@@ -15,8 +15,8 @@ describe('DataTable Component', () => {
     const wrapper = mount(TableDisplay, {
       props: {
         data: mockData,
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     expect(wrapper.find('table.table-wrapper').exists()).toBe(true)
@@ -28,8 +28,8 @@ describe('DataTable Component', () => {
     const wrapper = mount(TableDisplay, {
       props: {
         data: mockData,
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     const header = wrapper.find('th')
@@ -41,8 +41,8 @@ describe('DataTable Component', () => {
     const wrapper = mount(TableDisplay, {
       props: {
         data: mockData,
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     const headers = wrapper.findAll('tbody tr.row').at(0)?.findAll('td')
@@ -55,8 +55,8 @@ describe('DataTable Component', () => {
     const wrapper = mount(TableDisplay, {
       props: {
         data: mockData,
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     const rows = wrapper.findAll('tbody tr.row').slice(1)
@@ -81,8 +81,8 @@ describe('DataTable Component', () => {
     const wrapper = mount(TableDisplay, {
       props: {
         data: {},
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     const rows = wrapper.findAll('tbody tr.row')
@@ -91,14 +91,14 @@ describe('DataTable Component', () => {
 
   it('formats prices correctly with 2 decimal places', () => {
     const testData = {
-      item1: { name: 'Test Product', price: 20 }
+      item1: { name: 'Test Product', price: 20 },
     }
 
     const wrapper = mount(TableDisplay, {
       props: {
         data: testData,
-        category: mockCategory
-      }
+        category: mockCategory,
+      },
     })
 
     const priceCell = wrapper.find('td.price')
@@ -124,6 +124,6 @@ describe('DataTable Component', () => {
   //     }
   //   })
 
-    // expect(wrapper.html()).toMatchSnapshot()
+  // expect(wrapper.html()).toMatchSnapshot()
   // })
 })
