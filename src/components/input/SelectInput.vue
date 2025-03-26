@@ -1,5 +1,7 @@
 <template>
-  <div class="select-container">
+  <div class="select-container"
+       ref="target"
+  >
     <label class="select-label" v-if="label">{{ label }}</label>
     <div class="custom-select">
       <span class="input-icon">
@@ -9,8 +11,6 @@
         type="text"
         v-model="searchQuery"
         @input="handleInput"
-        @focus="showSuggestions = true"
-        @blur="handleBlur"
         :disabled="disabled"
         autocomplete="off"
         :class="['select-input-field', { disabled }]"
@@ -23,6 +23,8 @@
         <li
           v-for="option in filteredOptions"
           :key="option.name"
+          tabindex="0"
+          @keydown.enter="handleSelect(option)"
           @mousedown="handleSelect(option)"
           :class="{ selected: selectedValue === option.name }"
         >
@@ -37,7 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { useFocusWithin } from '@vueuse/core'
+import {ref, computed, watch, useTemplateRef } from 'vue'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
 
@@ -105,11 +108,21 @@ const handleSelect = (option: ICountry | ICity) => {
   emit('update:modelValue', selectedValue.value)
 }
 
+const target = useTemplateRef<HTMLElement>('target')
+const { focused } = useFocusWithin(target)
+watch(focused, (focused) => {
+  if (focused) {
+    showSuggestions.value = true
+  } else {
+    handleBlur()
+  }
+})
 const handleBlur = () => {
   setTimeout(() => {
     showSuggestions.value = false
   }, 200)
 }
+
 
 const clearValue = () => {
   selectedValue.value = ''
@@ -134,6 +147,7 @@ const highlightMatch = (text: string) => {
 const isCountry = (option: ICountry | ICity): option is ICountry => {
   return 'code' in option
 }
+
 </script>
 
 <style scoped lang="scss">
