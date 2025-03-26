@@ -27,8 +27,8 @@ defineProps({
   },
   autofocus: {
     type: Boolean,
-    required: false
-  }
+    required: false,
+  },
 })
 </script>
 

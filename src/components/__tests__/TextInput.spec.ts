@@ -7,8 +7,8 @@ describe('TextInput', () => {
     const wrapper = mount(TextInput, {
       props: {
         label: 'Email address',
-        name: 'email'
-      }
+        name: 'email',
+      },
     })
 
     expect(wrapper.find('label').text()).toBe('Email address')
@@ -20,8 +20,8 @@ describe('TextInput', () => {
     const wrapper = mount(TextInput, {
       props: {
         label: 'Email address',
-        name: 'email'
-      }
+        name: 'email',
+      },
     })
 
     const input = wrapper.find('input')
@@ -34,8 +34,8 @@ describe('TextInput', () => {
       props: {
         label: 'Password',
         name: 'password',
-        type: 'password'
-      }
+        type: 'password',
+      },
     })
 
     expect(wrapper.find('input').exists()).toBe(true)
@@ -47,8 +47,8 @@ describe('TextInput', () => {
       props: {
         label: 'Search',
         name: 'search',
-        placeholder: 'Enter search term...'
-      }
+        placeholder: 'Enter search term...',
+      },
     })
 
     expect(wrapper.find('input').exists()).toBe(true)
@@ -60,8 +60,8 @@ describe('TextInput', () => {
       props: {
         label: 'Email',
         name: 'email',
-        autocomplete: 'email'
-      }
+        autocomplete: 'email',
+      },
     })
 
     expect(wrapper.find('input').attributes('autocomplete')).toBe('email')
@@ -72,8 +72,8 @@ describe('TextInput', () => {
       props: {
         label: 'Username',
         name: 'username',
-        autofocus: true
-      }
+        autofocus: true,
+      },
     })
 
     expect(wrapper.find('input').attributes('autofocus')).toBe('')
@@ -83,8 +83,8 @@ describe('TextInput', () => {
     const wrapper = mount(TextInput, {
       props: {
         label: 'Test',
-        name: 'test'
-      }
+        name: 'test',
+      },
     })
 
     const input = wrapper.find('input')
