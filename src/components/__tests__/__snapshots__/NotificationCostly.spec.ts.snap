@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Notification Component > Snapshot Testing > matches snapshot for error type 1`] = `"<div data-v-5a392ee7="" class="notification error" aria-live="polite"><span data-v-5a392ee7="" class="notification-message">Test message</span></div>"`;
+
+exports[`Notification Component > Snapshot Testing > matches snapshot for success type 1`] = `"<div data-v-5a392ee7="" class="notification success" aria-live="polite"><span data-v-5a392ee7="" class="notification-message">Test message</span></div>"`;
