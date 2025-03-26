@@ -125,5 +125,5 @@ describe('DataTable Component', () => {
   //   })
 
     // expect(wrapper.html()).toMatchSnapshot()
-  })
+  // })
 })
