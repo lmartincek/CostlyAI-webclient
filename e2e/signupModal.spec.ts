@@ -1,78 +1,91 @@
-import { test, expect } from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
+async function fillCredentials(page: Page) {
+  await page.fill('#input-email', process.env.TEST_EMAIL);
+  await page.fill('#input-password', process.env.TEST_PASSWORD);
+}
 test.describe('Signup modal', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the page where the modal can be triggered
     await page.goto('/');
-    // Trigger the modal (e.g., by clicking a button that opens the modal)
     await page.click('.wrapper__auth--login');
   });
 
   test('should render the modal with correct content', async ({ page }) => {
-    // Verify the modal is visible
     await expect(page.locator('.modal-overlay')).toBeVisible();
 
-    // Verify the header text
     await expect(page.locator('.signup-wrapper__header h2')).toHaveText('Welcome to CostlyAI');
     await expect(page.locator('.signup-wrapper__header p')).toHaveText('Access personalized options');
 
-    // Verify the "Sign In" and "Sign Up" tabs are present
     await expect(page.locator('.sign-in')).toHaveText('Sign In');
     await expect(page.locator('.sign-up')).toHaveText('Sign Up');
   });
 
   test('should switch between Sign In and Sign Up tabs', async ({ page }) => {
-    // Click the "Sign Up" tab
     await page.click('.sign-up');
     await expect(page.locator('.sign-up')).toHaveClass(/active/);
 
-    // Click the "Sign In" tab
     await page.click('.sign-in');
     await expect(page.locator('.sign-in')).toHaveClass(/active/);
   });
 
   test('should validate email input', async ({ page }) => {
-    // Test empty email
-    await page.fill('#email input', '');
+    await page.fill('#input-email', '');
     await page.click('button[type="submit"]');
 
-    await expect(page.locator('.input-wrapper:has(#email) .error')).toContainText('Email is required');
-    // Test invalid email
-    await page.fill('#email input', 'invalid-email');
+    await expect(page.locator('.input-wrapper:has(#input-email) .error')).toContainText('Email is required');
+    await page.fill('#input-email', 'invalid-email');
     await page.click('button[type="submit"]');
-    await expect(page.locator('.input-wrapper:has(#email) .error')).toContainText('Email is invalid');
+    await expect(page.locator('.input-wrapper:has(#input-email) .error')).toContainText('Email is invalid');
 
-    // Test valid email
-    await page.fill('#email input', 'valid@example.com');
-    await expect(page.locator('.input-wrapper:has(#email) .error')).toBeHidden();
+    await page.fill('#input-email', 'valid@example.com');
+    await expect(page.locator('.input-wrapper:has(#input-email) .error')).toBeHidden();
   });
 
   test('should validate password input', async ({ page }) => {
-    const errors = page.locator('.input-wrapper:has(#password) .error')
-    const count = await errors.count()
+    await page.fill('#input-password', '');
+    await page.click('button[type="submit"]');
+    await expect(page.locator('.input-wrapper:has(#input-password) .error')).toContainText('Password is required');
 
-    // Test empty password
-    await page.fill('#password input', '');
+    await page.click('.sign-up');
+    await page.click('button[type="submit"]');
+
+    const errors = page.locator('.input-wrapper:has(#input-password) .error')
+    const count = await errors.count()
     for (let i = 0; i < count; ++i) {
-      await expect(page.locator('.input-wrapper:has(#password) .error').nth(i)).not.toHaveClass('fulfilled');
+      await expect(page.locator('.input-wrapper:has(#input-password) .error').nth(i)).not.toHaveClass('fulfilled');
     }
 
-    // Test password has at least 8 characters, 1 lowercase character, 1 uppercase character and one number
-    await page.fill('#password input', 'abcD1abc');
+    await page.fill('#input-password', 'abcD1abc');
     for (let i = 0; i < count; ++i) {
-      await expect(page.locator('.input-wrapper:has(#password) .error').nth(i)).toHaveClass('error fulfilled');
+      await expect(page.locator('.input-wrapper:has(#input-password) .error').nth(i)).toHaveClass('error fulfilled');
     }
   });
 
+  test('should successfully login with credentials', async ({ page }) => {
+    await fillCredentials(page)
+    await page.click('button[type="submit"]');
+
+    await expect(page.locator('.wrapper__auth--login')).not.toBeAttached()
+    await expect(page.locator('.wrapper__auth--profile')).toBeVisible()
+  });
+
+  test('should validate email in use on signup', async ({ page }) => {
+    await page.click('.sign-up');
+    await fillCredentials(page)
+    await page.click('button[type="submit"]');
+
+    await expect(page.locator('.notification')).toHaveClass(/error/)
+    await expect(page.locator('.wrapper__auth--login')).toBeVisible()
+  });
+
   test('should close the modal when clicking outside or on the close button', async ({ page }) => {
-    // Click outside the modal
     await page.mouse.click(10, 10);
     await expect(page.locator('.modal-overlay')).toBeHidden();
 
-    // Reopen the modal
     await page.click('.wrapper__auth--login');
 
-    // Click the close button
     await page.click('.close-button');
     await expect(page.locator('.modal-overlay')).toBeHidden();
   });

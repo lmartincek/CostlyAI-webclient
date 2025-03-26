@@ -36,6 +36,7 @@ defineProps({
   <div class="text-input">
     <label :for="name">{{ label }}</label>
     <input
+      :id="'input-' + name"
       :type="type"
       v-model="value"
       :name="name"

@@ -49,7 +49,12 @@ defineProps<{
         </p>
       </div>
 
-      <div class="wrapper-data__table">
+      <div
+        class="wrapper-data__table"
+        v-if="productsByCategory"
+        aria-live="polite"
+        aria-label="Product tables with their prices and names"
+      >
         <template v-for="(products, category) in productsByCategory" :key="category">
           <TableDisplay :data="products" :category="category" />
         </template>
