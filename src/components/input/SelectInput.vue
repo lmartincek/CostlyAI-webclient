@@ -17,7 +17,11 @@
       <button v-if="selectedValue" class="clear-button" @click="clearValue" type="button">
         &times;
       </button>
-      <ul v-if="showSuggestions && filteredOptions.length > 0" class="suggestions-list">
+      <ul
+        v-if="showSuggestions && filteredOptions.length > 0"
+        class="suggestions-list"
+        aria-live="polite"
+      >
         <li
           v-for="option in filteredOptions"
           :key="option.name"
@@ -37,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { useFocusWithin } from '@vueuse/core'
+import { useFocusWithin, useVirtualList } from '@vueuse/core'
 import { ref, computed, watch, useTemplateRef } from 'vue'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'

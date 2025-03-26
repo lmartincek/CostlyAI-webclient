@@ -77,7 +77,14 @@ const validateForm = () => {
 
   if (errorEmail.value) {
     return false
-  } else if (errorsPassword.value.find((error) => error.isFulfilled === false)) {
+  }
+
+  if (
+    step.value === AuthStep.SignUp &&
+    errorsPassword.value.find((error) => error.isFulfilled === false)
+  ) {
+    return false
+  } else if (step.value === AuthStep.SignIn && !!errorPassword.value) {
     return false
   }
 

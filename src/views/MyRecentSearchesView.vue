@@ -19,7 +19,12 @@
         <router-link to="/">here</router-link> and select location you're interested in.
       </div>
 
-      <div class="wrapper-data__table" v-if="productsByCategory !== null">
+      <div
+        class="wrapper-data__table"
+        v-if="productsByCategory !== null"
+        aria-live="polite"
+        aria-label="Product tables with their prices and names"
+      >
         <template v-for="(products, category) in productsByCategory" :key="category">
           <TableDisplay :data="products" :category="category" />
         </template>
