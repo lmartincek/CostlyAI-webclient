@@ -2,8 +2,10 @@
   <div
     :class="['tag', { 'tag-add': isAddTag, selected: isSelected, disabled: isDisabled }]"
     @click="handleClick"
+    @keydown.enter="handleClick"
     role="button"
     :aria-pressed="isSelected"
+    tabindex="0"
   >
     <span v-if="$slots.icon" class="icon">
       <slot name="icon" />
