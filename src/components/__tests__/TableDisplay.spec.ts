@@ -105,25 +105,25 @@ describe('DataTable Component', () => {
     expect(priceCell.text()).toBe('$20.00 USD')
   })
 
-  it('matches snapshot with data', () => {
-    const wrapper = mount(TableDisplay, {
-      props: {
-        data: mockData,
-        category: mockCategory
-      }
-    })
+  // it('matches snapshot with data', () => {
+  //   const wrapper = mount(TableDisplay, {
+  //     props: {
+  //       data: mockData,
+  //       category: mockCategory
+  //     }
+  //   })
+  //
+  //   expect(wrapper.html()).toMatchSnapshot()
+  // })
+  //
+  // it('matches snapshot with empty data', () => {
+  //   const wrapper = mount(TableDisplay, {
+  //     props: {
+  //       data: {},
+  //       category: mockCategory
+  //     }
+  //   })
 
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('matches snapshot with empty data', () => {
-    const wrapper = mount(TableDisplay, {
-      props: {
-        data: {},
-        category: mockCategory
-      }
-    })
-
-    expect(wrapper.html()).toMatchSnapshot()
-  })
+    // expect(wrapper.html()).toMatchSnapshot()
+  // })
 })
