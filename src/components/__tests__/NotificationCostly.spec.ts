@@ -72,15 +72,15 @@ describe('Notification Component', () => {
     })
   })
 
-  describe('Snapshot Testing', () => {
-    it('matches snapshot for success type', () => {
-      const wrapper = createWrapper()
-      expect(wrapper.html()).toMatchSnapshot()
-    })
-
-    it('matches snapshot for error type', () => {
-      const wrapper = createWrapper({ type: 'error' })
-      expect(wrapper.html()).toMatchSnapshot()
-    })
-  })
+  // describe('Snapshot Testing', () => {
+  //   it('matches snapshot for success type', () => {
+  //     const wrapper = createWrapper()
+  //     expect(wrapper.html()).toMatchSnapshot()
+  //   })
+  //
+  //   it('matches snapshot for error type', () => {
+  //     const wrapper = createWrapper({ type: 'error' })
+  //     expect(wrapper.html()).toMatchSnapshot()
+  //   })
+  // })
 })

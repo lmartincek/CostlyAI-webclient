@@ -1,5 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Icon Component > matches snapshot with custom props 1`] = `"<img src="" alt="Test icon" width="32" height="32" loading="lazy">"`;
-
-exports[`Icon Component > matches snapshot with default props 1`] = `"<img src="" alt="Test icon" width="24" height="24" loading="lazy">"`;
