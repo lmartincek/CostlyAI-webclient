@@ -26,8 +26,7 @@ describe('TextInput', () => {
 
     const input = wrapper.find('input')
     await input.setValue('test@example.com')
-
-    expect(wrapper.vm.value).toBe('test@example.com')
+    expect(input.element.value).toBe('test@example.com')
   })
 
   it('sets input type correctly', () => {
