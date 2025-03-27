@@ -2,16 +2,14 @@ import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
 import { apiClient } from '@/services/apiClient.ts'
 import type { ProductAIResponse } from '@/types/products'
+import {getQueryParams} from "@/utils/queryParamsHelper.ts";
 
 export const getProducts = async (country: ICountry | null, city: ICity | null) => {
-  const queryParams = []
-  if (country) {
-    queryParams.push(`countryId=${country.id}`)
+  const queryParams = {
+    countryId: country?.id,
+    cityId: city?.id
   }
-  if (city?.id) {
-    queryParams.push(`cityId=${city.id}`)
-  }
-  const url = `/products${queryParams.length ? `?${queryParams.join('&')}` : ''}`
+  const url = `/products${getQueryParams(queryParams)}`
 
   try {
     const response = await apiClient.get(url)
