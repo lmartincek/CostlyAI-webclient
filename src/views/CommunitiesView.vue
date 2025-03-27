@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 import IconCostly from '@/components/common/IconCostly.vue'
-import type { Community } from '@/types/communities'
+import type {Community, CommunityKey} from '@/types/communities'
 import { getCommunities } from '@/services/generalService.ts'
 import Icon from '@/components/common/IconCostly.vue'
 import SelectInput from '@/components/input/SelectInput.vue'
@@ -16,18 +16,24 @@ const sentinel = ref(null)
 const selectedCountry = ref('')
 const selectedCity = ref('')
 const selectedGroupType = ref('')
-const getUniqueValuesForKey = (key: string): { name: string; code?: string }[] => {
+
+type SelectOptions = {
+  name: string,
+  code?: string
+}
+const getUniqueValuesForKey = (key: CommunityKey): SelectOptions[] => {
   const seen = new Map<string, boolean>()
-  const result: { name: string; code?: string }[] = []
+  const result: SelectOptions[] = []
 
   for (const card of filteredCards.value.length ? filteredCards.value : allCards.value) {
     const name = card[key]
-    const code = key === 'country' ? card['code'] : undefined
-    const keyStr = code ? `${name}|${code}` : name
+    const code = key === 'country' ? card['code'] : null
+    const keyStr = code ? `${name}|${code}` : name as string
 
     if (!seen.has(keyStr)) {
       seen.set(keyStr, true)
-      result.push(code !== undefined ? { name, code } : { name })
+      //@ts-expect-error
+      result.push(code !== null ? { name, code } : { name })
     }
   }
 
