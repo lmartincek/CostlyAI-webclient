@@ -2,11 +2,12 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 import IconCostly from '@/components/common/IconCostly.vue'
-import type {Community, CommunityKey} from '@/types/communities'
+import type { Community, CommunityKey } from '@/types/communities'
 import { getCommunities } from '@/services/generalService.ts'
 import Icon from '@/components/common/IconCostly.vue'
 import SelectInput from '@/components/input/SelectInput.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { memoryCache } from '@/utils/cache.ts'
 
 const allCards = ref([] as Community[])
 const visibleCards = ref([] as Community[])
@@ -18,7 +19,7 @@ const selectedCity = ref('')
 const selectedGroupType = ref('')
 
 type SelectOptions = {
-  name: string,
+  name: string
   code?: string
 }
 const getUniqueValuesForKey = (key: CommunityKey): SelectOptions[] => {
@@ -28,7 +29,7 @@ const getUniqueValuesForKey = (key: CommunityKey): SelectOptions[] => {
   for (const card of filteredCards.value.length ? filteredCards.value : allCards.value) {
     const name = card[key]
     const code = key === 'country' ? card['code'] : null
-    const keyStr = code ? `${name}|${code}` : name as string
+    const keyStr = code ? `${name}|${code}` : (name as string)
 
     if (!seen.has(keyStr)) {
       seen.set(keyStr, true)
@@ -62,11 +63,18 @@ watch(filteredCards, () => {
   visibleCards.value = filteredCards.value.slice(0, batchSize)
 })
 
-onMounted(async () => {
-  allCards.value = await getCommunities({})
+const loadCommunities = async () => {
+  await getCommunities({})
+    .then((data: Community[]) => {
+      allCards.value = data
+      memoryCache.set('communities', data)
+    })
+    .catch((e) => {
+      throw e
+    })
+}
 
-  visibleCards.value = filteredCards.value.slice(0, batchSize)
-
+const initializeObserver = () => {
   const observer = new IntersectionObserver(
     (entries) => {
       if (entries[0].isIntersecting) {
@@ -77,6 +85,34 @@ onMounted(async () => {
   )
 
   if (sentinel.value) observer.observe(sentinel.value)
+}
+
+onMounted(async () => {
+  let error
+  if (memoryCache.has('communities')) {
+    const cached = memoryCache.get<Community[]>('communities') ?? []
+    if (cached) {
+      allCards.value = cached
+    } else {
+      memoryCache.delete('communities')
+
+      try {
+        await loadCommunities()
+      } catch (e) {
+        error = e
+      }
+    }
+  } else {
+    try {
+      await loadCommunities()
+    } catch (e) {
+      error = e
+    }
+  }
+  if (error) return
+
+  visibleCards.value = filteredCards.value.slice(0, batchSize)
+  initializeObserver()
 })
 </script>
 

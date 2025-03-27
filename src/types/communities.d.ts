@@ -10,7 +10,7 @@ export type Community = {
   members: number
   code: string
 }
-export type CommunityKey = keyof Community;
+export type CommunityKey = keyof Community
 
 export type CommunityQueries = {
   country?: string
