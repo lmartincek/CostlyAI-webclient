@@ -26,6 +26,7 @@ import {
   faSquareXmark,
   faSquareCheck,
   faHashtag,
+  faSortDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { faAirbnb, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { useAuthStore } from '@/stores/authStore.ts'
@@ -52,6 +53,7 @@ library.add(
   faSquareXmark,
   faSquareCheck,
   faHashtag,
+  faSortDown,
 )
 
 const app = createApp(App)

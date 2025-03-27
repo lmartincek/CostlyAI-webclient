@@ -23,3 +23,37 @@
     @content;
   }
 }
+
+@mixin display-utilities($property, $value) {
+  .#{$property}-#{$value} {
+    display: $value;
+  }
+
+  $breakpoints: (
+    sm: respond-sm,
+    md: respond-md,
+    lg: respond-lg,
+  );
+
+  @each $breakpoint, $mixin in $breakpoints {
+    .#{$property}-#{$breakpoint}-#{$value} {
+      @if $mixin == respond-sm {
+        @include respond-sm {
+          display: $value;
+        }
+      } @else if $mixin == respond-md {
+        @include respond-md {
+          display: $value;
+        }
+      } @else if $mixin == respond-lg {
+        @include respond-lg {
+          display: $value;
+        }
+      }
+    }
+  }
+}
+
+@include display-utilities('d', none);
+@include display-utilities('d', flex);
+@include display-utilities('d', block);
