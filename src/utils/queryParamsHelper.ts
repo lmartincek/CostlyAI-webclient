@@ -2,7 +2,7 @@ export const getQueryParams = <T extends Record<string, any>>(queries: T): strin
   const queryParams = Object.entries(queries)
     .filter(([_, value]) => value !== undefined && value !== null)
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join("&");
+    .join('&')
 
-  return queryParams ? `?${queryParams}` : "";
-};
+  return queryParams ? `?${queryParams}` : ''
+}

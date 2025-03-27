@@ -25,6 +25,7 @@ import {
   faWifi,
   faSquareXmark,
   faSquareCheck,
+  faHashtag,
 } from '@fortawesome/free-solid-svg-icons'
 import { faAirbnb, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { useAuthStore } from '@/stores/authStore.ts'
@@ -50,6 +51,7 @@ library.add(
   faGoogle,
   faSquareXmark,
   faSquareCheck,
+  faHashtag,
 )
 
 const app = createApp(App)

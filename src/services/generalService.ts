@@ -3,6 +3,8 @@ import { handleApiError } from '@/utils/handleApiError.ts'
 import type { CostOfLivingCategoryNames } from '@/constants/categories.ts'
 import type { ICountry } from '@/types/countries'
 import type { ICity } from '@/types/cities'
+import type { CommunityQueries } from '@/types/communities'
+import { getQueryParams } from '@/utils/queryParamsHelper.ts'
 
 export const getCountries = async () => {
   // TODO
@@ -68,5 +70,15 @@ export const postUserSearchedPlaces = async (
   } catch (error) {
     console.error(`Error posting new user searched places ${error}`)
     throw new Error(handleApiError(error))
+  }
+}
+
+export const getCommunities = async (queries: CommunityQueries) => {
+  try {
+    const response = await apiClient.get(`/communities${getQueryParams(queries)}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching countries from DB:', error)
+    throw error
   }
 }
