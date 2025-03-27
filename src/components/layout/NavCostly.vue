@@ -4,7 +4,7 @@ import Icon from '@/components/common/IconCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import ProfileBadge from '@/components/user/ProfileBadge.vue'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import type { RoutePaths } from '@/router'
 
 const modal = useModalStore()
@@ -12,38 +12,63 @@ const auth = useAuthStore()
 
 const route = useRoute()
 const path = computed<RoutePaths>(() => route.path as RoutePaths)
+
+const shadowed = ref<boolean>(false)
+
+const controller = new AbortController()
+onMounted(() => {
+  window.addEventListener('scroll', (evt) => {
+    shadowed.value = window.pageYOffset > 10
+  })
+})
+
+onUnmounted(() => {
+  controller.abort()
+})
 </script>
 
 <template>
-  <nav>
-    <div class="wrapper">
-      <div class="wrapper__logo">
-        <router-link to="/"
-          ><Icon alt="logo" name="globe" width="26" height="26" /> CostlyAI</router-link
-        >
-      </div>
-
-      <div class="wrapper__auth">
-        <router-link to="/communities" v-show="path !== '/communities'">Communities</router-link>
-        <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
-          <Icon alt="" name="login" width="18" height="18" /> <span>Sign in</span>
-        </div>
-        <div class="wrapper__auth--profile" v-else>
-          <router-link to="/my-recent-searches" v-show="path !== '/my-recent-searches'">
-            My recent searches</router-link
+  <header :class="{ shadowed }">
+    <nav>
+      <div class="wrapper">
+        <div class="wrapper__logo">
+          <router-link to="/"
+            ><Icon alt="logo" name="globe" width="26" height="26" /> CostlyAI</router-link
           >
-          <ProfileBadge v-if="auth.user" />
+        </div>
+
+        <div class="wrapper__auth">
+          <router-link to="/communities" v-show="path !== '/communities'">Communities</router-link>
+          <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
+            <Icon alt="" name="login" width="18" height="18" /> <span>Sign in</span>
+          </div>
+          <div class="wrapper__auth--profile" v-else>
+            <router-link to="/my-recent-searches" v-show="path !== '/my-recent-searches'">
+              My recent searches</router-link
+            >
+            <ProfileBadge v-if="auth.user" />
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 </template>
 
 <style scoped lang="scss">
+header {
+  transition: 300ms ease;
+  z-index: 100000;
+  position: sticky;
+  top: 0;
+
+  &.shadowed {
+    box-shadow: 2px 2px 4px $border-color;
+  }
+}
+
 nav {
   width: 100%;
   height: 4.5rem;
-  position: relative;
   background: $white-color;
 
   .wrapper {
