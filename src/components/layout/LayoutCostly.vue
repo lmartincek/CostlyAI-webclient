@@ -4,9 +4,7 @@ import FooterCostly from '@/components/layout/FooterCostly.vue'
 </script>
 
 <template>
-  <header>
-    <Nav />
-  </header>
+  <Nav />
   <div class="layout">
     <div class="layout__headline">
       <slot name="headline" />

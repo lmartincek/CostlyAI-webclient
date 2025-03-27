@@ -8,6 +8,7 @@ import Icon from '@/components/common/IconCostly.vue'
 import SelectInput from '@/components/input/SelectInput.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { memoryCache } from '@/utils/cache.ts'
+import SpinnerCostly from '@/components/common/SpinnerCostly.vue'
 
 const allCards = ref([] as Community[])
 const visibleCards = ref([] as Community[])
@@ -114,6 +115,9 @@ onMounted(async () => {
   visibleCards.value = filteredCards.value.slice(0, batchSize)
   initializeObserver()
 })
+
+const showFilters = ref<boolean>(true)
+const toggleFilters = () => (showFilters.value = !showFilters.value)
 </script>
 
 <template>
@@ -124,8 +128,7 @@ onMounted(async () => {
 
     <template v-slot:content>
       <div class="communities-wrapper">
-        <!--          todo - as user scrolls let it stick on the top-->
-        <div class="communities-wrapper__inputs">
+        <div :class="['communities-wrapper__inputs', { 'scrolled-up': showFilters }]">
           <SelectInput
             default-option-label="Vietnam"
             :options="getUniqueValuesForKey('country')"
@@ -151,34 +154,42 @@ onMounted(async () => {
               <font-awesome-icon icon="fa-solid fa-hashtag" />
             </template>
           </SelectInput>
+
+          <span class="toggle-filter" @click="toggleFilters"
+            ><font-awesome-icon icon="fa-solid fa-sort-down"
+          /></span>
         </div>
 
         <div class="communities-wrapper__list">
-          <div class="list-item" v-for="item in visibleCards" :key="item.id">
-            <div class="card">
-              <div class="card__header">
-                <div>
-                  <IconCostly alt="" :name="item.code" folder="flags" /> /
-                  <b>{{ item.country }}</b>
+          <template v-if="visibleCards.length">
+            <div class="list-item" v-for="item in visibleCards" :key="item.id">
+              <div class="card">
+                <div class="card__header">
+                  <div>
+                    <IconCostly alt="" :name="item.code" folder="flags" /> /
+                    <b>{{ item.country }}</b>
+                  </div>
+                  <div>
+                    Members: <b>{{ item.members }}</b>
+                  </div>
                 </div>
-                <div>
-                  Members: <b>{{ item.members }}</b>
-                </div>
-              </div>
-              <div class="card__body">
-                <a :href="item.group_link" target="_blank">
-                  {{ item.group_name }} /#{{ item.type }}
-                </a>
-                <div class="tags" v-if="item.tags.length">
-                  <div class="tag" v-for="tag in item.tags" :key="tag">
-                    {{ tag }}
+                <div class="card__body">
+                  <a :href="item.group_link" target="_blank">
+                    {{ item.group_name }} /#{{ item.type }}
+                  </a>
+                  <div class="tags" v-if="item.tags.length">
+                    <div class="tag" v-for="tag in item.tags" :key="tag">
+                      {{ tag }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div ref="sentinel" />
+            <div ref="sentinel" />
+          </template>
+          <template v-else>
+            <SpinnerCostly />
+          </template>
         </div>
       </div>
     </template>
@@ -186,34 +197,56 @@ onMounted(async () => {
 </template>
 
 <style lang="scss" scoped>
+$border-radius: 1rem;
+$padding-default: 1rem;
+$sticky-offset: 72px;
+
 .communities-wrapper {
   &__inputs {
+    position: sticky;
+    top: $sticky-offset;
+    width: 110%;
+    padding: $padding-default 5% 1.25rem;
+    background: $background-color;
+    transform: translateX(-5%);
     display: grid;
     gap: 5px;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    width: 100%;
-    margin: 1rem 0 2rem;
+    border-radius: 0 0 $border-radius $border-radius;
+    margin: -1rem 0 2rem;
+    box-shadow: 0 2px 2px $border-color;
+    transition: top 0.5s ease-in-out;
+
+    &.scrolled-up {
+      top: -105px;
+    }
 
     @include respond-md {
+      width: 100%;
       gap: 15px;
+      transform: none;
+      padding: $padding-default 2.5%;
+
+      &.scrolled-up {
+        top: $sticky-offset;
+      }
+    }
+
+    .toggle-filter {
+      position: absolute;
+      bottom: 5px;
+      width: 100%;
+
+      @include respond-sm {
+        display: none;
+      }
     }
   }
 
   &__list {
     display: grid;
     gap: 40px;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-
-    @include respond-md {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-    }
-
-    @include respond-xl {
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 
     .list-item {
       text-align: left;
@@ -226,9 +259,11 @@ onMounted(async () => {
 
   .card {
     background: $white-color;
-    border-radius: 1rem;
+    border-radius: $border-radius;
     padding: 2rem;
     min-height: 185px;
+    height: 100%;
+    box-shadow: 0 0 4px $border-color;
 
     &__header {
       display: flex;
@@ -239,6 +274,7 @@ onMounted(async () => {
       a {
         display: flex;
         padding: 1rem 0;
+        transition: text-decoration 0.3s ease-in-out;
 
         &:hover {
           text-decoration: underline;
@@ -247,13 +283,14 @@ onMounted(async () => {
 
       .tags {
         display: flex;
+        flex-wrap: wrap;
 
         .tag {
           background: $border-color;
           font-size: 0.9rem;
           padding: 0.25rem 1rem;
           margin-right: 0.25rem;
-          border-radius: 1rem;
+          border-radius: $border-radius;
         }
       }
     }
