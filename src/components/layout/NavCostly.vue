@@ -3,9 +3,15 @@ import { useModalStore } from '@/stores/modalsStore.ts'
 import Icon from '@/components/common/IconCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import ProfileBadge from '@/components/user/ProfileBadge.vue'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import type { RoutePaths } from '@/router'
 
 const modal = useModalStore()
 const auth = useAuthStore()
+
+const route = useRoute()
+const path = computed<RoutePaths>(() => route.path as RoutePaths)
 </script>
 
 <template>
@@ -18,11 +24,14 @@ const auth = useAuthStore()
       </div>
 
       <div class="wrapper__auth">
+        <router-link to="/communities" v-show="path !== '/communities'">Communities</router-link>
         <div class="wrapper__auth--login" @click="modal.openModal" v-if="!auth.isAuthenticated">
-          <Icon alt="" name="login" width="18" height="18" /> Sign in
+          <Icon alt="" name="login" width="18" height="18" /> <span>Sign in</span>
         </div>
         <div class="wrapper__auth--profile" v-else>
-          <router-link to="/my-recent-searches"> My recent searches</router-link>
+          <router-link to="/my-recent-searches" v-show="path !== '/my-recent-searches'">
+            My recent searches</router-link
+          >
           <ProfileBadge v-if="auth.user" />
         </div>
       </div>
@@ -67,6 +76,14 @@ nav {
       }
     }
 
+    &__auth a {
+      margin-right: 1rem;
+
+      @include respond-md {
+        margin-right: 2rem;
+      }
+    }
+
     &__auth--login {
       background: $primary-color;
       color: $white-color;
@@ -74,7 +91,7 @@ nav {
       font-weight: 500;
       transition: scale 300ms ease-in-out;
       cursor: pointer;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -83,15 +100,34 @@ nav {
         scale: 105%;
       }
 
-      img {
-        margin-right: 0.5rem;
+      span {
+        display: none;
+      }
+
+      @include respond-md {
+        padding: 0.5rem 1rem;
+
+        span {
+          display: flex;
+        }
+
+        img {
+          margin-right: 0.5rem;
+        }
       }
     }
 
     &__auth--profile {
       display: flex;
       align-items: center;
-      gap: 1rem;
+
+      a {
+        display: none;
+
+        @include respond-md {
+          display: flex;
+        }
+      }
     }
   }
 }

@@ -58,7 +58,7 @@ const props = defineProps({
     type: String,
   },
   options: {
-    type: Array as () => Array<ICountry | ICity>,
+    type: Array as () => Array<ICountry | ICity | Option>,
     required: true,
     default: () => [],
   },

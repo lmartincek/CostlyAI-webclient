@@ -5,6 +5,7 @@ import HomeView from '@/views/HomeView.vue'
 const MyRecentSearchesView = () => import('@/views/MyRecentSearchesView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 const AuthCallbackView = () => import('@/views/AuthCallbackView.vue')
+const CommunitiesView = () => import('@/views/CommunitiesView.vue')
 
 const routes = [
   { path: '/', component: HomeView },
@@ -14,8 +15,13 @@ const routes = [
     component: MyRecentSearchesView,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/communities',
+    component: CommunitiesView,
+  },
   { path: '/:pathMatch(.*)*', component: NotFoundView },
-]
+] as const
+export type RoutePaths = (typeof routes)[number]['path']
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
