@@ -53,12 +53,14 @@ interface Option {
   code?: string
 }
 
+type Options = Option | ICity | ICountry
+
 const props = defineProps({
   label: {
     type: String,
   },
   options: {
-    type: Array as () => Array<ICountry | ICity | Option>,
+    type: Array as () => Array<Options>,
     required: true,
     default: () => [],
   },
@@ -103,7 +105,7 @@ const handleInput = () => {
   showSuggestions.value = true
 }
 
-const handleSelect = (option: ICountry | ICity) => {
+const handleSelect = (option: Options) => {
   selectedValue.value = option.name
   searchQuery.value = option.name
   showSuggestions.value = false
@@ -145,7 +147,7 @@ const highlightMatch = (text: string) => {
   return `${beforeMatch}<strong>${match}</strong>${afterMatch}`
 }
 
-const isCountry = (option: ICountry | ICity): option is ICountry => {
+const isCountry = (option: Options): option is ICountry => {
   return 'code' in option
 }
 </script>
