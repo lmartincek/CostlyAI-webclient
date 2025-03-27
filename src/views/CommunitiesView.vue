@@ -155,7 +155,7 @@ const toggleFilters = () => (showFilters.value = !showFilters.value)
             </template>
           </SelectInput>
 
-          <span class="d-sm-none toggle-filter" @click="toggleFilters"
+          <span class="toggle-filter" @click="toggleFilters"
             ><font-awesome-icon icon="fa-solid fa-sort-down"
           /></span>
         </div>
@@ -236,6 +236,10 @@ $sticky-offset: 72px;
       position: absolute;
       bottom: 5px;
       width: 100%;
+
+      @include respond-sm {
+        display: none;
+      }
     }
   }
 
