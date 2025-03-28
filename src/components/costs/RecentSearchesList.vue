@@ -47,7 +47,9 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
         </div>
       </template>
     </div>
-    <SpinnerCostly v-else />
+    <div class="loader" v-else>
+      <SpinnerCostly />
+    </div>
   </div>
 </template>
 
@@ -103,5 +105,9 @@ const isUserSearch = (item: IPlace | IUserSearch): item is IUserSearch => {
       height: 100%;
     }
   }
+}
+
+.loader {
+  margin-top: 2rem;
 }
 </style>

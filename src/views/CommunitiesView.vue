@@ -146,7 +146,7 @@ const toggleFilters = () => (showFilters.value = !showFilters.value)
           </SelectInput>
 
           <SelectInput
-            default-option-label="Whatsapp"
+            default-option-label="WhatsApp"
             :options="getUniqueValuesForKey('type')"
             v-model="selectedGroupType"
           >
@@ -175,11 +175,19 @@ const toggleFilters = () => (showFilters.value = !showFilters.value)
                 </div>
                 <div class="card__body">
                   <a :href="item.group_link" target="_blank">
-                    {{ item.group_name }} /#{{ item.type }}
+                    <span
+                      >{{ item.group_name }} <b>#</b
+                      ><font-awesome-icon
+                        :icon="`fa-brands fa-${item.type?.toLowerCase()}`"
+                        style="margin-left: 2.5px; height: 20px; width: 20px"
+                    /></span>
                   </a>
                   <div class="tags" v-if="item.tags.length">
                     <div class="tag" v-for="tag in item.tags" :key="tag">
                       {{ tag }}
+                    </div>
+                    <div class="tag">
+                      {{ item.type }}
                     </div>
                   </div>
                 </div>
@@ -273,7 +281,7 @@ $sticky-offset: 72px;
     &__body {
       a {
         display: flex;
-        padding: 1rem 0;
+        padding: 1.25rem 0 0.75rem;
         transition: text-decoration 0.3s ease-in-out;
 
         &:hover {
@@ -287,9 +295,10 @@ $sticky-offset: 72px;
 
         .tag {
           background: $border-color;
-          font-size: 0.9rem;
-          padding: 0.25rem 1rem;
+          font-size: 0.75rem;
+          padding: 0.175rem 0.8rem;
           margin-right: 0.25rem;
+          margin-top: 0.5rem;
           border-radius: $border-radius;
         }
       }

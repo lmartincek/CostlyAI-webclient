@@ -26,6 +26,9 @@ export type RoutePaths = (typeof routes)[number]['path']
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior() {
+    return { top: 0 }
+  },
 })
 
 router.beforeEach(async (to, from, next) => {

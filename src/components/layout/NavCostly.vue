@@ -4,7 +4,7 @@ import Icon from '@/components/common/IconCostly.vue'
 import { useAuthStore } from '@/stores/authStore.ts'
 import ProfileBadge from '@/components/user/ProfileBadge.vue'
 import { useRoute } from 'vue-router'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed } from 'vue'
 import type { RoutePaths } from '@/router'
 
 const modal = useModalStore()
@@ -12,23 +12,10 @@ const auth = useAuthStore()
 
 const route = useRoute()
 const path = computed<RoutePaths>(() => route.path as RoutePaths)
-
-const shadowed = ref<boolean>(false)
-
-const controller = new AbortController()
-onMounted(() => {
-  window.addEventListener('scroll', (evt) => {
-    shadowed.value = window.pageYOffset > 10
-  })
-})
-
-onUnmounted(() => {
-  controller.abort()
-})
 </script>
 
 <template>
-  <header :class="{ shadowed }">
+  <header>
     <nav>
       <div class="wrapper">
         <div class="wrapper__logo">
@@ -57,13 +44,10 @@ onUnmounted(() => {
 <style scoped lang="scss">
 header {
   transition: 300ms ease;
-  z-index: 100000;
+  z-index: 10000;
   position: sticky;
   top: 0;
-
-  &.shadowed {
-    box-shadow: 2px 2px 4px $border-color;
-  }
+  box-shadow: 2px 2px 4px $border-color;
 }
 
 nav {

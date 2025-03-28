@@ -28,7 +28,16 @@ import {
   faHashtag,
   faSortDown,
 } from '@fortawesome/free-solid-svg-icons'
-import { faAirbnb, faGoogle } from '@fortawesome/free-brands-svg-icons'
+import {
+  faAirbnb,
+  faGoogle,
+  faReddit,
+  faWhatsapp,
+  faTelegram,
+  faFacebook,
+  faMeetup,
+  faDiscord,
+} from '@fortawesome/free-brands-svg-icons'
 import { useAuthStore } from '@/stores/authStore.ts'
 library.add(
   faHouse,
@@ -50,6 +59,12 @@ library.add(
   faCarSide,
   faAirbnb,
   faGoogle,
+  faReddit,
+  faWhatsapp,
+  faDiscord,
+  faMeetup,
+  faTelegram,
+  faFacebook,
   faSquareXmark,
   faSquareCheck,
   faHashtag,
