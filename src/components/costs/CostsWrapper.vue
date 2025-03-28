@@ -7,16 +7,20 @@ import TableDisplay from '@/components/costs/TableDisplay.vue'
 import IconCostly from '@/components/common/IconCostly.vue'
 import type { ProductGroups } from '@/types/products'
 import type { LastDataset } from '@/composables/productsProvider.ts'
+import { useTemplateRef } from 'vue'
 
 defineProps<{
   productsLoading: boolean
   productsByCategory: ProductGroups | null
   lastDataset: LastDataset
 }>()
+
+const costsWrapperRef = useTemplateRef('costsWrapperRef')
+defineExpose({ costsWrapperRef })
 </script>
 
 <template>
-  <div class="wrapper-data" v-show="productsLoading || productsByCategory !== null">
+  <div class="wrapper-data" ref="costsWrapperRef">
     <template v-if="productsLoading">
       <div class="loader">
         <Spinner />
@@ -66,6 +70,7 @@ defineProps<{
 <style scoped lang="scss">
 .wrapper-data {
   margin: 4rem 0;
+  scroll-margin-top: 7rem;
 
   &__last-country {
     display: flex;

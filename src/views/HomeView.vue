@@ -11,11 +11,15 @@
     <template v-slot:content>
       <SearchCosts :products-loading="loading" :load-products="loadProducts" />
       <CostsWrapper
+        ref="costsWrapperComponent"
         :products-loading="loading"
         :last-dataset="lastDataset"
         :products-by-category="productsByCategory"
       />
-      <RecentlySearched :load-products="loadProducts" />
+      <RecentlySearched
+        :load-products="loadProducts"
+        @update:recently-searched-clicked="scrollToProducts"
+      />
     </template>
   </LayoutCostly>
 </template>
@@ -26,6 +30,15 @@ import LayoutCostly from '@/components/layout/LayoutCostly.vue'
 import RecentlySearched from '@/components/costs/RecentlySearched.vue'
 import SearchCosts from '@/components/costs/SearchCosts.vue'
 import { useProducts } from '@/composables/productsProvider.ts'
+import { useTemplateRef } from 'vue'
 
 const { productsByCategory, loading, lastDataset, loadProducts } = useProducts()
+
+const costsWrapperComponent = useTemplateRef('costsWrapperComponent')
+function scrollToProducts(): void {
+  costsWrapperComponent?.value?.costsWrapperRef?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+  })
+}
 </script>

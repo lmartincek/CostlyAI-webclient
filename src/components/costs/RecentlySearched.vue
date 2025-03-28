@@ -18,8 +18,10 @@ onMounted(async () => {
   }
 })
 
-const handleItemClick = (place: IPlace) => {
-  props.loadProducts({ country: place.country, city: place.city })
+const emit = defineEmits(['update:recentlySearchedClicked'])
+const handleItemClick = async (place: IPlace) => {
+  await props.loadProducts({ country: place.country, city: place.city })
+  emit('update:recentlySearchedClicked')
 }
 </script>
 
