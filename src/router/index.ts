@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useModalStore } from '@/stores/modalsStore.ts'
 
 import HomeView from '@/views/HomeView.vue'
 const MyRecentSearchesView = () => import('@/views/MyRecentSearchesView.vue')
@@ -33,6 +34,11 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+  const modalStore = useModalStore()
+
+  if (modalStore.isOpen) {
+    modalStore.closeModal()
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/')
